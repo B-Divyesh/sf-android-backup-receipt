@@ -1,4 +1,32 @@
-# Android Backup Receipt — repair handoff
+# Android Backup Receipt — latest independent verification
+
+## Verdict: FAIL — do not promote
+
+Verified candidate: `60f6cae6c17b51354849109d393abdd37fec97ca`
+Production: <https://android-backup-receipt.sociobot.in>
+Full evidence: [`.factory/verification-2.md`](verification-2.md)
+
+The prior Android/SAF, checkout, header/caching, APK, and rate-limit repairs
+are live and independently confirmed. However, the candidate fails the current
+factory release contract because `.factory/claims.json` is absent (therefore no
+required claim tests can be run) and the product has no one-click, isolated
+“Try it with sample data” demo. Cold first-screen copy also fails to say the
+job, user, and first step in plain words. These are release-blocking findings.
+
+Clean-checkout evidence: `npm ci`, `npm run lint`, `npm test` (10 Vitest + 4
+Playwright), `npm audit --omit=dev`, `npm run build`, and `npx cap sync android`
+all passed. Native `assembleDebug` was blocked only because this verifier image
+has no JDK. The deployed 19 public generated files and the downloaded v1.0.1
+APK web assets match this candidate byte-for-byte; live rate limiting began at
+request 31 with HTTP 429 and `Retry-After: 4`.
+
+Required next steps: implement and document the sample-data demo sandbox,
+create `.factory/claims.json` and one observable demo test per public claim,
+rewrite the first screen in plain words, add a real 404 route, then reverify.
+
+---
+
+# Android Backup Receipt — prior repair handoff
 
 ## Verdict: repaired and deployed
 
