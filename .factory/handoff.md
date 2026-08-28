@@ -1,91 +1,64 @@
-# Android Backup Receipt — build handoff
+# Android Backup Receipt — independent verification handoff
 
-## Shipped
+## Verdict: FAIL
 
-- A complete Vite + vanilla TypeScript PWA at `dist/` for comparing a
-  user-selected Android source folder with a USB/local/synced destination.
-- Local file inventory with relative paths, sizes, timestamps, and SHA-256.
-  Files up to 32 MB are fully hashed. Larger files use SHA-256 over three 1 MB
-  samples plus file size to avoid loading large videos into memory; the UI and
-  receipt disclose this distinction.
-- Accounted, missing, changed, extra, media-category, and coverage totals with a
-  clear “do not wipe” conclusion when discrepancies exist.
-- Portable source/destination manifest export and destination manifest import,
-  dated JSON receipt, CSV issue export (formula-injection guarded), and print
-  view.
-- Empty, scanning, cancellation, invalid-manifest, read-error, offline, and
-  success states. Active inventory summaries use last-write-wins IndexedDB so a
-  check can resume after refresh; “Start another check” clears them. The mobile
-  layout was exercised at 390 × 844.
-- Installable PWA: 192/512/maskable icons, versioned app-shell cache, cached
-  legal pages, connectivity status, and update notification.
-- Optional $7 one-time Migration Kit wired to the Sociobot checkout/verify
-  contract. Core verification and all exports remain free; paid users get a
-  local 20-receipt IndexedDB archive. License checks are cached for one day and
-  do not block the free first paint.
-- Privacy and terms pages, MIT license, complete README, and an original
-  generated hero illustration with source prompt/provenance.
-- Capacitor 7 Android skeleton under `android/`, configured as
-  `in.sociobot.androidbackupreceipt`, synced to the current web build, with
-  product-specific launcher and splash assets.
+Candidate `83c9b945aa4db1c086300923909ce7e93601e162` was independently tested on
+2026-08-28 against <https://android-backup-receipt.sociobot.in>. The deployed
+site is byte-for-byte the candidate build (19/19 generated files matched), but
+the candidate is not acceptable as the contracted Android product.
 
-## Verification
+Blocking findings:
 
-Run from the repository root:
+1. **Critical:** no APK/AAB, download, or native SAF implementation exists; the
+   checked-in Android project is only a Capacitor `BridgeActivity` wrapper.
+2. **High:** the advertised production checkout returns HTTP 404
+   (`{"error":"enabled factory product","status":404}`).
+3. **High:** 80 rapid license-verification requests all returned 200; no 429 or
+   `Retry-After` was observed (threshold is greater than 80).
+
+Additional defects are missing CSP/frame/permissions policies, sub-44 px mobile
+navigation targets, non-immutable 30-second caching for all static assets, one
+moderate axe landmark finding, and a generic manifest MIME type. Full evidence
+and severity details are in `.factory/verification.md`.
+
+## What passed
+
+- Clean checkout: `npm ci`, `npm test` (7 unit + 3 Playwright), `npm run build`
+  including TypeScript, `npm audit --omit=dev`, and `npx cap sync android`.
+- Core browser flow: normal discrepancies, 100% success, 32 MiB hashing
+  boundary, invalid input/recovery, cancellation, JSON/CSV export, persistence,
+  clear/reset, invalid license handling, and privacy/legal pages.
+- Desktop 1440 × 900 and mobile 390 × 844 responsive checks; keyboard traversal,
+  visible focus, reduced motion, no horizontal overflow, no console/page errors.
+- Zero serious/critical axe violations.
+- Live Lighthouse mobile: 100 Performance, 100 Accessibility, 100 Best
+  Practices, 100 SEO; LCP 1.1 s, TBT 91 ms, CLS 0.
+- Offline reload and a simulated service-worker update with visible Reload toast.
+- Privacy network check: no upload, analytics, remote font, or unexpected third
+  party request; only explicit license verification contacted Sociobot API.
+
+## Reproduce
 
 ```sh
 npm ci
 npm test
 npm run build
+npm audit --omit=dev
 npx cap sync android
 ```
 
-Latest local results on 2026-08-28:
+The repository has no lint script. `android/gradlew assembleDebug` could not be
+executed in this verifier image because no Java/JDK is installed; this is not
+the reason for the FAIL verdict.
 
-- `npm test`: 7 unit tests and 3 Playwright tests passed.
-- Playwright checks: source/destination hashing and discrepancy receipt at
-  390 px; axe scan with zero serious/critical violations; offline reload.
-- `npm run build`: passed; output root is `dist/` with `dist/index.html`.
-- Initial assets: 16.3 KB JS, 13.6 KB CSS, 28 KB mobile hero WebP (all raw,
-  before transfer compression). No runtime fonts or third-party scripts.
-- Lighthouse mobile against the production preview: Performance 100,
-  Accessibility 100, Best Practices 100, SEO 100; FCP 0.9 s, LCP 1.2 s,
-  Total Blocking Time 0 ms, CLS 0.
-- `npm audit`: 0 vulnerabilities.
-- Console smoke test: no page errors or error-level console messages.
+## Required next steps
 
-Lighthouse command used:
-
-```sh
-CHROME_PATH=/opt/pw-browsers/chromium-1208/chrome-linux64/chrome \
-  npx -y lighthouse@12.8.2 http://127.0.0.1:4173 \
-  --quiet --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' \
-  --only-categories=performance,accessibility,best-practices,seo
-```
-
-## Known boundaries
-
-- A static PWA cannot reliably enumerate arbitrary WebDAV/S3 accounts because
-  provider CORS and authentication differ. This v1 does not collect remote
-  credentials: users mount/sync/download the remote folder or import a manifest
-  generated where that destination is available. This is stated in the UI.
-- The Capacitor project is a wrapper skeleton for the later APK work order. It
-  has not been packaged or signed here, as requested by the static deploy work
-  order. Native SAF integration should replace/augment the web directory input
-  before Play Store distribution.
-- Sampled hashes for files above 32 MB are efficient evidence, not a byte-for-byte
-  proof of the entire file. Users are told to open representative files before
-  wiping a source device.
-- The production billing product must be registered by the factory. The app uses
-  only the slug-based checkout and verify URLs and contains no provider product
-  ID or secret.
-
-## Recommended next steps
-
-1. Register the production Sociobot paid product and exercise checkout return,
-   restore, refund, and revoked-license cases on the deployed origin.
-2. In the Android artifact work order, add a narrow native SAF tree bridge,
-   confirm persistent URI permission behavior on Android 11–16, and build/sign
-   the APK with the factory keystore.
-3. Test large mixed-media folders on physical low-memory Android devices and
-   tune the 32 MB full-hash threshold if field timing suggests it.
+1. Implement persistent Android SAF folder access, build/sign the Android
+   artifact, publish its download and SHA-256, and test it on supported Android
+   versions with USB/document-provider destinations.
+2. Register and enable the production Sociobot billing product; retest checkout,
+   return, restore, revoked, and refunded-license paths.
+3. Add server-side rate limiting to license verification and verify a burst
+   yields `429` with `Retry-After` at a documented threshold.
+4. Resolve the medium/low web findings in `.factory/verification.md`, rerun all
+   gates, and repeat deployed-byte identity verification.
