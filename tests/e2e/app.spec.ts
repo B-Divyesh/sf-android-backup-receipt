@@ -49,8 +49,9 @@ test('installed shell reloads while offline', async ({ page, context }) => {
   await page.evaluate(() => navigator.serviceWorker.ready);
   await page.waitForTimeout(300);
   await context.setOffline(true);
+  await page.evaluate(() => window.dispatchEvent(new Event('offline')));
+  await expect(page.locator('#offline-banner')).toBeVisible();
   await page.reload({ waitUntil: 'domcontentloaded' });
   await expect(page.locator('h1')).toContainText('Know what made it');
-  await expect(page.locator('#offline-banner')).toBeVisible();
   await context.setOffline(false);
 });

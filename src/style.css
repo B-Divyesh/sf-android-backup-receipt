@@ -80,7 +80,7 @@ p { margin-top: 0; }
 .steps { display: grid; grid-template-columns: 1fr 52px 1fr; max-width: 1280px; margin: 0 auto; align-items: center; }
 .step-card { position: relative; min-height: 365px; padding: 34px; border: 3px solid var(--ink); background: var(--paper); box-shadow: 7px 7px 0 var(--ink); display: flex; flex-direction: column; gap: 20px; }
 .step-card.is-ready { background: var(--sheet); box-shadow: 7px 7px 0 var(--safe); }
-.step-number { position: absolute; right: 18px; top: 12px; color: transparent; -webkit-text-stroke: 1.5px var(--ink); font: 900 62px/1 Arial Black,Arial,sans-serif; opacity: .45; }
+.step-number { position: absolute; right: 18px; top: 12px; color: var(--muted); font: 900 62px/1 Arial Black,Arial,sans-serif; }
 .step-card p { max-width: 48ch; color: var(--muted); }
 .step-card .button, .step-card .button-row { margin-top: auto; align-self: flex-start; }
 .file-button { position: relative; overflow: hidden; }

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://android-backup-receipt.sociobot.in/sitemap.xml
