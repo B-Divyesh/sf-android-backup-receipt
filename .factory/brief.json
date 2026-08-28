@@ -1,0 +1,23 @@
+{
+  "slug": "android-backup-receipt",
+  "title": "Android Backup Receipt",
+  "territory": "utilities",
+  "user": "Android owners moving phones or relying on self-hosted backup who need to know which local photos, files, and app-export folders are actually recoverable.",
+  "evidence": [
+    {
+      "url": "https://hn.algolia.com/api/v1/items/42648597",
+      "date": "2025-01-09",
+      "quote_or_summary": "Ask HN simply asks how people back up Android; it drew 82 comments, indicating no obvious trusted default workflow."
+    },
+    {
+      "url": "https://github.com/nextcloud/android/issues/15039",
+      "date": "2025-06-20",
+      "quote_or_summary": "Nextcloud Android's Auto Upload issue has 122 comments and 90 reactions around a local file no longer being found."
+    }
+  ],
+  "smallest_useful_product": "Android app that inventories chosen SAF folders, computes a privacy-preserving manifest, compares it with an attached USB/WebDAV/S3 destination, and produces a dated restore receipt with missing/changed counts.",
+  "artifact_class": "android",
+  "monetization": "one-time",
+  "constraints": "Use Android Storage Access Framework only; never claim full-device backup; hash efficiently under battery limits; encrypt destination credentials; disclose media metadata handling.",
+  "state": "RESEARCHED"
+}

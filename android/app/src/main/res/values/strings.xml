@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Android Backup Receipt</string>
+    <string name="title_activity_main">Android Backup Receipt</string>
+    <string name="package_name">in.sociobot.androidbackupreceipt</string>
+    <string name="custom_url_scheme">in.sociobot.androidbackupreceipt</string>
+</resources>

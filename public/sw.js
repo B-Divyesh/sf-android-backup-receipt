@@ -1,0 +1,84 @@
+const VERSION = 'backup-receipt-v1';
+const SHELL_CACHE = `${VERSION}-shell`;
+const ASSET_CACHE = `${VERSION}-assets`;
+const SHELL = [
+  '/',
+  '/index.html',
+  '/offline.html',
+  '/privacy/',
+  '/terms/',
+  '/assets/app.js',
+  '/assets/style.css',
+  '/assets/legal.css',
+  '/assets/receipt-inspection-768.webp',
+  '/assets/receipt-inspection-1280.webp',
+  '/manifest.webmanifest',
+  '/assets/icon-192.png',
+  '/assets/icon-512.png',
+  '/assets/icon-maskable-512.png'
+];
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(caches.open(SHELL_CACHE).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting()));
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil((async () => {
+    const names = await caches.keys();
+    await Promise.all(names.filter((name) => ![SHELL_CACHE, ASSET_CACHE].includes(name)).map((name) => caches.delete(name)));
+    await self.clients.claim();
+    const clients = await self.clients.matchAll({ type: 'window' });
+    clients.forEach((client) => client.postMessage({ type: 'APP_UPDATED', version: VERSION }));
+  })());
+});
+
+self.addEventListener('fetch', (event) => {
+  const request = event.request;
+  if (request.method !== 'GET') return;
+  const url = new URL(request.url);
+
+  if (url.origin === self.location.origin && url.pathname === '/online-check.txt') {
+    event.respondWith(fetch(request).catch(async () => {
+      const client = await self.clients.get(event.clientId);
+      client?.postMessage({ type: 'OFFLINE' });
+      return new Response('', { status: 503, statusText: 'Offline' });
+    }));
+    return;
+  }
+
+  if (url.origin !== self.location.origin) {
+    event.respondWith(fetch(request));
+    return;
+  }
+
+  if (request.mode === 'navigate') {
+    event.respondWith((async () => {
+      const cached = await caches.match(request);
+      if (cached) return cached;
+      try {
+        const response = await fetch(request);
+        const cache = await caches.open(SHELL_CACHE);
+        cache.put(request, response.clone());
+        return response;
+      } catch {
+        return (await caches.match('/index.html')) || (await caches.match('/offline.html'));
+      }
+    })());
+    return;
+  }
+
+  event.respondWith((async () => {
+    const cached = await caches.match(request);
+    if (cached) return cached;
+    try {
+      const response = await fetch(request);
+      if (response.ok) {
+        const cache = await caches.open(ASSET_CACHE);
+        cache.put(request, response.clone());
+      }
+      return response;
+    } catch {
+      return new Response('', { status: 503, statusText: 'Offline' });
+    }
+  })());
+});

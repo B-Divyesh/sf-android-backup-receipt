@@ -23,7 +23,7 @@ explicitly paints that background; browser chrome uses the same color.
 | `muted-ink` | `#57554E` | secondary copy (≥ 6.6:1 on paper) |
 | `sheet` | `#FFFDF7` | raised working surface |
 | `acid` | `#D7FF45` | primary action / active evidence |
-| `blue` | `#4C6FFF` | informational marks and focus |
+| `blue` | `#3049C3` | informational marks and focus |
 | `safe` | `#197247` | accounted-for status |
 | `warn` | `#9A5600` | changed/attention status |
 | `danger` | `#B32825` | missing/error status |
@@ -103,4 +103,3 @@ on 2026-08-28. The selected output is stored with its prompt sidecar in
 `assets/src/`; optimized WebP derivatives are shipped from `public/assets/`.
 Generated imagery is original to this product and used under the repository's
 MIT license. Icons and the receipt seal are hand-authored SVG/CSS shapes.
-
