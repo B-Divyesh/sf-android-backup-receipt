@@ -6,11 +6,11 @@ export default defineConfig({
     cssCodeSplit: false,
     rollupOptions: {
       output: {
-        entryFileNames: 'assets/app.js',
-        chunkFileNames: 'assets/[name].js',
+        entryFileNames: 'assets/app-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
         assetFileNames: (asset) => asset.names.some((name) => name.endsWith('.css'))
-          ? 'assets/style.css'
-          : 'assets/[name][extname]'
+          ? 'assets/style-[hash][extname]'
+          : 'assets/[name]-[hash][extname]'
       }
     }
   }

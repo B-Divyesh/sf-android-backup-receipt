@@ -1,0 +1,58 @@
+name: Publish Android artifact
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'android/**'
+      - 'src/**'
+      - 'public/**'
+      - 'index.html'
+      - 'capacitor.config.ts'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/android.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - run: npm ci
+      - run: npm run build
+      - run: npx cap sync android
+      - name: Build signed debug-key release artifacts
+        working-directory: android
+        env:
+          RELEASE_STORE_FILE: app/release.keystore
+          RELEASE_STORE_PASSWORD: android
+          RELEASE_KEY_ALIAS: upload
+          RELEASE_KEY_PASSWORD: android
+        run: |
+          keytool -genkeypair -keystore app/release.keystore -storepass android -keypass android -alias upload -keyalg RSA -keysize 2048 -validity 10000 -dname 'CN=Android Backup Receipt, OU=Sociobot, O=Sociobot, L=Internet, ST=Internet, C=IN'
+          ./gradlew assembleRelease bundleRelease
+          mkdir -p ../release
+          cp app/build/outputs/apk/release/app-release.apk ../release/android-backup-receipt-1.0.1.apk
+          cp app/build/outputs/bundle/release/app-release.aab ../release/android-backup-receipt-1.0.1.aab
+          cd ../release
+          sha256sum android-backup-receipt-1.0.1.apk android-backup-receipt-1.0.1.aab > SHA256SUMS
+      - name: Publish release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view v1.0.1 >/dev/null 2>&1 || gh release create v1.0.1 --title 'Android Backup Receipt 1.0.1' --notes 'SAF-capable Android build. Verify the APK SHA-256 before sideloading.'
+          gh release upload v1.0.1 release/android-backup-receipt-1.0.1.apk release/android-backup-receipt-1.0.1.aab release/SHA256SUMS --clobber

@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#F4F0E6" />
     <meta name="description" content="Check whether the photos and files you chose are present in a backup destination. Files stay on your device." />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="icon" href="/assets/icon-192.png" />
+    <link rel="icon" href="/assets/icon-192-a89d24be.png" />
     <title>Android Backup Receipt — verify before you wipe</title>
   </head>
   <body>
@@ -36,6 +36,7 @@
           <p class="lede">Compare the folders on your phone with a USB drive, synced WebDAV folder, S3 download, or saved manifest. Get a dated, portable receipt—not another backup promise.</p>
           <div class="hero-actions">
             <a class="button button-primary" href="#verify">Check my backup <span aria-hidden="true">↓</span></a>
+            <a class="button button-plain" href="https://github.com/B-Divyesh/sf-android-backup-receipt/releases/download/v1.0.1/android-backup-receipt-1.0.1.apk">Download Android APK</a>
             <a class="text-link" href="#limits">Read the honest limits</a>
           </div>
           <ul class="trust-strip" aria-label="Privacy and capability summary">
@@ -46,8 +47,8 @@
         </div>
         <figure class="hero-art">
           <picture>
-            <source srcset="/assets/receipt-inspection-768.webp 768w, /assets/receipt-inspection-1280.webp 1280w" sizes="(max-width: 760px) 100vw, 48vw" type="image/webp" />
-            <img src="/assets/receipt-inspection-1280.webp" width="1536" height="1024" alt="A blank phone and archive drive with photo and document tiles passing through a bright verification frame" decoding="async" fetchpriority="high" />
+            <source srcset="/assets/receipt-inspection-768-9fd624e0.webp 768w, /assets/receipt-inspection-1280-3ed3da66.webp 1280w" sizes="(max-width: 760px) 100vw, 48vw" type="image/webp" />
+            <img src="/assets/receipt-inspection-1280-3ed3da66.webp" width="1536" height="1024" alt="A blank phone and archive drive with photo and document tiles passing through a bright verification frame" decoding="async" fetchpriority="high" />
           </picture>
           <figcaption><span>Fig. 01</span> Device evidence → destination evidence</figcaption>
         </figure>
@@ -68,10 +69,8 @@
               <h3>Choose the phone folder</h3>
               <p>Select a folder such as <code>DCIM</code>, <code>Download</code>, or an app’s export folder.</p>
             </div>
-            <label class="button button-dark file-button">
-              Choose source folder
-              <input id="source-input" type="file" webkitdirectory multiple />
-            </label>
+            <button id="source-picker" class="button button-dark" type="button">Choose source folder</button>
+            <input id="source-input" class="picker-input" type="file" webkitdirectory multiple tabindex="-1" aria-hidden="true" />
             <div id="source-status" class="file-status" aria-live="polite">No source selected</div>
             <button id="export-source-manifest" class="text-button" type="button" hidden>Export source manifest</button>
           </article>
@@ -86,10 +85,8 @@
               <p>Pick the copied folder on USB/local storage, or import a manifest made on the destination.</p>
             </div>
             <div class="button-row">
-              <label class="button button-dark file-button">
-                Choose destination
-                <input id="destination-input" type="file" webkitdirectory multiple />
-              </label>
+              <button id="destination-picker" class="button button-dark" type="button">Choose destination</button>
+              <input id="destination-input" class="picker-input" type="file" webkitdirectory multiple tabindex="-1" aria-hidden="true" />
               <label class="button button-plain file-button">
                 Import manifest
                 <input id="manifest-input" type="file" accept="application/json,.json" />
@@ -165,10 +162,10 @@
           <li><span>02</span><div><h3>Your browser fingerprints files</h3><p>Small and medium files use full SHA-256. Files over 32 MB use clearly marked, low-memory sampled SHA-256.</p></div></li>
           <li><span>03</span><div><h3>You keep the receipt</h3><p>Export JSON for machine-readable evidence or CSV for inspection. No account is required.</p></div></li>
         </ol>
-        <aside class="remote-note">
+        <div class="remote-note" role="note">
           <span aria-hidden="true">↗</span>
           <div><strong>WebDAV or S3?</strong><p>Sync or download the destination folder, then choose it here. Alternatively, run this app where the destination is mounted and export its manifest. Direct cloud credentials are intentionally not collected by this static v1.</p></div>
-        </aside>
+        </div>
       </section>
 
       <section id="limits" class="limits" aria-labelledby="limits-title">
@@ -178,6 +175,19 @@
           <p>It verifies user-selected photos, downloads, documents, and app-export folders. It cannot see protected app data, messages inside apps, system settings, or anything you do not select.</p>
           <p>Matching filenames and bytes are strong evidence, not a guarantee that a remote provider will retain them forever. Keep two copies of irreplaceable files.</p>
         </div>
+      </section>
+
+      <section class="apk-install" aria-labelledby="apk-title">
+        <p class="eyebrow">Android app / SAF</p>
+        <h2 id="apk-title">Inspect folders with Android’s own picker.</h2>
+        <p>The Android app asks you to select each source or destination tree. It keeps only that selected-tree permission, so it cannot scan your full device or protected app data.</p>
+        <ol>
+          <li>Download the APK and confirm the published <a href="https://github.com/B-Divyesh/sf-android-backup-receipt/releases/download/v1.0.1/SHA256SUMS">SHA-256 checksum</a>.</li>
+          <li>Open it on Android and allow installation from your browser or file manager if Android asks.</li>
+          <li>Choose the phone folder and its copied destination in the Android file picker, then issue the receipt.</li>
+        </ol>
+        <a class="button button-primary" href="https://github.com/B-Divyesh/sf-android-backup-receipt/releases/download/v1.0.1/android-backup-receipt-1.0.1.apk">Download APK (v1.0.1)</a>
+        <p class="fine-print">Not on Google Play yet. The APK is signed with the workflow’s generated upload key; a future Play listing will use the owner’s upload key.</p>
       </section>
 
       <section id="unlock" class="unlock" aria-labelledby="unlock-title">

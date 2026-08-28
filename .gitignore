@@ -7,3 +7,4 @@ graphify-out/
 test-results/
 playwright-report/
 artifacts-*.png
+android/app/release.keystore

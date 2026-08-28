@@ -43,8 +43,23 @@ test('core receipt flow works at mobile width', async ({ page }) => {
 test('has no serious accessibility violations', async ({ page }) => {
   await page.goto('/');
   const results = await new AxeBuilder({ page: page as never }).analyze();
-  const serious = results.violations.filter((violation) => ['serious', 'critical'].includes(violation.impact || ''));
-  expect(serious).toEqual([]);
+  expect(results.violations).toEqual([]);
+});
+
+test('folder controls retain the browser fallback and mobile targets meet the touch baseline', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  const chooser = page.waitForEvent('filechooser');
+  await page.locator('#source-picker').click();
+  await chooser;
+
+  for (const selector of ['.wordmark', 'footer a']) {
+    const targets = await page.locator(selector).all();
+    for (const target of targets) {
+      const box = await target.boundingBox();
+      expect(box?.height).toBeGreaterThanOrEqual(44);
+    }
+  }
 });
 
 test('installed shell reloads while offline', async ({ page, context }) => {

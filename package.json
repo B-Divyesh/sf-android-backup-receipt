@@ -9,10 +9,11 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && node scripts/postbuild.mjs",
+    "lint": "tsc --noEmit",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "vitest run tests/core.test.ts && playwright test",
-    "test:unit": "vitest run tests/core.test.ts",
+    "test": "vitest run tests/*.test.ts && playwright test",
+    "test:unit": "vitest run tests/*.test.ts",
     "test:e2e": "playwright test"
   },
   "devDependencies": {

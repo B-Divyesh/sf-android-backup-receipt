@@ -13,7 +13,7 @@ Production URL: <https://android-backup-receipt.sociobot.in>
 
 ## What works
 
-- Source and destination folder selection through the browser file picker
+- Android Storage Access Framework folder selection in the APK (with persistent selected-tree access when the provider supports it), plus browser folder selection in the PWA
 - Full SHA-256 for files up to 32 MB; disclosed sampled SHA-256 for larger files
 - Missing, changed, accounted-for, extra, and category totals
 - Portable source/destination manifests for mounted or synced WebDAV/S3 data
@@ -49,18 +49,27 @@ npm run build
 
 Preview the production output with `npm run preview`.
 
-## Android wrapper
+## Android APK
 
-The checked-in `android/` project is a Capacitor 7 skeleton with application ID
-`in.sociobot.androidbackupreceipt`. Refresh it after a web build with:
+The signed Android build has application ID `in.sociobot.androidbackupreceipt`.
+It uses Android’s Storage Access Framework (`ACTION_OPEN_DOCUMENT_TREE`) for
+both source and destination folders; it does not request broad storage access.
+Download the APK and its checksum from the [v1.0.1 release](https://github.com/B-Divyesh/sf-android-backup-receipt/releases/tag/v1.0.1).
+Android may ask you to allow installation from the browser or file manager that
+opened the APK. It is not on Google Play yet.
+
+The release workflow builds both APK and AAB with JDK 17, generates a signing
+key inside GitHub Actions, and publishes `SHA256SUMS`. A Play Store release must
+replace that generated key with the owner’s upload key. Refresh native assets after a web build with:
 
 ```sh
 npm run build
 npx cap sync android
 ```
 
-An APK is intentionally left to the later Android artifact work order. The web
-build is the deployment target for this work order.
+For a local Android release build, provide `android/app/release.keystore` (or
+the `RELEASE_STORE_*` environment variables used by the workflow) before running
+`./gradlew assembleRelease` from `android/`.
 
 ## Privacy and billing
 

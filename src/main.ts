@@ -9,6 +9,7 @@ import {
   type Comparison,
   type Inventory
 } from './core.ts';
+import { cancelSafScan, chooseSafTree, listenForSafProgress, usesNativeSaf } from './native-saf.ts';
 
 const PRODUCT_SLUG = 'android-backup-receipt';
 const BILLING_BASE = 'https://api.sociobot.in/api/v1';
@@ -25,6 +26,8 @@ function element<T extends HTMLElement>(id: string): T {
 const sourceInput = element<HTMLInputElement>('source-input');
 const destinationInput = element<HTMLInputElement>('destination-input');
 const manifestInput = element<HTMLInputElement>('manifest-input');
+const sourcePicker = element<HTMLButtonElement>('source-picker');
+const destinationPicker = element<HTMLButtonElement>('destination-picker');
 const sourceStatus = element<HTMLDivElement>('source-status');
 const destinationStatus = element<HTMLDivElement>('destination-status');
 const sourceCard = element<HTMLElement>('source-card');
@@ -89,6 +92,19 @@ function updateReadiness(): void {
   }
 }
 
+function acceptInventory(kind: 'source' | 'destination', inventory: Inventory): void {
+  const bytes = inventory.files.reduce((sum, file) => sum + file.size, 0);
+  const status = kind === 'source' ? sourceStatus : destinationStatus;
+  const card = kind === 'source' ? sourceCard : destinationCard;
+  if (kind === 'source') sourceInventory = inventory;
+  else destinationInventory = inventory;
+  void saveActiveInventory(kind, inventory);
+  status.textContent = `${inventory.label} / ${inventory.files.length.toLocaleString()} files / ${formatBytes(bytes)}`;
+  card.classList.add('is-ready');
+  scanPanel.hidden = true;
+  updateReadiness();
+}
+
 async function scanFiles(kind: 'source' | 'destination', files: FileList): Promise<void> {
   if (files.length === 0) {
     const status = kind === 'source' ? sourceStatus : destinationStatus;
@@ -100,7 +116,6 @@ async function scanFiles(kind: 'source' | 'destination', files: FileList): Promi
   const controller = scanController;
   const label = folderLabel(Array.from(files), kind === 'source' ? 'Source folder' : 'Destination folder');
   const status = kind === 'source' ? sourceStatus : destinationStatus;
-  const card = kind === 'source' ? sourceCard : destinationCard;
   scanPanel.hidden = false;
   scanLabel.textContent = kind === 'source' ? 'Inventorying source…' : 'Inventorying destination…';
   status.textContent = `Reading ${files.length.toLocaleString()} files…`;
@@ -114,14 +129,7 @@ async function scanFiles(kind: 'source' | 'destination', files: FileList): Promi
       progressTrack.setAttribute('aria-valuenow', String(percent));
     }, controller.signal);
     if (controller !== scanController) return;
-    const bytes = inventory.files.reduce((sum, file) => sum + file.size, 0);
-    if (kind === 'source') sourceInventory = inventory;
-    else destinationInventory = inventory;
-    void saveActiveInventory(kind, inventory);
-    status.textContent = `${label} / ${inventory.files.length.toLocaleString()} files / ${formatBytes(bytes)}`;
-    card.classList.add('is-ready');
-    scanPanel.hidden = true;
-    updateReadiness();
+    acceptInventory(kind, inventory);
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') {
       status.textContent = 'Scan cancelled. Choose the folder again when ready.';
@@ -132,11 +140,36 @@ async function scanFiles(kind: 'source' | 'destination', files: FileList): Promi
   }
 }
 
+async function scanSafTree(kind: 'source' | 'destination'): Promise<void> {
+  const status = kind === 'source' ? sourceStatus : destinationStatus;
+  scanPanel.hidden = false;
+  scanLabel.textContent = kind === 'source' ? 'Waiting for Android folder permission…' : 'Waiting for Android destination permission…';
+  scanCount.textContent = '0 / 0';
+  scanFile.textContent = 'Choose a folder in Android’s file picker';
+  progressBar.style.width = '0%';
+  status.textContent = 'Android will only read the folder you select.';
+  try {
+    const inventory = await chooseSafTree(kind);
+    acceptInventory(kind, inventory);
+  } catch (error) {
+    status.textContent = error instanceof Error ? error.message : 'Could not read this folder. Choose another folder.';
+    scanPanel.hidden = true;
+  }
+}
+
 sourceInput.addEventListener('change', () => {
   if (sourceInput.files) void scanFiles('source', sourceInput.files);
 });
 destinationInput.addEventListener('change', () => {
   if (destinationInput.files) void scanFiles('destination', destinationInput.files);
+});
+sourcePicker.addEventListener('click', () => {
+  if (usesNativeSaf()) void scanSafTree('source');
+  else sourceInput.click();
+});
+destinationPicker.addEventListener('click', () => {
+  if (usesNativeSaf()) void scanSafTree('destination');
+  else destinationInput.click();
 });
 manifestInput.addEventListener('change', async () => {
   const file = manifestInput.files?.[0];
@@ -155,7 +188,10 @@ manifestInput.addEventListener('change', async () => {
   }
 });
 
-element<HTMLButtonElement>('cancel-scan').addEventListener('click', () => scanController?.abort());
+element<HTMLButtonElement>('cancel-scan').addEventListener('click', () => {
+  scanController?.abort();
+  void cancelSafScan();
+});
 exportSourceButton.addEventListener('click', () => { if (sourceInventory) exportManifest(sourceInventory); });
 exportDestinationButton.addEventListener('click', () => { if (destinationInventory) exportManifest(destinationInventory); });
 
@@ -425,6 +461,17 @@ if (storedLicense) {
 
 void restoreActiveInventories().catch(() => {
   announce('Saved inventory could not be restored. You can start a new check.');
+});
+
+void listenForSafProgress((progress) => {
+  scanLabel.textContent = progress.kind === 'source' ? 'Inventorying source…' : 'Inventorying destination…';
+  scanCount.textContent = `${progress.current.toLocaleString()} / ${progress.total.toLocaleString()}`;
+  scanFile.textContent = progress.path || 'Preparing inventory';
+  const percent = progress.total === 0 ? 0 : Math.round((progress.current / progress.total) * 100);
+  progressBar.style.width = `${percent}%`;
+  progressTrack.setAttribute('aria-valuenow', String(percent));
+}).catch(() => {
+  // A browser build has no native plugin. The regular file picker remains available.
 });
 
 if ('serviceWorker' in navigator && import.meta.env.PROD) {

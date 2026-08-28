@@ -34,10 +34,10 @@ img { max-width: 100%; display: block; }
 :focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }
 
 .site-header { min-height: 72px; padding: 12px clamp(20px, 4vw, 64px); border-bottom: var(--rule); display: flex; align-items: center; gap: 32px; background: rgba(244,240,230,.96); }
-.wordmark { display: inline-flex; align-items: center; gap: 10px; font-family: Arial Black, Arial, sans-serif; font-weight: 900; letter-spacing: -.04em; text-decoration: none; }
+.wordmark { min-height: 48px; display: inline-flex; align-items: center; gap: 10px; padding: 6px; font-family: Arial Black, Arial, sans-serif; font-weight: 900; letter-spacing: -.04em; text-decoration: none; }
 .wordmark-mark { display: grid; place-items: center; width: 35px; height: 35px; background: var(--acid); border: var(--rule); box-shadow: 3px 3px 0 var(--ink); }
 nav { display: flex; gap: 28px; margin-left: auto; }
-nav a, .footer-links a { font-weight: 800; font-size: 14px; }
+nav a, .footer-links a { min-height: 44px; display: inline-flex; align-items: center; padding: 6px 2px; font-weight: 800; font-size: 14px; }
 .local-chip { padding: 7px 10px; border: 1.5px solid var(--ink); text-transform: uppercase; font-size: 12px; font-weight: 800; letter-spacing: .08em; background: var(--sheet); }
 
 .offline-banner { padding: 12px clamp(20px,4vw,64px); background: var(--blue); color: white; border-bottom: var(--rule); }
@@ -83,9 +83,7 @@ p { margin-top: 0; }
 .step-number { position: absolute; right: 18px; top: 12px; color: var(--muted); font: 900 62px/1 Arial Black,Arial,sans-serif; }
 .step-card p { max-width: 48ch; color: var(--muted); }
 .step-card .button, .step-card .button-row { margin-top: auto; align-self: flex-start; }
-.file-button { position: relative; overflow: hidden; }
-.file-button input { position: absolute; width: 1px; height: 1px; opacity: 0; }
-.file-button:focus-within { outline: 3px solid var(--blue); outline-offset: 4px; }
+.picker-input { position: fixed; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 .file-status { min-height: 54px; padding: 12px 0 0; border-top: 1px dashed var(--ink); font-size: 13px; overflow-wrap: anywhere; }
 .flow-arrow { font: 900 44px/1 Arial Black,sans-serif; text-align: center; }
 .scan-panel, .ready-panel { max-width: 1280px; margin: 36px auto 0; padding: 24px; border: var(--rule); background: var(--paper); box-shadow: 6px 6px 0 var(--ink); }
@@ -136,6 +134,11 @@ p { margin-top: 0; }
 .limits .eyebrow { color: var(--acid); }
 .limits-grid { max-width: 1000px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; font-size: 18px; }
 .limits-grid p { padding-top: 20px; border-top: 2px solid var(--acid); }
+
+.apk-install { padding: clamp(64px,8vw,108px) clamp(20px,8vw,128px); border-bottom: var(--rule); background: var(--paper); }
+.apk-install > * { max-width: 760px; }
+.apk-install ol { margin: 28px 0; padding-left: 28px; }
+.apk-install li { margin: 14px 0; }
 
 .unlock { padding: clamp(72px,9vw,120px) clamp(20px,8vw,128px); display: grid; grid-template-columns: 1fr 1fr; gap: clamp(42px,7vw,96px); border-bottom: var(--rule); }
 .unlock > div:first-child { max-width: 670px; }
@@ -199,7 +202,7 @@ footer p { margin: 4px 0 0; color: #d3d0c6; }
 
 @media print {
   body { background: white; }
-  .site-header,.hero,.section-heading,.steps,.scan-panel,.ready-panel,.empty-guidance,.how,.limits,.unlock,footer,.receipt-actions,.offline-banner,.toast { display: none !important; }
+  .site-header,.hero,.section-heading,.steps,.scan-panel,.ready-panel,.empty-guidance,.how,.limits,.apk-install,.unlock,footer,.receipt-actions,.offline-banner,.toast { display: none !important; }
   .workspace { padding: 0; border: 0; background: white; }
   .receipt { display: block !important; margin: 0; border: 2px solid; box-shadow: none; }
 }

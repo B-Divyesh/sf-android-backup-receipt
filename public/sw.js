@@ -1,4 +1,4 @@
-const VERSION = 'backup-receipt-v1';
+const VERSION = 'backup-receipt-__BUILD_ID__';
 const SHELL_CACHE = `${VERSION}-shell`;
 const ASSET_CACHE = `${VERSION}-assets`;
 const SHELL = [
@@ -7,15 +7,15 @@ const SHELL = [
   '/offline.html',
   '/privacy/',
   '/terms/',
-  '/assets/app.js',
-  '/assets/style.css',
-  '/assets/legal.css',
-  '/assets/receipt-inspection-768.webp',
-  '/assets/receipt-inspection-1280.webp',
+  '/assets/__APP_JS__',
+  '/assets/__STYLE_CSS__',
+  '/assets/legal-ff7db1a6.css',
+  '/assets/receipt-inspection-768-9fd624e0.webp',
+  '/assets/receipt-inspection-1280-3ed3da66.webp',
   '/manifest.webmanifest',
-  '/assets/icon-192.png',
-  '/assets/icon-512.png',
-  '/assets/icon-maskable-512.png'
+  '/assets/icon-192-a89d24be.png',
+  '/assets/icon-512-22de8196.png',
+  '/assets/icon-maskable-512-0fb5b020.png'
 ];
 
 self.addEventListener('install', (event) => {
