@@ -117,6 +117,7 @@ async function scanFiles(kind: 'source' | 'destination', files: FileList): Promi
     const bytes = inventory.files.reduce((sum, file) => sum + file.size, 0);
     if (kind === 'source') sourceInventory = inventory;
     else destinationInventory = inventory;
+    void saveActiveInventory(kind, inventory);
     status.textContent = `${label} / ${inventory.files.length.toLocaleString()} files / ${formatBytes(bytes)}`;
     card.classList.add('is-ready');
     scanPanel.hidden = true;
@@ -142,6 +143,7 @@ manifestInput.addEventListener('change', async () => {
   if (!file) return;
   try {
     destinationInventory = parseManifest(JSON.parse(await file.text()));
+    void saveActiveInventory('destination', destinationInventory);
     destinationStatus.textContent = `${destinationInventory.label} manifest / ${destinationInventory.files.length.toLocaleString()} files`;
     destinationCard.classList.add('is-ready');
     updateReadiness();
@@ -230,6 +232,7 @@ element<HTMLButtonElement>('new-check').addEventListener('click', () => {
   sourceCard.classList.remove('is-ready');
   destinationCard.classList.remove('is-ready');
   receiptElement.hidden = true;
+  void clearActiveInventories();
   updateReadiness();
   sourceInput.focus();
 });
@@ -289,11 +292,51 @@ licenseForm.addEventListener('submit', (event) => {
 
 function openDatabase(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('android-backup-receipt', 1);
-    request.onupgradeneeded = () => request.result.createObjectStore('history', { keyPath: 'checkedAt' });
+    const request = indexedDB.open('android-backup-receipt', 2);
+    request.onupgradeneeded = () => {
+      if (!request.result.objectStoreNames.contains('history')) request.result.createObjectStore('history', { keyPath: 'checkedAt' });
+      if (!request.result.objectStoreNames.contains('active')) request.result.createObjectStore('active', { keyPath: 'kind' });
+    };
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
   });
+}
+
+async function saveActiveInventory(kind: 'source' | 'destination', inventory: Inventory): Promise<void> {
+  const database = await openDatabase();
+  const transaction = database.transaction('active', 'readwrite');
+  transaction.objectStore('active').put({ kind, inventory, updatedAt: Date.now() });
+  transaction.oncomplete = () => database.close();
+}
+
+async function clearActiveInventories(): Promise<void> {
+  const database = await openDatabase();
+  const transaction = database.transaction('active', 'readwrite');
+  transaction.objectStore('active').clear();
+  transaction.oncomplete = () => database.close();
+}
+
+async function restoreActiveInventories(): Promise<void> {
+  const database = await openDatabase();
+  const transaction = database.transaction('active', 'readonly');
+  const request = transaction.objectStore('active').getAll();
+  const records = await new Promise<Array<{ kind: 'source' | 'destination'; inventory: Inventory }>>((resolve, reject) => {
+    request.onsuccess = () => resolve(request.result as Array<{ kind: 'source' | 'destination'; inventory: Inventory }>);
+    request.onerror = () => reject(request.error);
+  });
+  database.close();
+  for (const record of records) {
+    if (record.kind === 'source') {
+      sourceInventory = record.inventory;
+      sourceStatus.textContent = `${record.inventory.label} / ${record.inventory.files.length.toLocaleString()} files / restored local inventory`;
+      sourceCard.classList.add('is-ready');
+    } else {
+      destinationInventory = record.inventory;
+      destinationStatus.textContent = `${record.inventory.label} / ${record.inventory.files.length.toLocaleString()} files / restored local inventory`;
+      destinationCard.classList.add('is-ready');
+    }
+  }
+  updateReadiness();
 }
 
 async function saveHistory(result: Comparison): Promise<void> {
@@ -379,6 +422,10 @@ if (storedLicense) {
   element<HTMLInputElement>('license-input').value = storedLicense;
   void verifyLicense(storedLicense);
 }
+
+void restoreActiveInventories().catch(() => {
+  announce('Saved inventory could not be restored. You can start a new check.');
+});
 
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
   const hadControllerAtStart = Boolean(navigator.serviceWorker.controller);

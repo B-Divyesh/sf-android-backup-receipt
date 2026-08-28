@@ -65,9 +65,10 @@ build is the deployment target for this work order.
 ## Privacy and billing
 
 The app has no analytics, ad pixels, remote fonts, or third-party runtime
-scripts. Inventory data stays in memory unless the user exports it. Paid archive
-summaries use IndexedDB; the license and daily verification verdict use
-localStorage. License verification talks only to the Sociobot billing API.
+scripts. The two active inventory summaries are stored in IndexedDB so a check
+can resume; “Start another check” clears them. Paid archive summaries also use
+IndexedDB; the license and daily verification verdict use localStorage. License
+verification talks only to the Sociobot billing API.
 
 See [/privacy](https://android-backup-receipt.sociobot.in/privacy/) and
 [/terms](https://android-backup-receipt.sociobot.in/terms/).

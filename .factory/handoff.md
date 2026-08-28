@@ -14,7 +14,9 @@
   dated JSON receipt, CSV issue export (formula-injection guarded), and print
   view.
 - Empty, scanning, cancellation, invalid-manifest, read-error, offline, and
-  success states. The mobile layout was exercised at 390 × 844.
+  success states. Active inventory summaries use last-write-wins IndexedDB so a
+  check can resume after refresh; “Start another check” clears them. The mobile
+  layout was exercised at 390 × 844.
 - Installable PWA: 192/512/maskable icons, versioned app-shell cache, cached
   legal pages, connectivity status, and update notification.
 - Optional $7 one-time Migration Kit wired to the Sociobot checkout/verify
@@ -44,10 +46,10 @@ Latest local results on 2026-08-28:
 - Playwright checks: source/destination hashing and discrepancy receipt at
   390 px; axe scan with zero serious/critical violations; offline reload.
 - `npm run build`: passed; output root is `dist/` with `dist/index.html`.
-- Initial assets: 15.1 KB JS, 13.6 KB CSS, 28 KB mobile hero WebP (all raw,
+- Initial assets: 16.3 KB JS, 13.6 KB CSS, 28 KB mobile hero WebP (all raw,
   before transfer compression). No runtime fonts or third-party scripts.
 - Lighthouse mobile against the production preview: Performance 100,
-  Accessibility 100, Best Practices 100, SEO 100; FCP 1.0 s, LCP 1.4 s,
+  Accessibility 100, Best Practices 100, SEO 100; FCP 0.9 s, LCP 1.2 s,
   Total Blocking Time 0 ms, CLS 0.
 - `npm audit`: 0 vulnerabilities.
 - Console smoke test: no page errors or error-level console messages.

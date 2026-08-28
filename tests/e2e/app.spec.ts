@@ -35,6 +35,9 @@ test('core receipt flow works at mobile width', async ({ page }) => {
   await expect(page.locator('#accounted-count')).toHaveText('1');
   await expect(page.locator('#changed-count')).toHaveText('1');
   await expect(page.locator('#receipt-conclusion')).toContainText('Do not wipe');
+  await page.reload();
+  await expect(page.locator('#ready-panel')).toBeVisible();
+  await expect(page.locator('#source-status')).toContainText('restored local inventory');
 });
 
 test('has no serious accessibility violations', async ({ page }) => {
