@@ -58,7 +58,7 @@ Download the APK and its checksum from the [v1.0.1 release](https://github.com/B
 Android may ask you to allow installation from the browser or file manager that
 opened the APK. It is not on Google Play yet.
 
-The release workflow builds both APK and AAB with JDK 17, generates a signing
+The release workflow builds both APK and AAB with JDK 21, generates a signing
 key inside GitHub Actions, and publishes `SHA256SUMS`. A Play Store release must
 replace that generated key with the owner’s upload key. Refresh native assets after a web build with:
 
