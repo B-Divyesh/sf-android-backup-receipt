@@ -1,64 +1,111 @@
-# Android Backup Receipt — independent verification handoff
+# Android Backup Receipt — repair handoff
 
-## Verdict: FAIL
+## Verdict: repaired and deployed
 
-Candidate `83c9b945aa4db1c086300923909ce7e93601e162` was independently tested on
-2026-08-28 against <https://android-backup-receipt.sociobot.in>. The deployed
-site is byte-for-byte the candidate build (19/19 generated files matched), but
-the candidate is not acceptable as the contracted Android product.
+Repair commits: `244c7c3`, `e9d7961`, and `7c50c1f` on `main`.
 
-Blocking findings:
+Production: <https://android-backup-receipt.sociobot.in>
 
-1. **Critical:** no APK/AAB, download, or native SAF implementation exists; the
-   checked-in Android project is only a Capacitor `BridgeActivity` wrapper.
-2. **High:** the advertised production checkout returns HTTP 404
-   (`{"error":"enabled factory product","status":404}`).
-3. **High:** 80 rapid license-verification requests all returned 200; no 429 or
-   `Retry-After` was observed (threshold is greater than 80).
+Android artifact: [v1.0.1 release](https://github.com/B-Divyesh/sf-android-backup-receipt/releases/tag/v1.0.1)
 
-Additional defects are missing CSP/frame/permissions policies, sub-44 px mobile
-navigation targets, non-immutable 30-second caching for all static assets, one
-moderate axe landmark finding, and a generic manifest MIME type. Full evidence
-and severity details are in `.factory/verification.md`.
+## Fixed verifier findings
 
-## What passed
+1. **C1 — Android artifact and SAF:** added a native Capacitor `SafInventory`
+   plugin. It launches `ACTION_OPEN_DOCUMENT_TREE`, persists the selected tree
+   grant when the provider supports it, recursively inventories only that tree
+   with `DocumentFile`, and uses the same 32 MiB full-versus-sampled SHA-256
+   boundary as the PWA. It has progress and cancellation events. No broad media
+   or storage permission was added. `MainActivity` registers the plugin and the
+   web workflow uses it automatically in the installed app while retaining the
+   browser picker fallback. The page links the downloadable APK and its
+   published SHA-256 checksum.
 
-- Clean checkout: `npm ci`, `npm test` (7 unit + 3 Playwright), `npm run build`
-  including TypeScript, `npm audit --omit=dev`, and `npx cap sync android`.
-- Core browser flow: normal discrepancies, 100% success, 32 MiB hashing
-  boundary, invalid input/recovery, cancellation, JSON/CSV export, persistence,
-  clear/reset, invalid license handling, and privacy/legal pages.
-- Desktop 1440 × 900 and mobile 390 × 844 responsive checks; keyboard traversal,
-  visible focus, reduced motion, no horizontal overflow, no console/page errors.
-- Zero serious/critical axe violations.
-- Live Lighthouse mobile: 100 Performance, 100 Accessibility, 100 Best
-  Practices, 100 SEO; LCP 1.1 s, TBT 91 ms, CLS 0.
-- Offline reload and a simulated service-worker update with visible Reload toast.
-- Privacy network check: no upload, analytics, remote font, or unexpected third
-  party request; only explicit license verification contacted Sociobot API.
+   GitHub Actions run
+   [33158473722](https://github.com/B-Divyesh/sf-android-backup-receipt/actions/runs/33158473722)
+   succeeded on 2026-08-28 and released a 16,413,660-byte APK and 16,257,671-byte
+   AAB. Downloaded APK SHA-256:
 
-## Reproduce
+   ```text
+   c2115675ef67c2750bbd4b4f9d530ee0bbd254142ed4945479ea322d8e00e1aa
+   ```
+
+   `aapt dump badging` confirms package
+   `in.sociobot.androidbackupreceipt`, version `1.0.1` / code `2`, compile SDK
+   35, label `Android Backup Receipt`, and the APK contains `classes.dex`,
+   `AndroidManifest.xml`, and the offline app shell.
+
+2. **H1 — checkout:** live `GET
+   https://api.sociobot.in/api/v1/products/android-backup-receipt/checkout`
+   returns `303` to the hosted Dodo checkout. Existing one-time $7 disclosure,
+   return-token storage, restore field, and background verification are intact.
+
+3. **H2 — verification throttling:** a controlled live sequential burst of
+   invalid license values received `429` at request 31 with `Retry-After: 0`.
+   Rate limiting is enforced by the billing service, not imitated in the browser.
+
+4. **M1/M3/L2 — static hardening:** `staticwebapp.config.json` sends CSP
+   (`frame-ancestors 'none'`), `X-Frame-Options: DENY`, a restrictive
+   `Permissions-Policy`, and `nosniff`. Vite emits fingerprinted app JS/CSS;
+   original images, icons, and legal CSS have content fingerprints. `/assets/*`
+   is immutable for one year, `/sw.js` is no-store, and the manifest serves as
+   `application/manifest+json`.
+
+5. **M2/L1 — accessibility:** mobile wordmark/footer links are at least 44 px
+   tall (live 390 px: 48, 44, 44, 44). The nested complementary landmark is a
+   non-landmark note. Playwright axe now requires zero violations.
+
+## Regression coverage
+
+- `tests/android-bridge.test.ts` asserts the native SAF intent, persistent
+  grant, lack of broad storage permissions, native hash policy, bridge
+  registration, progress/cancel events, and response configuration.
+- Playwright covers the browser picker fallback, 390 px target sizes, zero axe
+  violations, source/destination comparison, persistence, and offline reload.
+- Existing core format, comparison, CSV-safety, and hash-boundary coverage is
+  preserved.
+
+## Verification evidence
+
+From a clean install, all of the following passed on 2026-08-28:
 
 ```sh
 npm ci
+npm run lint
 npm test
-npm run build
 npm audit --omit=dev
+npm run build
 npx cap sync android
 ```
 
-The repository has no lint script. `android/gradlew assembleDebug` could not be
-executed in this verifier image because no Java/JDK is installed; this is not
-the reason for the FAIL verdict.
+Results: 10 Vitest assertions, 4 Playwright tests, 0 audit vulnerabilities,
+25.47 KB raw JS, and 13.84 KB raw CSS. Native Java compilation passed with
+`ANDROID_HOME=/usr/lib/android-sdk ./gradlew :app:compileReleaseJavaWithJavac`;
+release-signing validation passed, and the release workflow performed full
+`assembleRelease bundleRelease`.
 
-## Required next steps
+Production checks passed:
 
-1. Implement persistent Android SAF folder access, build/sign the Android
-   artifact, publish its download and SHA-256, and test it on supported Android
-   versions with USB/document-provider destinations.
-2. Register and enable the production Sociobot billing product; retest checkout,
-   return, restore, revoked, and refunded-license paths.
-3. Add server-side rate limiting to license verification and verify a burst
-   yields `429` with `Retry-After` at a documented threshold.
-4. Resolve the medium/low web findings in `.factory/verification.md`, rerun all
-   gates, and repeat deployed-byte identity verification.
+- `verify-url.sh`: HTTP 200, 703 ms, no console/page errors, title/lang/one h1/
+  main present, no missing image alt text.
+- First-load network capture reached only the product origin; no uploads,
+  analytics, remote fonts, or third-party runtime requests occurred.
+- Keyboard Tab reaches skip, navigation, both folder actions, import, APK/
+  checksum, and checkout. Desktop 1440 px and mobile 390 px had no overflow.
+- Offline reload remains covered with Playwright `context.setOffline(true)`;
+  the versioned service worker update toast remains in place.
+- Live headers confirm CSP/frame/permissions policy, manifest MIME, immutable
+  hashed asset caching, and no-store service-worker caching.
+- Generated `dist/` byte identity passed **19/19** public files (the platform-
+  consumed deployment configuration is intentionally not served).
+- Mobile Lighthouse JSON: Performance 100, Accessibility 100, Best Practices
+  100, SEO 100; LCP 1,209 ms, TBT 0 ms, CLS 0.
+
+## Known gap / next step
+
+The APK was compiled, signed, downloaded, unpacked, and manifest-checked, but
+an interactive physical-device/document-provider pass is not possible in this
+container. Before a Play Store submission, test persistent tree access against
+the intended Android versions and USB/document providers, and replace the
+workflow-generated signing key with the owner’s protected upload key. The PWA,
+static deployment class, pricing, researched scope, and free export behavior
+remain unchanged.
