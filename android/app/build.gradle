@@ -18,7 +18,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file(System.getenv("RELEASE_STORE_FILE") ?: "release.keystore")
+            storeFile rootProject.file(System.getenv("RELEASE_STORE_FILE") ?: "app/release.keystore")
             storePassword System.getenv("RELEASE_STORE_PASSWORD") ?: "android"
             keyAlias System.getenv("RELEASE_KEY_ALIAS") ?: "upload"
             keyPassword System.getenv("RELEASE_KEY_PASSWORD") ?: "android"
