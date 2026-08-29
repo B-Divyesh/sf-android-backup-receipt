@@ -1,0 +1,29 @@
+
+> android-backup-receipt@1.0.3 test
+> vitest run tests/*.test.ts && playwright test
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/android-bridge.test.ts (6 tests) 88ms
+ ✓ tests/claims-contract.test.ts (2 tests) 87ms
+ ✓ tests/core.test.ts (10 tests) 759ms
+   ✓ hash policy > @claim:hash-boundary uses full SHA-256 through 32 MiB and sampled SHA-256 above it  620ms
+
+ Test Files  3 passed (3)
+      Tests  18 passed (18)
+   Start at  21:33:59
+   Duration  2.23s (transform 353ms, setup 0ms, collect 558ms, tests 934ms, environment 1ms, prepare 1.21s)
+
+[WebServer] (node:5213) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 21 tests using 1 worker
+(node:5274) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5274) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+·····················
+  21 passed (55.0s)

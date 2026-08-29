@@ -1,0 +1,54 @@
+
+> android-backup-receipt@1.0.3 lint
+> tsc --noEmit
+
+
+> android-backup-receipt@1.0.3 build
+> tsc --noEmit && vite build && node scripts/postbuild.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 7 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                 16.57 kB │ gzip:  4.73 kB
+dist/assets/style-Ch_lQprv.css  18.50 kB │ gzip:  4.60 kB
+dist/assets/app-jOZXOY7t.js     33.49 kB │ gzip: 11.90 kB
+✓ built in 460ms
+found 0 vulnerabilities
+✔ Copying web assets from dist to android/app/src/main/assets/public in 11.54ms
+✔ Creating capacitor.config.json in android/app/src/main/assets in 645.60μs
+✔ copy android in 21.65ms
+✔ Updating Android plugins in 1.53ms
+✔ update android in 23.46ms
+[info] Sync finished in 0.06s
+DIST_BUDGETS
+62232 dist/assets/receipt-inspection-1280-3ed3da66.webp
+41454 dist/assets/receipt-og-1200x630-84bd4a44.webp
+33491 dist/assets/app-jOZXOY7t.js
+28160 dist/assets/receipt-inspection-768-9fd624e0.webp
+18503 dist/assets/style-Ch_lQprv.css
+16567 dist/index.html
+16567 dist/demo.html
+14170 dist/assets/apple-touch-180-e257b61a.png
+12391 dist/assets/icon-512-22de8196.png
+11126 dist/assets/icon-maskable-512-0fb5b020.png
+10273 dist/assets/icon-192-a89d24be.png
+4003 dist/privacy/index.html
+3689 dist/terms/index.html
+3064 dist/sw.js
+2655 dist/404.html
+2601 dist/offline.html
+1769 dist/assets/legal-ff7db1a6.css
+1488 dist/staticwebapp.config.json
+658 dist/manifest.webmanifest
+424 dist/assets/icon-source.svg
+400 dist/sitemap.xml
+353 dist/assets/icon-maskable-source.svg
+309 dist/route-focus.js
+88 dist/robots.txt
+7 dist/online-check.txt
+GZIP_BUDGETS
+11880 dist/assets/app-jOZXOY7t.js
+851 dist/assets/legal-ff7db1a6.css
+4624 dist/assets/style-Ch_lQprv.css

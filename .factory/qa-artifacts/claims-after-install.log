@@ -1,0 +1,383 @@
+CLAIM demo-sample-receipt
+npm run test:claims -- --grep @claim:demo-sample-receipt
+
+> android-backup-receipt@1.0.3 test:claims
+> playwright test --grep @claim:demo-sample-receipt
+
+[WebServer] (node:1193) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1236) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+(node:1254) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1254) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+·
+  1 passed (12.4s)
+RESULT demo-sample-receipt 0
+CLAIM demo-reset-isolation
+npm run test:claims -- --grep @claim:demo-reset-isolation
+
+> android-backup-receipt@1.0.3 test:claims
+> playwright test --grep @claim:demo-reset-isolation
+
+[WebServer] (node:1387) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1429) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+(node:1447) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1447) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+·
+  1 passed (10.1s)
+RESULT demo-reset-isolation 0
+CLAIM resume-reset
+npm run test:claims -- --grep @claim:resume-reset
+
+> android-backup-receipt@1.0.3 test:claims
+> playwright test --grep @claim:resume-reset
+
+[WebServer] (node:1593) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1637) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+(node:1655) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1655) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+·
+  1 passed (11.1s)
+RESULT resume-reset 0
+CLAIM local-only-files
+npm run test:claims -- --grep @claim:local-only-files
+
+> android-backup-receipt@1.0.3 test:claims
+> playwright test --grep @claim:local-only-files
+
+[WebServer] (node:1779) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1821) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+(node:1839) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1839) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+·
+  1 passed (8.8s)
+RESULT local-only-files 0
+CLAIM no-tracking-runtime
+npm run test:claims -- --grep @claim:no-tracking-runtime
+
+> android-backup-receipt@1.0.3 test:claims
+> playwright test --grep @claim:no-tracking-runtime
+
+[WebServer] (node:1969) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2011) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+(node:2029) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2029) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+·
+  1 passed (10.0s)
+RESULT no-tracking-runtime 0
+CLAIM receipt-exports
+npm run test:claims -- --grep @claim:receipt-exports
+
+> android-backup-receipt@1.0.3 test:claims
+> playwright test --grep @claim:receipt-exports
+
+[WebServer] (node:2172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2215) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+(node:2233) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2233) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+·
+  1 passed (9.8s)
+RESULT receipt-exports 0
+CLAIM sha256-evidence
+npm run test:claims -- --grep @claim:sha256-evidence
+
+> android-backup-receipt@1.0.3 test:claims
+> playwright test --grep @claim:sha256-evidence
+
+[WebServer] (node:2360) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2403) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+(node:2421) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2421) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+·
+  1 passed (9.8s)
+RESULT sha256-evidence 0
+CLAIM hash-boundary
+npm run test:unit -- -t @claim:hash-boundary
+
+> android-backup-receipt@1.0.3 test:unit
+> vitest run tests/*.test.ts -t @claim:hash-boundary
+
+
+ RUN  v3.2.7 /work/repo
+
+ ↓ tests/claims-contract.test.ts (2 tests | 2 skipped)
+ ↓ tests/android-bridge.test.ts (6 tests | 6 skipped)
+ ✓ tests/core.test.ts (10 tests | 9 skipped) 634ms
+   ✓ hash policy > @claim:hash-boundary uses full SHA-256 through 32 MiB and sampled SHA-256 above it  631ms
+
+ Test Files  1 passed | 2 skipped (3)
+      Tests  1 passed | 17 skipped (18)
+   Start at  21:31:33
+   Duration  2.23s (transform 504ms, setup 0ms, collect 578ms, tests 634ms, environment 1ms, prepare 1.29s)
+
+RESULT hash-boundary 0
+CLAIM comparison-manifest
+npm run test:claims -- --grep @claim:comparison-manifest
+
+> android-backup-receipt@1.0.3 test:claims
+> playwright test --grep @claim:comparison-manifest
+
+[WebServer] (node:2721) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2763) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+(node:2781) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2781) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+·
+  1 passed (9.9s)
+RESULT comparison-manifest 0
+CLAIM multi-folder-receipt
+npm run test:claims -- --grep @claim:multi-folder-receipt
+
+> android-backup-receipt@1.0.3 test:claims
+> playwright test --grep @claim:multi-folder-receipt
+
+[WebServer] (node:2905) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2947) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+(node:2983) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2983) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+·
+  1 passed (11.2s)
+RESULT multi-folder-receipt 0
+CLAIM saf-read-only
+npm run test:unit -- -t @claim:saf-read-only
+
+> android-backup-receipt@1.0.3 test:unit
+> vitest run tests/*.test.ts -t @claim:saf-read-only
+
+
+ RUN  v3.2.7 /work/repo
+
+ ↓ tests/claims-contract.test.ts (2 tests | 2 skipped)
+ ✓ tests/android-bridge.test.ts (6 tests | 5 skipped) 6ms
+ ↓ tests/core.test.ts (10 tests | 10 skipped)
+
+ Test Files  1 passed | 2 skipped (3)
+      Tests  1 passed | 17 skipped (18)
+   Start at  21:32:01
+   Duration  1.56s (transform 523ms, setup 0ms, collect 645ms, tests 6ms, environment 1ms, prepare 1.20s)
+
+RESULT saf-read-only 0
+CLAIM android-private-backup
+npm run test:unit -- -t @claim:android-private-backup
+
+> android-backup-receipt@1.0.3 test:unit
+> vitest run tests/*.test.ts -t @claim:android-private-backup
+
+
+ RUN  v3.2.7 /work/repo
+
+ ↓ tests/claims-contract.test.ts (2 tests | 2 skipped)
+ ✓ tests/android-bridge.test.ts (6 tests | 5 skipped) 11ms
+ ↓ tests/core.test.ts (10 tests | 10 skipped)
+
+ Test Files  1 passed | 2 skipped (3)
+      Tests  1 passed | 17 skipped (18)
+   Start at  21:32:03
+   Duration  1.58s (transform 495ms, setup 0ms, collect 706ms, tests 11ms, environment 1ms, prepare 1.12s)
+
+RESULT android-private-backup 0
+CLAIM android-updates
+npm run test:unit -- -t @claim:android-updates
+
+> android-backup-receipt@1.0.3 test:unit
+> vitest run tests/*.test.ts -t @claim:android-updates
+
+
+ RUN  v3.2.7 /work/repo
+
+ ↓ tests/claims-contract.test.ts (2 tests | 2 skipped)
+ ↓ tests/core.test.ts (10 tests | 10 skipped)
+ ✓ tests/android-bridge.test.ts (6 tests | 5 skipped) 85ms
+
+ Test Files  1 passed | 2 skipped (3)
+      Tests  1 passed | 17 skipped (18)
+   Start at  21:32:06
+   Duration  1.57s (transform 423ms, setup 0ms, collect 628ms, tests 85ms, environment 1ms, prepare 1.28s)
+
+RESULT android-updates 0
+CLAIM local-metadata-storage
+npm run test:claims -- --grep @claim:local-metadata-storage
+
+> android-backup-receipt@1.0.3 test:claims
+> playwright test --grep @claim:local-metadata-storage
+
+[WebServer] (node:3636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:3678) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+(node:3696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+·
+  1 passed (9.6s)
+RESULT local-metadata-storage 0
+CLAIM migration-archive
+npm run test:claims -- --grep @claim:migration-archive
+
+> android-backup-receipt@1.0.3 test:claims
+> playwright test --grep @claim:migration-archive
+
+[WebServer] (node:3819) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:3862) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+(node:3880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+·
+  1 passed (25.9s)
+RESULT migration-archive 0
+CLAIM license-revocation
+npm run test:claims -- --grep @claim:license-revocation
+
+> android-backup-receipt@1.0.3 test:claims
+> playwright test --grep @claim:license-revocation
+
+[WebServer] (node:4025) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4067) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+(node:4085) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4085) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+·
+  1 passed (11.6s)
+RESULT license-revocation 0
+CLAIM print-view
+npm run test:claims -- --grep @claim:print-view
+
+> android-backup-receipt@1.0.3 test:claims
+> playwright test --grep @claim:print-view
+
+[WebServer] (node:4228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4271) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+(node:4289) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4289) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+·
+  1 passed (9.8s)
+RESULT print-view 0
+CLAIM responsive-keyboard
+npm run test:claims -- --grep @claim:responsive-keyboard
+
+> android-backup-receipt@1.0.3 test:claims
+> playwright test --grep @claim:responsive-keyboard
+
+[WebServer] (node:4411) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4453) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+(node:4471) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4471) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+·
+  1 passed (10.1s)
+RESULT responsive-keyboard 0
+CLAIM offline-reload
+npm run test:claims -- --grep @claim:offline-reload
+
+> android-backup-receipt@1.0.3 test:claims
+> playwright test --grep @claim:offline-reload
+
+[WebServer] (node:4601) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+(node:4662) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4662) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+·
+  1 passed (10.5s)
+RESULT offline-reload 0
+CLAIM offline-exports
+npm run test:claims -- --grep @claim:offline-exports
+
+> android-backup-receipt@1.0.3 test:claims
+> playwright test --grep @claim:offline-exports
+
+[WebServer] (node:4791) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4833) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+(node:4851) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4851) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+·
+  1 passed (10.5s)
+RESULT offline-exports 0
+CLAIMS_TOTAL 20
+CLAIMS_FAILURES 0
