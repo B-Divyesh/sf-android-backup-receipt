@@ -57,7 +57,7 @@ jobs:
         run: |
           test -n "$RELEASE_STORE_PASSWORD" -a -n "$RELEASE_KEY_ALIAS" -a -n "$RELEASE_KEY_PASSWORD" || { echo 'Android signing secrets are required'; exit 1; }
           export ANDROID_VERSION_CODE=$((100000 + GITHUB_RUN_NUMBER))
-          export ANDROID_VERSION_NAME="1.0.2.${GITHUB_RUN_NUMBER}"
+          export ANDROID_VERSION_NAME="1.0.3.${GITHUB_RUN_NUMBER}"
           ./gradlew assembleRelease bundleRelease
           mkdir -p ../release
           cp app/build/outputs/apk/release/app-release.apk ../release/android-backup-receipt.apk
@@ -71,5 +71,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          RELEASE_TAG="android-v1.0.2-build-${GITHUB_RUN_NUMBER}"
-          gh release create "$RELEASE_TAG" --latest --title "Android Backup Receipt 1.0.2 (build ${GITHUB_RUN_NUMBER})" --notes "Signed with the stable factory key. Android version code: $((100000 + GITHUB_RUN_NUMBER)). Verify SHA256SUMS and SIGNING_CERT_SHA256.txt before sideloading." release/android-backup-receipt.apk release/android-backup-receipt.aab release/SHA256SUMS release/SIGNING_CERT_SHA256.txt
+          RELEASE_TAG="android-v1.0.3-build-${GITHUB_RUN_NUMBER}"
+          gh release create "$RELEASE_TAG" --latest --title "Android Backup Receipt 1.0.3 (build ${GITHUB_RUN_NUMBER})" --notes "Signed with the stable factory key. Android version code: $((100000 + GITHUB_RUN_NUMBER)). Verify SHA256SUMS and SIGNING_CERT_SHA256.txt before sideloading." release/android-backup-receipt.apk release/android-backup-receipt.aab release/SHA256SUMS release/SIGNING_CERT_SHA256.txt

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { FULL_HASH_LIMIT, MANIFEST_SCHEMA, categoryFor, compareInventories, comparisonCsv, formatBytes, hashFile, isSha256Hex, parseManifest, type Inventory } from '../src/core.ts';
+import { FULL_HASH_LIMIT, MANIFEST_SCHEMA, categoryFor, compareFolderPairs, compareInventories, comparisonCsv, formatBytes, hashFile, isSha256Hex, parseManifest, type Inventory } from '../src/core.ts';
 
 const source: Inventory = {
   schema: MANIFEST_SCHEMA,
@@ -31,6 +31,18 @@ describe('backup comparison', () => {
   it('treats an empty source honestly', () => {
     const empty = { ...source, files: [] };
     expect(compareInventories(empty, empty).coverage).toBe(0);
+  });
+
+  it('combines several folder pairs without losing per-pair results', () => {
+    const exact = { ...source, label: 'USB / DCIM' };
+    const partial = { ...source, label: 'USB / Documents', files: [source.files[0]] };
+    const result = compareFolderPairs([
+      { source: { ...source, label: 'Phone / DCIM' }, destination: exact },
+      { source: { ...source, label: 'Phone / Documents' }, destination: partial }
+    ], new Date('2026-08-29T18:00:00.000Z'));
+    expect(result).toMatchObject({ total: 6, accounted: 4, missing: 2, changed: 0, coverage: 66.7 });
+    expect(result.pairs).toHaveLength(2);
+    expect(result.issues[0].path).toContain('Phone / Documents /');
   });
 });
 

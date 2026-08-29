@@ -1,13 +1,14 @@
 import './style.css';
 import {
   buildInventory,
-  compareInventories,
+  compareFolderPairs,
   comparisonCsv,
   folderLabel,
   formatBytes,
   MANIFEST_SCHEMA,
   parseManifest,
   type Comparison,
+  type FolderPair,
   type Inventory
 } from './core.ts';
 import { cancelSafScan, chooseSafTree, listenForSafProgress, usesNativeSaf } from './native-saf.ts';
@@ -26,7 +27,23 @@ const DATABASE_NAME = `${storagePrefix}${PRODUCT_SLUG}`;
 const DAY = 86_400_000;
 
 document.documentElement.dataset.demo = String(demoMode);
-if (demoMode) document.title = 'Demo — Android Backup Receipt';
+
+function setMeta(selector: string, value: string): void {
+  document.querySelector<HTMLMetaElement>(selector)?.setAttribute('content', value);
+}
+
+if (demoMode) {
+  const demoUrl = 'https://android-backup-receipt.sociobot.in/demo';
+  const demoDescription = 'Review a four-file sample receipt with matched, missing, and changed files.';
+  document.title = 'Demo — Android Backup Receipt';
+  document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', demoUrl);
+  setMeta('meta[name="description"]', demoDescription);
+  setMeta('meta[property="og:title"]', 'Demo — Android Backup Receipt');
+  setMeta('meta[property="og:description"]', demoDescription);
+  setMeta('meta[property="og:url"]', demoUrl);
+  setMeta('meta[name="twitter:title"]', 'Demo — Android Backup Receipt');
+  setMeta('meta[name="twitter:description"]', demoDescription);
+}
 
 const demoSource: Inventory = {
   schema: MANIFEST_SCHEMA,
@@ -83,8 +100,34 @@ const receiptElement = element<HTMLElement>('receipt');
 const exportSourceButton = element<HTMLButtonElement>('export-source-manifest');
 const exportDestinationButton = element<HTMLButtonElement>('export-destination-manifest');
 
+const routeHeading = element<HTMLHeadingElement>('hero-title');
+if (demoMode) {
+  routeHeading.textContent = 'Review a sample backup receipt';
+  receiptElement.querySelector('.receipt-top > div')?.prepend(routeHeading);
+  receiptElement.parentElement?.prepend(receiptElement);
+}
+
+function focusRouteHeading(): void {
+  const heading = document.querySelector<HTMLHeadingElement>('h1');
+  if (!heading) return;
+  heading.focus({ preventScroll: true });
+  element<HTMLElement>('route-announcement').textContent = document.title;
+}
+
+document.querySelector<HTMLAnchorElement>('.hero-actions a[href="/demo"]')?.addEventListener('click', (event) => {
+  if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  history.pushState({ route: 'demo' }, '', '/demo');
+  location.reload();
+});
+
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) window.setTimeout(focusRouteHeading, 0);
+});
+
 let sourceInventory: Inventory | null = null;
 let destinationInventory: Inventory | null = null;
+let folderPairs: FolderPair[] = [];
 let comparison: Comparison | null = null;
 let scanController: AbortController | null = null;
 let isPremium = false;
@@ -113,20 +156,25 @@ function safeFilename(label: string): string {
 
 function exportManifest(inventory: Inventory): void {
   download(`${safeFilename(inventory.label)}-backup-manifest.json`, JSON.stringify(inventory, null, 2), 'application/json');
-  announce('Manifest exported. Keep it private: it contains filenames and fingerprints.');
+  announce('Folder record downloaded. Keep it private because it contains file names and fingerprints.');
 }
 
 function updateReadiness(): void {
   const source = sourceInventory;
   const destination = destinationInventory;
-  const ready = source !== null && destination !== null;
+  const currentReady = source !== null && destination !== null;
+  const currentIncomplete = (source !== null) !== (destination !== null);
+  const ready = currentReady || folderPairs.length > 0;
   readyPanel.hidden = !ready;
   emptyGuidance.hidden = sourceInventory !== null || destinationInventory !== null;
   exportSourceButton.hidden = sourceInventory === null;
   exportDestinationButton.hidden = destinationInventory === null;
-  if (ready && source && destination) {
-    readySummary.textContent = `${source.files.length.toLocaleString()} source files vs ${destination.files.length.toLocaleString()} destination files`;
-  }
+  element<HTMLButtonElement>('add-pair').hidden = !currentReady;
+  compareButton.disabled = currentIncomplete;
+  const pairCount = folderPairs.length + (currentReady ? 1 : 0);
+  if (currentReady && source && destination) readySummary.textContent = `${pairCount} folder ${pairCount === 1 ? 'pair' : 'pairs'} ready / ${source.files.length.toLocaleString()} phone files vs ${destination.files.length.toLocaleString()} backup files in the current pair`;
+  else if (currentIncomplete) readySummary.textContent = source ? 'Choose the backup folder for this pair.' : 'Choose the phone folder for this pair.';
+  else if (folderPairs.length > 0) readySummary.textContent = `${folderPairs.length} folder ${folderPairs.length === 1 ? 'pair' : 'pairs'} ready. Choose another pair or issue the receipt.`;
 }
 
 function acceptInventory(kind: 'source' | 'destination', inventory: Inventory): void {
@@ -143,11 +191,12 @@ function acceptInventory(kind: 'source' | 'destination', inventory: Inventory): 
 }
 
 function loadDemoData(): void {
+  folderPairs = [];
   sourceInventory = structuredClone(demoSource);
   destinationInventory = structuredClone(demoDestination);
   acceptInventory('source', sourceInventory);
   acceptInventory('destination', destinationInventory);
-  comparison = compareInventories(sourceInventory, destinationInventory, new Date('2026-08-29T09:02:00.000Z'));
+  comparison = compareFolderPairs([{ source: sourceInventory, destination: destinationInventory }], new Date('2026-08-29T09:02:00.000Z'));
   renderReceipt(comparison, false);
 }
 
@@ -160,10 +209,10 @@ async function scanFiles(kind: 'source' | 'destination', files: FileList): Promi
   scanController?.abort();
   scanController = new AbortController();
   const controller = scanController;
-  const label = folderLabel(Array.from(files), kind === 'source' ? 'Source folder' : 'Destination folder');
+  const label = folderLabel(Array.from(files), kind === 'source' ? 'Phone folder' : 'Backup folder');
   const status = kind === 'source' ? sourceStatus : destinationStatus;
   scanPanel.hidden = false;
-  scanLabel.textContent = kind === 'source' ? 'Inventorying source…' : 'Inventorying destination…';
+  scanLabel.textContent = kind === 'source' ? 'Reading phone folder…' : 'Reading backup folder…';
   status.textContent = `Reading ${files.length.toLocaleString()} files…`;
 
   try {
@@ -189,7 +238,7 @@ async function scanFiles(kind: 'source' | 'destination', files: FileList): Promi
 async function scanSafTree(kind: 'source' | 'destination'): Promise<void> {
   const status = kind === 'source' ? sourceStatus : destinationStatus;
   scanPanel.hidden = false;
-  scanLabel.textContent = kind === 'source' ? 'Waiting for Android folder permission…' : 'Waiting for Android destination permission…';
+  scanLabel.textContent = kind === 'source' ? 'Waiting for phone-folder permission…' : 'Waiting for backup-folder permission…';
   scanCount.textContent = '0 / 0';
   scanFile.textContent = 'Choose a folder in Android’s file picker';
   progressBar.style.width = '0%';
@@ -225,17 +274,17 @@ manifestInput.addEventListener('change', async () => {
     try {
       decoded = JSON.parse(await file.text());
     } catch {
-      throw new Error('That file is not valid JSON. Choose a manifest exported from this app.');
+      throw new Error('That file is not a valid folder record. Choose one downloaded from this app.');
     }
     destinationInventory = parseManifest(decoded);
     void saveActiveInventory('destination', destinationInventory);
-    destinationStatus.textContent = `${destinationInventory.label} manifest / ${destinationInventory.files.length.toLocaleString()} files`;
+    destinationStatus.textContent = `${destinationInventory.label} saved record / ${destinationInventory.files.length.toLocaleString()} files`;
     destinationCard.classList.add('is-ready');
     updateReadiness();
   } catch (error) {
     destinationInventory = null;
     destinationCard.classList.remove('is-ready');
-    destinationStatus.textContent = error instanceof Error ? error.message : 'Could not read that manifest.';
+    destinationStatus.textContent = error instanceof Error ? error.message : 'Could not read that folder record. Choose another file.';
     updateReadiness();
   }
 });
@@ -247,8 +296,57 @@ element<HTMLButtonElement>('cancel-scan').addEventListener('click', () => {
 exportSourceButton.addEventListener('click', () => { if (sourceInventory) exportManifest(sourceInventory); });
 exportDestinationButton.addEventListener('click', () => { if (destinationInventory) exportManifest(destinationInventory); });
 
+function renderFolderPairs(): void {
+  const panel = element<HTMLElement>('pair-list-panel');
+  const list = element<HTMLOListElement>('pair-list');
+  panel.hidden = folderPairs.length === 0;
+  list.replaceChildren(...folderPairs.map((pair, index) => {
+    const item = document.createElement('li');
+    const copy = document.createElement('span');
+    copy.textContent = `${pair.source.label} → ${pair.destination.label} / ${pair.source.files.length.toLocaleString()} phone files`;
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.className = 'text-button';
+    remove.textContent = `Remove pair ${index + 1}`;
+    remove.addEventListener('click', () => {
+      folderPairs.splice(index, 1);
+      void saveFolderPairs();
+      renderFolderPairs();
+      updateReadiness();
+      announce(`Folder pair ${index + 1} removed.`);
+    });
+    item.append(copy, remove);
+    return item;
+  }));
+}
+
+function resetCurrentPair(): void {
+  sourceInventory = null;
+  destinationInventory = null;
+  sourceInput.value = '';
+  destinationInput.value = '';
+  manifestInput.value = '';
+  sourceStatus.textContent = 'No phone folder selected';
+  destinationStatus.textContent = 'No backup folder selected';
+  sourceCard.classList.remove('is-ready');
+  destinationCard.classList.remove('is-ready');
+  receiptElement.hidden = true;
+}
+
+element<HTMLButtonElement>('add-pair').addEventListener('click', async () => {
+  if (!sourceInventory || !destinationInventory) return;
+  folderPairs.push({ source: structuredClone(sourceInventory), destination: structuredClone(destinationInventory) });
+  await saveFolderPairs();
+  await clearCurrentInventories();
+  resetCurrentPair();
+  renderFolderPairs();
+  updateReadiness();
+  sourcePicker.focus();
+  announce('Folder pair added. Choose another pair or issue the receipt.');
+});
+
 function renderReceipt(result: Comparison, scroll = true): void {
-  element<HTMLElement>('receipt-meta').textContent = `${new Date(result.checkedAt).toLocaleString()} / ${result.sourceLabel} → ${result.destinationLabel} / ${result.total.toLocaleString()} source files`;
+  element<HTMLElement>('receipt-meta').textContent = `${new Date(result.checkedAt).toLocaleString()} / ${result.sourceLabel} → ${result.destinationLabel} / ${result.total.toLocaleString()} phone files`;
   element<HTMLElement>('coverage-score').textContent = `${result.coverage}%`;
   element<HTMLElement>('accounted-count').textContent = result.accounted.toLocaleString();
   element<HTMLElement>('missing-count').textContent = result.missing.toLocaleString();
@@ -261,8 +359,20 @@ function renderReceipt(result: Comparison, scroll = true): void {
     const name = document.createElement('span');
     name.textContent = category.name;
     const count = document.createElement('span');
-    count.textContent = `${category.accounted}/${category.total} found`;
+    count.textContent = `${category.accounted}/${category.total} matched`;
     row.append(name, count);
+    return row;
+  }));
+
+  const pairResults = element<HTMLDivElement>('pair-results');
+  pairResults.replaceChildren(...(result.pairs ?? []).map((pair, index) => {
+    const row = document.createElement('div');
+    row.className = 'pair-result';
+    const label = document.createElement('strong');
+    label.textContent = `Pair ${index + 1}: ${pair.phoneFolder} → ${pair.backupFolder}`;
+    const counts = document.createElement('span');
+    counts.textContent = `${pair.accounted} matched · ${pair.missing} missing · ${pair.changed} changed · ${pair.extra} extra`;
+    row.append(label, counts);
     return row;
   }));
 
@@ -287,15 +397,17 @@ function renderReceipt(result: Comparison, scroll = true): void {
 
   const conclusion = element<HTMLElement>('receipt-conclusion');
   conclusion.textContent = result.missing + result.changed === 0
-    ? `All ${result.total.toLocaleString()} selected files are accounted for. Open representative destination files before wiping the source.`
-    : `Do not wipe the source yet: ${result.missing.toLocaleString()} missing and ${result.changed.toLocaleString()} changed files need attention.`;
+    ? `All ${result.total.toLocaleString()} selected files match. Open important backup files before wiping your phone.`
+    : `Do not wipe your phone yet: ${result.missing.toLocaleString()} missing and ${result.changed.toLocaleString()} changed files need attention.`;
   receiptElement.hidden = false;
   if (scroll) receiptElement.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
 }
 
 compareButton.addEventListener('click', () => {
-  if (!sourceInventory || !destinationInventory) return;
-  comparison = compareInventories(sourceInventory, destinationInventory);
+  const pairs = [...folderPairs];
+  if (sourceInventory && destinationInventory) pairs.push({ source: sourceInventory, destination: destinationInventory });
+  if (pairs.length === 0) return;
+  comparison = compareFolderPairs(pairs);
   renderReceipt(comparison);
   if (isPremium) void saveHistory(comparison).then(renderHistory);
 });
@@ -309,20 +421,13 @@ element<HTMLButtonElement>('export-csv').addEventListener('click', () => {
 });
 element<HTMLButtonElement>('print-receipt').addEventListener('click', () => window.print());
 element<HTMLButtonElement>('new-check').addEventListener('click', () => {
-  sourceInventory = null;
-  destinationInventory = null;
+  folderPairs = [];
   comparison = null;
-  sourceInput.value = '';
-  destinationInput.value = '';
-  manifestInput.value = '';
-  sourceStatus.textContent = 'No source selected';
-  destinationStatus.textContent = 'No destination selected';
-  sourceCard.classList.remove('is-ready');
-  destinationCard.classList.remove('is-ready');
-  receiptElement.hidden = true;
+  resetCurrentPair();
+  renderFolderPairs();
   void clearActiveInventories();
   updateReadiness();
-  sourceInput.focus();
+  sourcePicker.focus();
 });
 
 interface LicenseVerdict { token: string; valid: boolean; checkedAt: number; reason: string; }
@@ -339,7 +444,7 @@ async function verifyLicense(token: string): Promise<void> {
   const cached = cachedVerdict();
   if (cached?.token === token && cached.valid) setPremium(true);
   if (cached?.token === token && Date.now() - cached.checkedAt < DAY) {
-    status.textContent = cached.valid ? 'Migration Kit active on this device.' : 'License no longer active. The free verifier is still available.';
+    status.textContent = cached.valid ? 'Migration Kit active on this device.' : 'License no longer active. The free folder checker is still available.';
     return;
   }
   if (!navigator.onLine) {
@@ -354,7 +459,7 @@ async function verifyLicense(token: string): Promise<void> {
     const verdict = { token, valid: result.valid === true, checkedAt: Date.now(), reason: result.reason || 'invalid' };
     localStorage.setItem(VERDICT_KEY, JSON.stringify(verdict));
     setPremium(verdict.valid);
-    status.textContent = verdict.valid ? 'Migration Kit active on this device.' : 'License no longer active. The free verifier is still available; use the buy link to get a new license.';
+    status.textContent = verdict.valid ? 'Migration Kit active on this device.' : 'License no longer active. The free folder checker is still available; use the buy link to get a new license.';
   } catch {
     status.textContent = cached?.valid ? 'Migration Kit active; today’s online check could not finish.' : 'Could not verify right now. Check your connection and try again later.';
   }
@@ -400,6 +505,29 @@ async function saveActiveInventory(kind: 'source' | 'destination', inventory: In
   });
 }
 
+async function saveFolderPairs(): Promise<void> {
+  const database = await openDatabase();
+  const transaction = database.transaction('active', 'readwrite');
+  const store = transaction.objectStore('active');
+  if (folderPairs.length > 0) store.put({ kind: 'pairs', pairs: folderPairs, updatedAt: Date.now() });
+  else store.delete('pairs');
+  await new Promise<void>((resolve, reject) => {
+    transaction.oncomplete = () => { database.close(); resolve(); };
+    transaction.onerror = () => { database.close(); reject(transaction.error); };
+  });
+}
+
+async function clearCurrentInventories(): Promise<void> {
+  const database = await openDatabase();
+  const transaction = database.transaction('active', 'readwrite');
+  transaction.objectStore('active').delete('source');
+  transaction.objectStore('active').delete('destination');
+  await new Promise<void>((resolve, reject) => {
+    transaction.oncomplete = () => { database.close(); resolve(); };
+    transaction.onerror = () => { database.close(); reject(transaction.error); };
+  });
+}
+
 async function clearActiveInventories(): Promise<void> {
   const database = await openDatabase();
   const transaction = database.transaction('active', 'readwrite');
@@ -414,22 +542,25 @@ async function restoreActiveInventories(): Promise<void> {
   const database = await openDatabase();
   const transaction = database.transaction('active', 'readonly');
   const request = transaction.objectStore('active').getAll();
-  const records = await new Promise<Array<{ kind: 'source' | 'destination'; inventory: Inventory }>>((resolve, reject) => {
-    request.onsuccess = () => resolve(request.result as Array<{ kind: 'source' | 'destination'; inventory: Inventory }>);
+  const records = await new Promise<Array<{ kind: 'source' | 'destination' | 'pairs'; inventory?: Inventory; pairs?: FolderPair[] }>>((resolve, reject) => {
+    request.onsuccess = () => resolve(request.result as Array<{ kind: 'source' | 'destination' | 'pairs'; inventory?: Inventory; pairs?: FolderPair[] }>);
     request.onerror = () => reject(request.error);
   });
   database.close();
   for (const record of records) {
-    if (record.kind === 'source') {
+    if (record.kind === 'pairs' && Array.isArray(record.pairs)) {
+      folderPairs = record.pairs;
+    } else if (record.kind === 'source' && record.inventory) {
       sourceInventory = record.inventory;
-      sourceStatus.textContent = `${record.inventory.label} / ${record.inventory.files.length.toLocaleString()} files / restored local inventory`;
+      sourceStatus.textContent = `${record.inventory.label} / ${record.inventory.files.length.toLocaleString()} files / restored phone folder`;
       sourceCard.classList.add('is-ready');
-    } else {
+    } else if (record.kind === 'destination' && record.inventory) {
       destinationInventory = record.inventory;
-      destinationStatus.textContent = `${record.inventory.label} / ${record.inventory.files.length.toLocaleString()} files / restored local inventory`;
+      destinationStatus.textContent = `${record.inventory.label} / ${record.inventory.files.length.toLocaleString()} files / restored backup folder`;
       destinationCard.classList.add('is-ready');
     }
   }
+  renderFolderPairs();
   updateReadiness();
 }
 
@@ -533,14 +664,23 @@ if (demoMode) {
 }
 
 void restoreActiveInventories().then(() => {
-  if (demoMode) loadDemoData();
+  if (demoMode) {
+    loadDemoData();
+    window.setTimeout(focusRouteHeading, 0);
+  } else if (performance.getEntriesByType('navigation')[0] instanceof PerformanceNavigationTiming
+    && (performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming).type === 'back_forward') {
+    window.setTimeout(focusRouteHeading, 0);
+  }
 }).catch(() => {
-  if (demoMode) loadDemoData();
-  else announce('Saved inventory could not be restored. You can start a new check.');
+  if (demoMode) {
+    loadDemoData();
+    window.setTimeout(focusRouteHeading, 0);
+  }
+  else announce('Saved folder records could not be restored. Start a new check.');
 });
 
 void listenForSafProgress((progress) => {
-  scanLabel.textContent = progress.kind === 'source' ? 'Inventorying source…' : 'Inventorying destination…';
+  scanLabel.textContent = progress.kind === 'source' ? 'Reading phone folder…' : 'Reading backup folder…';
   scanCount.textContent = `${progress.current.toLocaleString()} / ${progress.total.toLocaleString()}`;
   scanFile.textContent = progress.path || 'Preparing inventory';
   const percent = progress.total === 0 ? 0 : Math.round((progress.current / progress.total) * 100);

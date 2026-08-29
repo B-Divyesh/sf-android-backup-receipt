@@ -49,6 +49,13 @@
     "sandbox": "Fresh /demo; assert every comparison count/category, import its exported source manifest, and observe 100% coverage."
   },
   {
+    "id": "multi-folder-receipt",
+    "claim": "Add several phone and backup folder pairs to one combined receipt.",
+    "where": "Workspace, receipt, README",
+    "test": "npm run test:claims -- --grep @claim:multi-folder-receipt",
+    "sandbox": "Fresh browser context; add one pair, reload it from local state, add a second pair, then assert per-pair rows and combined exported totals."
+  },
+  {
     "id": "saf-read-only",
     "claim": "The Android app uses persistent read-only selected-tree SAF access and requests no broad storage permission.",
     "where": "Android install section, privacy policy, README",
@@ -106,9 +113,16 @@
   },
   {
     "id": "offline-reload",
-    "claim": "The installable check works offline after the first visit.",
+    "claim": "The installable sample receipt reloads offline after the first visit.",
     "where": "README, manifest, offline status",
     "test": "npm run test:claims -- --grep @claim:offline-reload",
     "sandbox": "Fresh /?demo=1; verify standalone manifest icons, install the worker, go offline, reload, and assert the sample receipt remains visible."
+  },
+  {
+    "id": "offline-exports",
+    "claim": "Folder checks and both receipt downloads work offline after the first visit.",
+    "where": "Offline status, README",
+    "test": "npm run test:claims -- --grep @claim:offline-exports",
+    "sandbox": "Service-worker-controlled /?demo=1; go offline, issue the receipt, then download and assert both JSON and CSV files."
   }
 ]

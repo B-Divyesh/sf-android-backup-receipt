@@ -51,10 +51,10 @@ describe('Android update contract', () => {
     expect(workflow).toContain('secrets.ANDROID_RELEASE_STORE_PASSWORD');
     expect(workflow).not.toContain('keytool -genkeypair');
     expect(workflow).toContain('100000 + GITHUB_RUN_NUMBER');
-    expect(workflow).toContain('android-v1.0.2-build-${GITHUB_RUN_NUMBER}');
+    expect(workflow).toContain('android-v1.0.3-build-${GITHUB_RUN_NUMBER}');
     expect(workflow).not.toContain('gh release upload');
     expect(gradle).toContain('System.getenv("ANDROID_VERSION_CODE")');
-    expect(gradle).toContain('"3"');
+    expect(gradle).toContain('"4"');
   });
 });
 

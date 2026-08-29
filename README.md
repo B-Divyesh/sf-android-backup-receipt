@@ -1,107 +1,93 @@
 # Android Backup Receipt
 
-Check an Android backup before you wipe. Android Backup Receipt is for Android
-owners moving phones who need evidence that selected photos, documents,
-downloads, and app-export folders reached a backup destination.
+Android Backup Receipt is for Android owners moving phones. It checks whether selected files match a backup folder.
 
-It inventories two user-selected folder trees and computes SHA-256 evidence on
-the device. It compares paths and content, then exports a JSON receipt and CSV
-discrepancy list. This is a verifier, not a backup engine. It cannot access
-protected Android app data.
+Add each phone and backup folder pair to one check. The app compares file names, sizes, and fingerprints on your device. It then shows matched, missing, changed, and extra files.
 
-Production URL: <https://android-backup-receipt.sociobot.in>
+This is a checker, not a backup service. It cannot read protected Android app data.
 
-Try the one-click isolated sample at
-<https://android-backup-receipt.sociobot.in/demo>. It opens a four-file backup
-check with two accounted files, one missing file, and one changed file. Demo
-state uses `demo:android-backup-receipt` IndexedDB and never reads or writes
-your real check.
+Production: <https://android-backup-receipt.sociobot.in>
 
-## What works
+Try the isolated sample: <https://android-backup-receipt.sociobot.in/demo>
 
-- Android Storage Access Framework folder selection in the APK (with persistent selected-tree access when the provider supports it), plus browser folder selection in the PWA
-- Full SHA-256 for files through 32 MiB; disclosed sampled SHA-256 for larger files
-- Missing, changed, accounted-for, extra, and category totals
-- Portable source/destination manifests for mounted or synced WebDAV/S3 data
-- JSON receipt, CSV discrepancy export, and print view
-- Offline checks and exports after the first visit, plus an installable PWA
-- Optional $7 one-time Migration Kit license for a 20-receipt local archive
-- Responsive 390 px layout and full keyboard operation
+The sample opens a four-file receipt. It shows two matched files, one missing file, one changed file, and one extra file. Demo data uses separate browser storage and never reads or writes your real check.
 
-For WebDAV or S3, sync/download or mount the relevant remote folder first, then
-select it. The static v1 deliberately does not collect cloud credentials.
+## User guide
 
-## Develop and verify
+- Choose folders through Android’s file picker in the app. The web version uses the browser’s folder picker.
+- Add several phone and backup folder pairs to one combined receipt.
+- Create a complete file fingerprint through 32 MiB. Larger files use a clearly marked sampled fingerprint.
+- See matched, missing, changed, extra, and category totals for every folder pair.
+- Import or download a saved folder record, called a manifest in the file format.
+- Download a detailed receipt (JSON), a spreadsheet-ready issue list (CSV), or print the receipt.
+- Resume an interrupted check from local browser storage. “Start another check” clears it.
+- Use the installed web app offline after its first visit. Folder checks and both downloads work offline.
+- Buy the optional $7 Migration Kit once. It stores up to 20 receipt summaries on this device.
+- Use the layout at 390 px and operate every control with a keyboard.
 
-Requires Node.js 20 or newer.
+Mount, sync, or download a remote backup folder before checking it.
+
+Before wiping your phone, open important files in every backup folder. Keep two copies of files you cannot replace.
+
+## Install the Android app
+
+Download the [current Android app package (APK)](https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/android-backup-receipt.apk). Advanced users can also download its [published fingerprint](https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/SHA256SUMS).
+
+Android may ask you to allow installation from your browser or file manager. The app requests read access only for folders you select.
+
+## Develop and test
+
+Use Node.js 20 or newer.
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Run all unit, mobile flow, accessibility, and offline tests:
+Run unit, browser, mobile, accessibility, privacy, and offline checks:
 
 ```sh
 npm test
 ```
 
-Run the public reliance-claim checks only:
+Run only the public claim tests:
 
 ```sh
 npm run test:claims
 ```
 
-Create the exact static deployment output:
+Build the static site into `dist/`:
 
 ```sh
 npm run build
-# output: ./dist (with dist/index.html at its root)
 ```
 
-Preview the production output with `npm run preview`.
+Preview it with `npm run preview`.
 
-## Android APK
+## Maintainer release notes
 
-The signed Android build has application ID `in.sociobot.androidbackupreceipt`.
-It uses Android’s Storage Access Framework (`ACTION_OPEN_DOCUMENT_TREE`) for
-both source and destination folders. It persists read access to the selected
-trees and does not request write or broad storage access. Download the
-[current APK](https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/android-backup-receipt.apk)
-and [SHA-256 checksum](https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/SHA256SUMS).
-Android may ask you to allow installation from the browser or file manager that
-opened the APK.
+The Android release workflow is configured for JDK 21. It builds an app package and an Android App Bundle (AAB).
 
-The release workflow builds both APK and AAB with JDK 21. It restores the
-factory-managed signing key from protected repository secrets, assigns a higher
-Android version code from the workflow run number, and creates an immutable
-release with checksums and the signing-certificate fingerprint. Refresh native
-assets after a web build with:
+The workflow restores the protected signing key. It uses the run number for a higher version code. Each release includes checksums and the signing fingerprint.
+
+Refresh the Capacitor Android project after a web build:
 
 ```sh
 npm run build
 npx cap sync android
 ```
 
-For a local Android release build, provide `android/app/release.keystore` and
-the `RELEASE_STORE_*` environment variables used by the workflow. Then run
-`./gradlew assembleRelease` from `android/`.
-
-The rejected `v1.0.1` test APK used a discarded workflow key and cannot update
-in place. Remove that test build once before installing the current APK.
-Current and future releases share the protected signer and update normally.
+For a local release, provide `android/app/release.keystore` and the `RELEASE_STORE_*` values used by the workflow. Run `./gradlew assembleRelease` from `android/`.
 
 ## Privacy and billing
 
-The app has no analytics, ad pixels, remote fonts, or third-party runtime
-scripts. The two active inventory summaries are stored in IndexedDB so a check
-can resume; “Start another check” clears them. Paid archive summaries also use
-IndexedDB; the license and daily verification verdict use localStorage. License
-verification talks only to the Sociobot billing API. The Android package
-excludes this private state from Android cloud backup and device transfer.
+The app has no analytics, ads, remote fonts, or third-party runtime scripts. Core folder checks make no cross-origin request.
 
-See [/privacy](https://android-backup-receipt.sociobot.in/privacy/) and
-[/terms](https://android-backup-receipt.sociobot.in/terms/).
+The browser stores active folder records in its local database so a check can resume. It stores paid receipt summaries there too. The browser stores the license and daily verdict separately. License checks contact only the Sociobot billing API.
+
+The Android app excludes private app state from cloud backup and device transfer.
+
+See [Privacy](https://android-backup-receipt.sociobot.in/privacy/) and [Terms](https://android-backup-receipt.sociobot.in/terms/).
 
 ## License
 

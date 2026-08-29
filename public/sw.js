@@ -7,6 +7,7 @@ const SHELL = [
   '/demo.html',
   '/404.html',
   '/offline.html',
+  '/route-focus.js',
   '/privacy/',
   '/terms/',
   '/assets/__APP_JS__',

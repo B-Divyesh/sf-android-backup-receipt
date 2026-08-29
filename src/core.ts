@@ -50,6 +50,23 @@ export interface Comparison {
   sampledHashes: number;
   issues: FileIssue[];
   categories: CategoryResult[];
+  pairs?: PairResult[];
+}
+
+export interface FolderPair {
+  source: Inventory;
+  destination: Inventory;
+}
+
+export interface PairResult {
+  phoneFolder: string;
+  backupFolder: string;
+  total: number;
+  accounted: number;
+  missing: number;
+  changed: number;
+  extra: number;
+  coverage: number;
 }
 
 export interface ScanProgress {
@@ -188,15 +205,58 @@ export function compareInventories(source: Inventory, destination: Inventory, no
   };
 }
 
+export function compareFolderPairs(pairs: readonly FolderPair[], now = new Date()): Comparison {
+  if (pairs.length === 0) throw new Error('Choose at least one phone and backup folder pair.');
+  const comparisons = pairs.map((pair) => compareInventories(pair.source, pair.destination, now));
+  const total = comparisons.reduce((sum, result) => sum + result.total, 0);
+  const accounted = comparisons.reduce((sum, result) => sum + result.accounted, 0);
+  const categoryMap = new Map<string, CategoryResult>();
+  for (const result of comparisons) {
+    for (const category of result.categories) {
+      const combined = categoryMap.get(category.name) ?? { name: category.name, total: 0, accounted: 0, missing: 0, changed: 0 };
+      combined.total += category.total;
+      combined.accounted += category.accounted;
+      combined.missing += category.missing;
+      combined.changed += category.changed;
+      categoryMap.set(category.name, combined);
+    }
+  }
+  return {
+    sourceLabel: pairs.length === 1 ? comparisons[0].sourceLabel : `${pairs.length} phone folders`,
+    destinationLabel: pairs.length === 1 ? comparisons[0].destinationLabel : `${pairs.length} backup folders`,
+    checkedAt: now.toISOString(),
+    total,
+    accounted,
+    missing: comparisons.reduce((sum, result) => sum + result.missing, 0),
+    changed: comparisons.reduce((sum, result) => sum + result.changed, 0),
+    extra: comparisons.reduce((sum, result) => sum + result.extra, 0),
+    coverage: total === 0 ? 0 : Math.round((accounted / total) * 1000) / 10,
+    fullHashes: comparisons.reduce((sum, result) => sum + result.fullHashes, 0),
+    sampledHashes: comparisons.reduce((sum, result) => sum + result.sampledHashes, 0),
+    issues: comparisons.flatMap((result) => result.issues.map((issue) => ({ ...issue, path: `${result.sourceLabel} / ${issue.path}` }))),
+    categories: [...categoryMap.values()].sort((a, b) => a.name.localeCompare(b.name)),
+    pairs: comparisons.map((result) => ({
+      phoneFolder: result.sourceLabel,
+      backupFolder: result.destinationLabel,
+      total: result.total,
+      accounted: result.accounted,
+      missing: result.missing,
+      changed: result.changed,
+      extra: result.extra,
+      coverage: result.coverage
+    }))
+  };
+}
+
 export function parseManifest(value: unknown): Inventory {
-  if (!value || typeof value !== 'object') throw new Error('This file is not a Backup Receipt manifest.');
+  if (!value || typeof value !== 'object') throw new Error('This file is not a saved Backup Receipt folder record.');
   const candidate = value as Partial<Inventory>;
   if (candidate.schema !== MANIFEST_SCHEMA || typeof candidate.label !== 'string' || !Array.isArray(candidate.files)) {
-    throw new Error('Manifest format is not supported. Export a fresh manifest from this app.');
+    throw new Error('This folder record version is not supported. Download a new record from this app.');
   }
   const files = candidate.files.map((file) => {
     if (!file || typeof file.path !== 'string' || typeof file.size !== 'number' || typeof file.hash !== 'string' || !isSha256Hex(file.hash) || !['sha256','sampled-sha256'].includes(file.hashMethod)) {
-      throw new Error('Manifest contains an invalid file entry.');
+      throw new Error('This folder record contains an invalid file entry. Download it again.');
     }
     return { path: file.path, size: file.size, modified: Number(file.modified) || 0, hash: file.hash, hashMethod: file.hashMethod } as FileEvidence;
   });

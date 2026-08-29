@@ -50,11 +50,11 @@ test('@claim:resume-reset restores an interrupted check and clears it on request
   await expect(page.locator('#receipt-conclusion')).toContainText('Do not wipe');
   await page.reload();
   await expect(page.locator('#ready-panel')).toBeVisible();
-  await expect(page.locator('#source-status')).toContainText('restored local inventory');
+  await expect(page.locator('#source-status')).toContainText('restored phone folder');
   await page.locator('#compare-button').click();
   await page.locator('#new-check').click();
-  await expect(page.locator('#source-status')).toHaveText('No source selected');
-  await expect(page.locator('#destination-status')).toHaveText('No destination selected');
+  await expect(page.locator('#source-status')).toHaveText('No phone folder selected');
+  await expect(page.locator('#destination-status')).toHaveText('No backup folder selected');
   await expect.poll(() => page.evaluate(async () => {
     const database = await new Promise<IDBDatabase>((resolve, reject) => {
       const request = indexedDB.open('android-backup-receipt');
@@ -121,7 +121,8 @@ test('installed shell reloads while offline', async ({ page, context }) => {
   await context.setOffline(false);
 });
 
-test('@claim:demo-sample-receipt loads a useful four-file check from the one-click demo entry point', async ({ page }) => {
+test('@claim:demo-sample-receipt loads a useful four-file receipt inside the first mobile screen', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/online-check.txt');
   await page.evaluate(async () => {
     localStorage.setItem('sb_license:android-backup-receipt', 'real-license-sentinel');
@@ -141,16 +142,24 @@ test('@claim:demo-sample-receipt loads a useful four-file check from the one-cli
     });
     database.close();
   });
-  await page.goto('/demo');
+  await page.goto('/');
+  await page.locator('.hero-actions a[href="/demo"]').click();
+  await expect(page).toHaveURL('/demo');
   await expect(page).toHaveTitle('Demo — Android Backup Receipt');
   await expect(page.locator('#demo-banner')).toBeVisible();
   await expect(page.locator('#receipt')).toBeVisible();
-  await expect(page.locator('#ready-summary')).toContainText('4 source files vs 4 destination files');
+  await expect(page.locator('#ready-summary')).toContainText('4 phone files vs 4 backup files');
   await expect(page.locator('#accounted-count')).toHaveText('2');
   await expect(page.locator('#missing-count')).toHaveText('1');
   await expect(page.locator('#changed-count')).toHaveText('1');
   await expect(page.locator('#coverage-score')).toHaveText('50%');
   await expect(page.locator('#receipt-conclusion')).toContainText('Do not wipe');
+  await expect(page.locator('h1')).toBeFocused();
+  for (const selector of ['#receipt', '#accounted-count', '#missing-count', '#changed-count', '.issue-list', '#export-receipt', '#export-csv']) {
+    const box = await page.locator(selector).boundingBox();
+    expect(box?.y).toBeGreaterThanOrEqual(0);
+    expect((box?.y ?? 845) + (box?.height ?? 845)).toBeLessThanOrEqual(844);
+  }
   const databases = await page.evaluate(async () => (await indexedDB.databases()).map((database) => database.name));
   expect(databases).toContain('demo:android-backup-receipt');
   expect(databases).toContain('android-backup-receipt');
@@ -173,10 +182,44 @@ test('@claim:demo-sample-receipt loads a useful four-file check from the one-cli
   expect(accessibility.violations).toEqual([]);
 });
 
+test('@claim:multi-folder-receipt combines several folder pairs and preserves per-pair results', async ({ page }) => {
+  await page.goto('/');
+  await chooseVirtualFolder(page, '#source-input', 'DCIM', [
+    { path: 'Camera/one.jpg', body: 'photo one' },
+    { path: 'Camera/two.jpg', body: 'photo two' }
+  ]);
+  await chooseVirtualFolder(page, '#destination-input', 'DCIM-backup', [
+    { path: 'Camera/one.jpg', body: 'photo one' },
+    { path: 'Camera/two.jpg', body: 'changed photo' }
+  ]);
+  await page.locator('#add-pair').click();
+  await expect(page.locator('#pair-list li')).toHaveCount(1);
+  await page.reload();
+  await expect(page.locator('#pair-list li')).toHaveCount(1);
+
+  await chooseVirtualFolder(page, '#source-input', 'Documents', [
+    { path: 'notes.txt', body: 'move notes' }
+  ]);
+  await chooseVirtualFolder(page, '#destination-input', 'Documents-backup', [
+    { path: 'notes.txt', body: 'move notes' },
+    { path: 'extra.txt', body: 'extra' }
+  ]);
+  await page.locator('#compare-button').click();
+  await expect(page.locator('#pair-results .pair-result')).toHaveCount(2);
+  await expect(page.locator('#accounted-count')).toHaveText('2');
+  await expect(page.locator('#changed-count')).toHaveText('1');
+  const downloadPromise = page.waitForEvent('download');
+  await page.locator('#export-receipt').click();
+  const path = await (await downloadPromise).path();
+  const receipt = JSON.parse(await readFile(path!, 'utf8')) as { pairs: unknown[]; total: number; accounted: number; changed: number; extra: number };
+  expect(receipt).toMatchObject({ total: 3, accounted: 2, changed: 1, extra: 1 });
+  expect(receipt.pairs).toHaveLength(2);
+});
+
 test('keyboard users can skip to the demo check and operate its reset control', async ({ page }) => {
   await page.goto('/?demo=1');
-  await page.keyboard.press('Tab');
-  await expect(page.locator('.skip-link')).toBeFocused();
+  await expect(page.locator('h1')).toBeFocused();
+  await page.locator('.skip-link').focus();
   await page.keyboard.press('Enter');
   await expect(page.locator('#main')).toBeFocused();
   await page.locator('#reset-demo').focus();
@@ -251,7 +294,7 @@ test('@claim:comparison-manifest reports every comparison class and accepts an e
   await page.locator('#export-source-manifest').click();
   const manifestPath = await (await manifestPromise).path();
   await page.locator('#manifest-input').setInputFiles(manifestPath!);
-  await expect(page.locator('#destination-status')).toContainText('manifest / 4 files');
+  await expect(page.locator('#destination-status')).toContainText('saved record / 4 files');
   await page.locator('#compare-button').click();
   await expect(page.locator('#coverage-score')).toHaveText('100%');
   await expect(page.locator('#missing-count')).toHaveText('0');
@@ -389,21 +432,37 @@ test('@claim:license-revocation keeps the free verifier active when Sociobot rej
 test('malformed manifest errors use plain recovery guidance', async ({ page }) => {
   await page.goto('/demo');
   await page.locator('#manifest-input').setInputFiles({ name: 'broken.json', mimeType: 'application/json', buffer: Buffer.from('{bad') });
-  await expect(page.locator('#destination-status')).toHaveText('That file is not valid JSON. Choose a manifest exported from this app.');
+  await expect(page.locator('#destination-status')).toHaveText('That file is not a valid folder record. Choose one downloaded from this app.');
   await expect(page.locator('#destination-status')).not.toContainText('position');
 });
 
-test('ships complete social, canonical, Apple, footer, and build metadata', async ({ page }) => {
+test('ships route-specific metadata, consistent navigation, focus, and build identity', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /receipt-og-1200x630/);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
   await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute('sizes', '180x180');
   await expect(page.locator('footer')).toContainText('Built by Param Factory');
   await expect(page.locator('footer')).not.toContainText('__BUILD_ID__');
-  for (const route of ['/privacy/', '/terms/']) {
+  await page.locator('.hero-actions a[href="/demo"]').click();
+  await expect(page).toHaveTitle('Demo — Android Backup Receipt');
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://android-backup-receipt.sociobot.in/demo');
+  await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', 'https://android-backup-receipt.sociobot.in/demo');
+  await expect(page.locator('h1')).toBeFocused();
+  await page.goBack();
+  await expect(page).toHaveURL('/');
+  await expect(page.locator('h1')).toBeFocused();
+  for (const route of ['/privacy/', '/terms/', '/404.html']) {
     await page.goto(route);
     await expect(page.locator('link[rel="canonical"]')).toHaveCount(1);
+    await expect(page.locator('meta[property="og:title"]')).toHaveCount(1);
+    await expect(page.locator('meta[name="twitter:title"]')).toHaveCount(1);
+    await expect(page.locator('header nav a')).toHaveCount(3);
+    await expect(page.locator('footer a[href="/privacy/"]')).toHaveCount(1);
+    await expect(page.locator('footer a[href="/terms/"]')).toHaveCount(1);
     await expect(page.locator('footer')).toContainText('Built by Param Factory');
+    await expect(page.locator('h1')).toBeFocused();
+    const accessibility = await new AxeBuilder({ page: page as never }).analyze();
+    expect(accessibility.violations.filter((violation) => violation.impact === 'serious' || violation.impact === 'critical')).toEqual([]);
   }
 });
 
@@ -435,5 +494,22 @@ test('@claim:offline-reload is installable and reloads the demo after its first 
   await expect(page).toHaveURL(/\?demo=1/);
   await expect(page.locator('#demo-banner')).toBeVisible();
   await expect(page.locator('#receipt')).toBeVisible();
+  await context.setOffline(false);
+});
+
+test('@claim:offline-exports runs the check and downloads both receipt files while offline', async ({ page, context }) => {
+  await page.goto('/?demo=1');
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.waitForTimeout(300);
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await context.setOffline(true);
+  await page.evaluate(() => window.dispatchEvent(new Event('offline')));
+  await page.locator('#compare-button').click();
+  await expect(page.locator('#coverage-score')).toHaveText('50%');
+  for (const selector of ['#export-receipt', '#export-csv']) {
+    const downloadPromise = page.waitForEvent('download');
+    await page.locator(selector).click();
+    expect(await (await downloadPromise).path()).toBeTruthy();
+  }
   await context.setOffline(false);
 });
