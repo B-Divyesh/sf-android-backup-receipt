@@ -1,0 +1,172 @@
+CLAIM demo-sample-receipt
+
+> android-backup-receipt@1.0.2 test:claims
+> playwright test --grep @claim:demo-sample-receipt
+
+
+Running 1 test using 1 worker
+·
+  1 passed (6.8s)
+CLAIM resume-reset
+
+> android-backup-receipt@1.0.2 test:claims
+> playwright test --grep @claim:resume-reset
+
+
+Running 1 test using 1 worker
+·
+  1 passed (7.6s)
+CLAIM local-only-files
+
+> android-backup-receipt@1.0.2 test:claims
+> playwright test --grep @claim:local-only-files
+
+
+Running 1 test using 1 worker
+·
+  1 passed (5.9s)
+CLAIM receipt-exports
+
+> android-backup-receipt@1.0.2 test:claims
+> playwright test --grep @claim:receipt-exports
+
+
+Running 1 test using 1 worker
+·
+  1 passed (5.9s)
+CLAIM sha256-evidence
+
+> android-backup-receipt@1.0.2 test:claims
+> playwright test --grep @claim:sha256-evidence
+
+
+Running 1 test using 1 worker
+·
+  1 passed (5.9s)
+CLAIM hash-boundary
+
+> android-backup-receipt@1.0.2 test:unit
+> vitest run tests/*.test.ts -t @claim:hash-boundary
+
+
+ RUN  v3.2.7 /work/repo
+
+ ↓ tests/android-bridge.test.ts (6 tests | 6 skipped)
+ ✓ tests/core.test.ts (9 tests | 8 skipped) 273ms
+
+ Test Files  1 passed | 1 skipped (2)
+      Tests  1 passed | 14 skipped (15)
+   Start at  15:48:13
+   Duration  938ms (transform 125ms, setup 0ms, collect 152ms, tests 273ms, environment 0ms, prepare 346ms)
+
+CLAIM comparison-manifest
+
+> android-backup-receipt@1.0.2 test:claims
+> playwright test --grep @claim:comparison-manifest
+
+
+Running 1 test using 1 worker
+·
+  1 passed (6.0s)
+CLAIM saf-read-only
+
+> android-backup-receipt@1.0.2 test:unit
+> vitest run tests/*.test.ts -t @claim:saf-read-only
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/android-bridge.test.ts (6 tests | 5 skipped) 6ms
+ ↓ tests/core.test.ts (9 tests | 9 skipped)
+
+ Test Files  1 passed | 1 skipped (2)
+      Tests  1 passed | 14 skipped (15)
+   Start at  15:48:22
+   Duration  664ms (transform 232ms, setup 0ms, collect 218ms, tests 6ms, environment 0ms, prepare 277ms)
+
+CLAIM android-private-backup
+
+> android-backup-receipt@1.0.2 test:unit
+> vitest run tests/*.test.ts -t @claim:android-private-backup
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/android-bridge.test.ts (6 tests | 5 skipped) 5ms
+ ↓ tests/core.test.ts (9 tests | 9 skipped)
+
+ Test Files  1 passed | 1 skipped (2)
+      Tests  1 passed | 14 skipped (15)
+   Start at  15:48:23
+   Duration  690ms (transform 184ms, setup 0ms, collect 189ms, tests 5ms, environment 0ms, prepare 258ms)
+
+CLAIM android-updates
+
+> android-backup-receipt@1.0.2 test:unit
+> vitest run tests/*.test.ts -t @claim:android-updates
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/android-bridge.test.ts (6 tests | 5 skipped) 5ms
+ ↓ tests/core.test.ts (9 tests | 9 skipped)
+
+ Test Files  1 passed | 1 skipped (2)
+      Tests  1 passed | 14 skipped (15)
+   Start at  15:48:24
+   Duration  639ms (transform 120ms, setup 0ms, collect 186ms, tests 5ms, environment 1ms, prepare 309ms)
+
+CLAIM local-metadata-storage
+
+> android-backup-receipt@1.0.2 test:claims
+> playwright test --grep @claim:local-metadata-storage
+
+
+Running 1 test using 1 worker
+·
+  1 passed (5.9s)
+CLAIM migration-archive
+
+> android-backup-receipt@1.0.2 test:claims
+> playwright test --grep @claim:migration-archive
+
+
+Running 1 test using 1 worker
+·
+  1 passed (18.2s)
+CLAIM license-revocation
+
+> android-backup-receipt@1.0.2 test:claims
+> playwright test --grep @claim:license-revocation
+
+
+Running 1 test using 1 worker
+·
+  1 passed (5.8s)
+CLAIM print-view
+
+> android-backup-receipt@1.0.2 test:claims
+> playwright test --grep @claim:print-view
+
+
+Running 1 test using 1 worker
+·
+  1 passed (5.8s)
+CLAIM responsive-keyboard
+
+> android-backup-receipt@1.0.2 test:claims
+> playwright test --grep @claim:responsive-keyboard
+
+
+Running 1 test using 1 worker
+·
+  1 passed (6.1s)
+CLAIM offline-reload
+
+> android-backup-receipt@1.0.2 test:claims
+> playwright test --grep @claim:offline-reload
+
+
+Running 1 test using 1 worker
+·
+  1 passed (6.4s)
