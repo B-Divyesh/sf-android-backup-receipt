@@ -1,0 +1,8 @@
+PUBLISHED
+SHA-256: A6:10:61:7B:7B:34:3A:B0:A6:18:03:A2:AD:B5:EF:EC:25:56:57:4B:04:71:09:3A:64:E3:A8:04:2B:8F:3B:01
+APK_CERTIFICATE
+subject=CN = Android Backup Receipt, OU = Param Factory, O = Sociobot, C = IN
+issuer=CN = Android Backup Receipt, OU = Param Factory, O = Sociobot, C = IN
+notBefore=Aug 29 15:23:29 2026 GMT
+notAfter=Jan 14 15:23:29 2054 GMT
+sha256 Fingerprint=A6:10:61:7B:7B:34:3A:B0:A6:18:03:A2:AD:B5:EF:EC:25:56:57:4B:04:71:09:3A:64:E3:A8:04:2B:8F:3B:01

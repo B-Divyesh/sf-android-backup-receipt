@@ -1,0 +1,19 @@
+PUBLISHED_CHECKSUMS
+83aa18714ce7b77d1f38b0d05d0de768df20000e65f02539b7f3202ddc2e08c0  android-backup-receipt.apk
+8617fdaff50fcd80cfa8b197ac1bbcf8cec9185dd3ecb2264bb8d96f04d0cad5  android-backup-receipt.aab
+LOCAL_APK_SHA256
+83aa18714ce7b77d1f38b0d05d0de768df20000e65f02539b7f3202ddc2e08c0  /tmp/tmp.KnH2E5WLZU/android-backup-receipt.apk
+ZIP_TEST
+    testing: META-INF/CERT.RSA        OK
+    testing: META-INF/MANIFEST.MF     OK
+No errors detected in compressed data of /tmp/tmp.KnH2E5WLZU/android-backup-receipt.apk.
+KEY_MEMBERS
+  7015036  1981-01-01 01:01   classes.dex
+    16567  1981-01-01 01:01   assets/public/index.html
+     3064  1981-01-01 01:01   assets/public/sw.js
+     2165  1981-01-01 01:01   META-INF/CERT.RSA
+EMBEDDED_WEB_HASHES
+8f247628adda217645c07d5a13bbe4341283dfc2982f52f34e5168243dd02cbc  -
+8f247628adda217645c07d5a13bbe4341283dfc2982f52f34e5168243dd02cbc  dist/index.html
+64a4fd5e7659e26a03e38a68cf67b7d921ef0663006902e89073f7ee2799f523  -
+64a4fd5e7659e26a03e38a68cf67b7d921ef0663006902e89073f7ee2799f523  dist/sw.js

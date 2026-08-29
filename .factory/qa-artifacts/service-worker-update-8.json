@@ -1,0 +1,12 @@
+{
+  "toast": "A fresh offline version is ready.",
+  "reloadVisible": true,
+  "controlled": true,
+  "caches": [
+    "backup-receipt-verification-8-new-shell"
+  ],
+  "before": [
+    "backup-receipt-verification-8-old-shell"
+  ],
+  "pass": true
+}

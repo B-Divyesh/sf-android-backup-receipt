@@ -1,0 +1,11 @@
+{
+  "url": "https://android-backup-receipt.sociobot.in/",
+  "status": "License no longer active. The free folder checker is still available; use the buy link to get a new license.",
+  "stored": "verification-8-invalid-live",
+  "historyHidden": true,
+  "checkerVisible": true,
+  "billingRequests": [
+    "https://api.sociobot.in/api/v1/products/android-backup-receipt/verify?license=verification-8-invalid-live"
+  ],
+  "pass": true
+}

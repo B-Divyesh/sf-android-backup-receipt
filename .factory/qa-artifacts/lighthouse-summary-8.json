@@ -1,0 +1,75 @@
+{
+  "requestedUrl": "https://android-backup-receipt.sociobot.in/",
+  "finalDisplayedUrl": "https://android-backup-receipt.sociobot.in/",
+  "lighthouseVersion": "13.0.1",
+  "fetchTime": "2026-08-29T21:39:05.350Z",
+  "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "metrics": {
+    "fcp": "1.1 s",
+    "lcp": "1.1 s",
+    "tbt": "100 ms",
+    "cls": "0",
+    "si": "1.1 s"
+  },
+  "resourceSummary": [
+    {
+      "resourceType": "total",
+      "label": "Total",
+      "requestCount": 7,
+      "transferSize": 62806
+    },
+    {
+      "resourceType": "image",
+      "label": "Image",
+      "requestCount": 1,
+      "transferSize": 28304
+    },
+    {
+      "resourceType": "script",
+      "label": "Script",
+      "requestCount": 1,
+      "transferSize": 12101
+    },
+    {
+      "resourceType": "other",
+      "label": "Other",
+      "requestCount": 3,
+      "transferSize": 11877
+    },
+    {
+      "resourceType": "document",
+      "label": "Document",
+      "requestCount": 1,
+      "transferSize": 5633
+    },
+    {
+      "resourceType": "stylesheet",
+      "label": "Stylesheet",
+      "requestCount": 1,
+      "transferSize": 4891
+    },
+    {
+      "resourceType": "media",
+      "label": "Media",
+      "requestCount": 0,
+      "transferSize": 0
+    },
+    {
+      "resourceType": "font",
+      "label": "Font",
+      "requestCount": 0,
+      "transferSize": 0
+    },
+    {
+      "resourceType": "third-party",
+      "label": "Third-party",
+      "requestCount": 0,
+      "transferSize": 0
+    }
+  ]
+}

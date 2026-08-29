@@ -1,0 +1,305 @@
+{
+  "checkedAt": "2026-08-29T21:38:12.317Z",
+  "origin": "https://android-backup-receipt.sociobot.in",
+  "checks": {
+    "cold-first-read": {
+      "pass": true,
+      "evidence": {
+        "title": "Android Backup Receipt — check a phone backup",
+        "lang": "en",
+        "h1": [
+          "Check an Android backup before you wipe."
+        ],
+        "lede": "For Android owners moving phones: compare selected folders, then get a receipt showing which selected files match.",
+        "primary": "Try it with sample data →",
+        "facts": [
+          "Local files stay on your device",
+          "4 files in the sample check",
+          "2 downloads receipt and issue list"
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "missingAlt": 0
+      }
+    },
+    "axe-home": {
+      "pass": true,
+      "evidence": []
+    },
+    "mobile-first-screen": {
+      "pass": true,
+      "evidence": {
+        "scrollWidth": 390,
+        "viewportWidth": 390,
+        "factsBottom": 655.96875,
+        "primaryBottom": 463.46875
+      }
+    },
+    "keyboard-and-focus": {
+      "pass": true,
+      "evidence": {
+        "skipFocused": true,
+        "mainFocused": true,
+        "focusStyle": {
+          "width": "3px",
+          "style": "solid",
+          "color": "rgb(48, 73, 195)",
+          "offset": "4px"
+        },
+        "folderChooserOpened": true
+      }
+    },
+    "mobile-touch-targets": {
+      "pass": true,
+      "evidence": {
+        "checked": 18,
+        "undersizedTargets": []
+      }
+    },
+    "one-click-demo": {
+      "pass": true,
+      "evidence": {
+        "url": "https://android-backup-receipt.sociobot.in/demo",
+        "title": "Demo — Android Backup Receipt",
+        "h1Focused": true,
+        "banner": "Demo — sample data, nothing is saved to your real check. Four sample files show two matched, one missing, and one changed. Reset demoStart for real",
+        "counts": {
+          "coverage": "50%",
+          "accounted": "2",
+          "missing": "1",
+          "changed": "1",
+          "extraShown": true
+        },
+        "receiptBottom": 699.65625,
+        "viewportHeight": 844,
+        "scrollWidth": 390
+      }
+    },
+    "axe-demo": {
+      "pass": true,
+      "evidence": []
+    },
+    "live-demo-exports": {
+      "pass": true,
+      "evidence": {
+        "json": {
+          "schema": "backup-receipt/result-1",
+          "total": 4,
+          "accounted": 2,
+          "missing": 1,
+          "changed": 1,
+          "extra": 1
+        },
+        "csvLines": 3
+      }
+    },
+    "service-worker-update-check": {
+      "pass": true,
+      "evidence": {
+        "controlled": true,
+        "activeState": "activated",
+        "waitingState": null,
+        "installingState": null,
+        "caches": [
+          "backup-receipt-4008a35e8d05-shell"
+        ]
+      }
+    },
+    "offline-reload-and-exports": {
+      "pass": true,
+      "evidence": {
+        "offlineBanner": true,
+        "demoBanner": true,
+        "receipt": true,
+        "coverage": "50%",
+        "controlled": true,
+        "caches": [
+          "backup-receipt-4008a35e8d05-shell"
+        ],
+        "#export-receipt-download": true,
+        "#export-csv-download": true
+      }
+    },
+    "normal-folder-comparison": {
+      "pass": true,
+      "evidence": {
+        "accounted": "1",
+        "missing": "1",
+        "changed": "1",
+        "extraShown": true,
+        "conclusion": "Do not wipe your phone yet: 1 file is missing and 1 has changed."
+      }
+    },
+    "resume-and-clear": {
+      "pass": true,
+      "evidence": {
+        "resumed": true,
+        "cleared": true
+      }
+    },
+    "invalid-input-recovery": {
+      "pass": true,
+      "evidence": {
+        "malformed": "That file is not a valid folder record. Choose one downloaded from this app.",
+        "unsupported": "This folder record version is not supported. Download a new record from this app."
+      }
+    },
+    "legal-offline-404-routes": {
+      "pass": true,
+      "evidence": [
+        {
+          "route": "/privacy/",
+          "status": 200,
+          "title": "Privacy — Android Backup Receipt",
+          "lang": "en",
+          "h1": 1,
+          "main": 1,
+          "missingAlt": 0,
+          "overflow": false,
+          "headingFocused": true,
+          "axe": []
+        },
+        {
+          "route": "/terms/",
+          "status": 200,
+          "title": "Terms — Android Backup Receipt",
+          "lang": "en",
+          "h1": 1,
+          "main": 1,
+          "missingAlt": 0,
+          "overflow": false,
+          "headingFocused": true,
+          "axe": []
+        },
+        {
+          "route": "/offline.html",
+          "status": 200,
+          "title": "Offline — Android Backup Receipt",
+          "lang": "en",
+          "h1": 1,
+          "main": 1,
+          "missingAlt": 0,
+          "overflow": false,
+          "headingFocused": true,
+          "axe": []
+        },
+        {
+          "route": "/route-that-does-not-exist-verification-8",
+          "status": 404,
+          "title": "Page not found — Android Backup Receipt",
+          "lang": "en",
+          "h1": 1,
+          "main": 1,
+          "missingAlt": 0,
+          "overflow": false,
+          "headingFocused": true,
+          "axe": []
+        }
+      ]
+    },
+    "reduced-motion": {
+      "pass": true,
+      "evidence": {
+        "matches": true,
+        "transitionDuration": "1e-05s",
+        "animationDuration": "1e-05s",
+        "scrollBehavior": "auto"
+      }
+    },
+    "text-resize-200-percent": {
+      "pass": true,
+      "evidence": {
+        "scrollWidth": 390,
+        "viewportWidth": 390,
+        "primaryVisible": true
+      }
+    },
+    "core-flow-request-privacy": {
+      "pass": true,
+      "evidence": {
+        "uniqueRequests": [
+          "https://android-backup-receipt.sociobot.in/",
+          "https://android-backup-receipt.sociobot.in/assets/app-jOZXOY7t.js",
+          "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+          "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+          "https://android-backup-receipt.sociobot.in/demo",
+          "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788039497802",
+          "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788039497836",
+          "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788039500294",
+          "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788039500573",
+          "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788039501835",
+          "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788039501840",
+          "https://android-backup-receipt.sociobot.in/privacy/",
+          "https://android-backup-receipt.sociobot.in/assets/legal-ff7db1a6.css",
+          "https://android-backup-receipt.sociobot.in/route-focus.js",
+          "https://android-backup-receipt.sociobot.in/terms/",
+          "https://android-backup-receipt.sociobot.in/offline.html"
+        ],
+        "external": []
+      }
+    },
+    "console-and-page-errors": {
+      "pass": true,
+      "evidence": {
+        "consoleErrors": [],
+        "pageErrors": []
+      }
+    }
+  },
+  "failures": [],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "requests": [
+    "https://android-backup-receipt.sociobot.in/",
+    "https://android-backup-receipt.sociobot.in/assets/app-jOZXOY7t.js",
+    "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+    "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+    "https://android-backup-receipt.sociobot.in/",
+    "https://android-backup-receipt.sociobot.in/assets/app-jOZXOY7t.js",
+    "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+    "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+    "https://android-backup-receipt.sociobot.in/demo",
+    "https://android-backup-receipt.sociobot.in/assets/app-jOZXOY7t.js",
+    "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+    "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+    "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788039497802",
+    "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788039497836",
+    "https://android-backup-receipt.sociobot.in/demo",
+    "https://android-backup-receipt.sociobot.in/assets/app-jOZXOY7t.js",
+    "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+    "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+    "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788039500294",
+    "https://android-backup-receipt.sociobot.in/demo",
+    "https://android-backup-receipt.sociobot.in/assets/app-jOZXOY7t.js",
+    "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+    "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+    "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788039500573",
+    "https://android-backup-receipt.sociobot.in/",
+    "https://android-backup-receipt.sociobot.in/assets/app-jOZXOY7t.js",
+    "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+    "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+    "https://android-backup-receipt.sociobot.in/",
+    "https://android-backup-receipt.sociobot.in/assets/app-jOZXOY7t.js",
+    "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+    "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+    "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788039501835",
+    "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788039501840",
+    "https://android-backup-receipt.sociobot.in/privacy/",
+    "https://android-backup-receipt.sociobot.in/assets/legal-ff7db1a6.css",
+    "https://android-backup-receipt.sociobot.in/route-focus.js",
+    "https://android-backup-receipt.sociobot.in/terms/",
+    "https://android-backup-receipt.sociobot.in/assets/legal-ff7db1a6.css",
+    "https://android-backup-receipt.sociobot.in/route-focus.js",
+    "https://android-backup-receipt.sociobot.in/offline.html",
+    "https://android-backup-receipt.sociobot.in/assets/legal-ff7db1a6.css",
+    "https://android-backup-receipt.sociobot.in/route-focus.js",
+    "https://android-backup-receipt.sociobot.in/",
+    "https://android-backup-receipt.sociobot.in/assets/app-jOZXOY7t.js",
+    "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+    "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+    "https://android-backup-receipt.sociobot.in/",
+    "https://android-backup-receipt.sociobot.in/assets/app-jOZXOY7t.js",
+    "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+    "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp"
+  ]
+}
