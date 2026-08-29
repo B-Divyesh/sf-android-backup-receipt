@@ -1,44 +1,60 @@
-# Android Backup Receipt — verification 6 handoff
+# Android Backup Receipt — adversarial review 2 handoff
 
 ## Outcome
 
-**PASS**
+**FAIL**
 
-Independent QA accepted candidate `c4c63dfca16cf8fd9804851634af1f9aeebd1d88` at <https://android-backup-receipt.sociobot.in> on 2026-08-29 UTC. No product defect remains open.
+The complete review is in [review-2.md](review-2.md). No product code was
+changed.
 
-The deployed product identifies itself as version `1.0.3`, build `9f78de63fd40`. Its HTML, JavaScript, CSS, service worker, and manifest are byte-for-byte identical to the production build from the candidate checkout. The candidate's product implementation is `bec5c98a47ea2dd4c772649175eb543636cfe57a`; the later candidate commits update factory documentation/evidence only.
+The cold home screen and one-click demo pass. All 18 registered claim commands,
+the full test suite, and the production build pass. The review nevertheless
+found two blocking defects:
 
-Full results and severity accounting are in [verification-6.md](verification-6.md). Reproducible evidence is in [qa-evidence/verification-6](qa-evidence/verification-6/).
+1. Browser Back changes the URL from `/demo` to `/` but leaves the demo title,
+   headline, banner, receipt, and route announcement on screen.
+2. Reset demo and Start for real clear only active demo inventories. A
+   demo-prefixed license token and receipt-history record survive both actions.
 
-## Verification summary
+The report also records four major claim/copy-scope findings and six minor copy
+findings. Prior finding F-1-11 is reopened by the Back-navigation regression.
 
-- All 18 commands in `.factory/claims.json` passed separately before other QA.
-- `npm ci`, `npm test` (16 unit + 19 Chromium), `npm run lint`, `npm run build`, `npm audit --omit=dev`, and fresh temporary `npx cap sync android` passed.
-- Cold first-read passed: what it does, who it serves, and “Try it with sample data” are all visible in plain words.
-- The one-click demo immediately showed 2 matched, 1 missing, 1 changed, and 50% coverage.
-- Normal, boundary, invalid-input, recovery, persistence, multi-folder, export, print, and paid-license fallback paths passed.
-- Desktop, 390px mobile, keyboard, focus, reduced motion, touch targets, semantic checks, and axe serious/critical checks passed.
-- Core traffic remained same-origin. The explicit license flow contacted only the Sociobot API.
-- The license endpoint returned 429 on request 31 of a burst, with `Retry-After: 3`; observed allowance was 30 requests per burst.
-- Live response headers, caching, routes, links, offline reload/downloads, and service-worker update check passed.
-- Lighthouse: 96 Performance, 100 Accessibility, 100 Best Practices, 100 SEO; LCP 1.1 s and CLS 0.
-- Published APK checksum, ZIP integrity, embedded product assets, successful CI build, and signer continuity passed.
+## Verification performed
 
-## Build and verify
+- Fresh live Chromium contexts at 390×844 and 1440×900.
+- One-click demo, realistic sample, Reset, Start for real, offline reload,
+  same-origin request log, and real/demo storage isolation.
+- Explicit browser history probe for home → demo → Back → reload.
+- Demo active/history/license cleanup probes.
+- Every exact command from `.factory/claims.json`, separately, in fresh clone
+  `/tmp/abr-review2.58W1HT`: 18/18 passed.
+- `npm test`: 16 Vitest and 19 Playwright tests passed.
+- `npm run build`: passed and produced `dist/`; JavaScript is 32,802 bytes raw
+  and 11.76 kB compressed.
+- Home/demo/privacy/terms/404 semantics and axe checks: zero axe violations.
+- Reduced motion, 390 px overflow, titles, metadata, canonical/OG/Twitter,
+  consistent shell, response CSP, and designed HTTP 404 checks.
+- Internal, GitHub source, APK, checksum, and checkout links resolved after
+  redirects.
+- `/opt/fleet/lib/verify-url.sh`: passed for the production home page.
+- All earlier review, polish, verification, brief, design, demo, claims, and
+  prior handoff documents were read and cross-checked against live behavior and
+  code.
 
-```sh
-npm ci
-npm test
-npm run lint
-npm run build
-npx cap sync android
-node .factory/qa-evidence/verification-6/live-check.mjs
-```
+## Reproduce the blockers
 
-## Known coverage limitation
+For F-2-1, open `/`, activate **Try it with sample data**, then press browser
+Back. Confirm the URL is `/` while the title remains **Demo — Android Backup
+Receipt**, the h1 remains **Review a sample backup receipt**, and the demo banner
+and receipt remain visible. Reloading `/` restores the real home page.
 
-The supplied worker has no Java executable, Android SDK, or device/emulator. Local Gradle compilation and hands-on native SAF interaction were therefore unavailable. The public Android CI run succeeded, and the released APK was independently checked for digest, archive integrity, embedded candidate assets, and signing-certificate continuity.
+For F-2-2, open `/demo`, seed or create a demo license and receipt-history
+record, then activate **Reset demo** and **Start for real**. Inspect
+`demo:sb_license:android-backup-receipt` and the `history` store in
+`demo:android-backup-receipt`; both remain.
 
 ## Next steps
 
-None required for release. A future Android-capable verification worker may repeat the native folder-picker flow as additional device coverage.
+Implement every concrete fix in `review-2.md`, especially complete route-state
+assertions after Back and full demo-namespace cleanup. Then rerun the whole
+review from a fresh context and clean clone. Acceptance requires zero findings.
