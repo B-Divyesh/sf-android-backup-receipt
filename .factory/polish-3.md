@@ -1,7 +1,7 @@
 # Polish round 3 — cumulative finding closure
 
-Implementation commits: `03526f9` and `285d73f` (final metadata and evidence
-commit follows this report).
+Implementation commits: `03526f9`, `285d73f`, and `02a29a0` (final metadata
+and evidence commit follows this report).
 
 Production: <https://android-backup-receipt.sociobot.in>
 
@@ -57,14 +57,15 @@ production screenshots.
 
 ## Verification
 
-- A clean clone at `285d73f` completed `npm ci`, each of the 22 exact claim
+- A clean clone at `02a29a0` completed `npm ci`, each of the 22 exact claim
   commands in `.factory/claims.json`, `npm run lint`, `npm test`, `npm run
   build`, and `npm audit --omit=dev` successfully.
 - The full suite contained 20 Vitest and 21 Playwright tests. The browser
   suite includes Axe checks, request privacy checks, mobile/keyboard checks,
   demo reset/Back checks, and independent offline contexts.
-- The local Lighthouse result was Performance 99, Accessibility 100, Best
-  Practices 100, SEO 100; LCP 1.21 s, CLS 0, and TBT 109 ms.
-- Production deployment and its final cold check are recorded in the handoff.
+- The local Lighthouse result was Performance 100, Accessibility 100, Best
+  Practices 100, SEO 100; LCP 1.20 s, CLS 0, and TBT 0 ms.
+- Static deployment `a59c280b-2b1c-4429-ab86-599cb6ee0f79` and its final cold
+  check are recorded in the handoff.
 
 No review finding remains open.

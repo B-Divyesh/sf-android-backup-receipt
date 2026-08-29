@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://android-backup-receipt.sociobot.in/",
+    "status": 200,
+    "location": null
+  },
+  {
+    "url": "https://android-backup-receipt.sociobot.in/demo",
+    "status": 200,
+    "location": null
+  },
+  {
+    "url": "https://android-backup-receipt.sociobot.in/privacy/",
+    "status": 200,
+    "location": null
+  },
+  {
+    "url": "https://android-backup-receipt.sociobot.in/terms/",
+    "status": 200,
+    "location": null
+  },
+  {
+    "url": "https://android-backup-receipt.sociobot.in/offline.html",
+    "status": 200,
+    "location": null
+  },
+  {
+    "url": "https://github.com/B-Divyesh/sf-android-backup-receipt",
+    "status": 200,
+    "location": null
+  },
+  {
+    "url": "https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/android-backup-receipt.apk",
+    "status": 302,
+    "location": "https://github.com/B-Divyesh/sf-android-backup-receipt/releases/download/android-v1.0.3-build-13/android-backup-receipt.apk"
+  },
+  {
+    "url": "https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/SHA256SUMS",
+    "status": 302,
+    "location": "https://github.com/B-Divyesh/sf-android-backup-receipt/releases/download/android-v1.0.3-build-13/SHA256SUMS"
+  },
+  {
+    "url": "https://api.sociobot.in/api/v1/products/android-backup-receipt/checkout",
+    "status": 303,
+    "location": "https://checkout.dodopayments.com/session/cks_0NmTSnYp1syX1Ydfl8cs7"
+  }
+]
