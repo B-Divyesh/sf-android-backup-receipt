@@ -449,7 +449,7 @@ async function verifyLicense(token: string): Promise<void> {
     return;
   }
   if (!navigator.onLine) {
-    status.textContent = cached?.valid ? 'Migration Kit active from the last check; verification will resume online.' : 'License saved. Connect once to verify it and use receipt history.';
+    status.textContent = cached?.valid ? 'Migration Kit active from the last completed check.' : 'License saved. Connect once to verify it and use receipt history.';
     return;
   }
   status.textContent = 'Checking license…';

@@ -1,0 +1,161 @@
+{
+  "demo": {
+    "path": "/demo",
+    "title": "Demo — Android Backup Receipt",
+    "h1": "Review a sample backup receipt",
+    "focused": true,
+    "receipt": {
+      "x": 8,
+      "y": 178,
+      "width": 374,
+      "height": 521.65625
+    },
+    "exports": [
+      {
+        "x": 21,
+        "y": 582.65625,
+        "width": 170,
+        "height": 52
+      },
+      {
+        "x": 199,
+        "y": 582.65625,
+        "width": 170,
+        "height": 52
+      }
+    ],
+    "warning": "Do not wipe your phone yet: 1 file is missing and 1 has changed.",
+    "overflow": 0
+  },
+  "back": {
+    "path": "/",
+    "title": "Android Backup Receipt — check a phone backup",
+    "h1": "Check an Android backup before you wipe.",
+    "demo": "false",
+    "bannerHidden": true,
+    "receiptHidden": true,
+    "announcement": "Android Backup Receipt — check a phone backup",
+    "focused": true
+  },
+  "reset": {
+    "afterReset": {
+      "demoKeys": [],
+      "realLicense": "real-license",
+      "active": 2,
+      "history": 0
+    },
+    "afterExit": {
+      "demoKeys": [],
+      "demoDatabase": false,
+      "realLicense": "real-license"
+    }
+  },
+  "routes": {
+    "/": {
+      "status": 200,
+      "title": "Android Backup Receipt — check a phone backup",
+      "canonical": "https://android-backup-receipt.sociobot.in/",
+      "h1": 1,
+      "main": true,
+      "lang": "en",
+      "nav": 3,
+      "privacy": 1,
+      "terms": 1,
+      "og": true,
+      "twitter": true,
+      "focused": false,
+      "overflow": 0
+    },
+    "/demo": {
+      "status": 200,
+      "title": "Demo — Android Backup Receipt",
+      "canonical": "https://android-backup-receipt.sociobot.in/demo",
+      "h1": 1,
+      "main": true,
+      "lang": "en",
+      "nav": 3,
+      "privacy": 1,
+      "terms": 1,
+      "og": true,
+      "twitter": true,
+      "focused": true,
+      "overflow": 0
+    },
+    "/privacy/": {
+      "status": 200,
+      "title": "Privacy — Android Backup Receipt",
+      "canonical": "https://android-backup-receipt.sociobot.in/privacy/",
+      "h1": 1,
+      "main": true,
+      "lang": "en",
+      "nav": 3,
+      "privacy": 1,
+      "terms": 1,
+      "og": true,
+      "twitter": true,
+      "focused": true,
+      "overflow": 0
+    },
+    "/terms/": {
+      "status": 200,
+      "title": "Terms — Android Backup Receipt",
+      "canonical": "https://android-backup-receipt.sociobot.in/terms/",
+      "h1": 1,
+      "main": true,
+      "lang": "en",
+      "nav": 3,
+      "privacy": 1,
+      "terms": 1,
+      "og": true,
+      "twitter": true,
+      "focused": true,
+      "overflow": 0
+    },
+    "/offline.html": {
+      "status": 200,
+      "title": "Offline — Android Backup Receipt",
+      "canonical": "https://android-backup-receipt.sociobot.in/offline.html",
+      "h1": 1,
+      "main": true,
+      "lang": "en",
+      "nav": 3,
+      "privacy": 1,
+      "terms": 1,
+      "og": true,
+      "twitter": true,
+      "focused": true,
+      "overflow": 0
+    },
+    "/not-a-real-page-polish-2": {
+      "status": 404,
+      "title": "Page not found — Android Backup Receipt",
+      "canonical": "https://android-backup-receipt.sociobot.in/404.html",
+      "h1": 1,
+      "main": true,
+      "lang": "en",
+      "nav": 3,
+      "privacy": 1,
+      "terms": 1,
+      "og": true,
+      "twitter": true,
+      "focused": true,
+      "overflow": 0
+    }
+  },
+  "axe": {
+    "/": [],
+    "/demo": [],
+    "/privacy/": [],
+    "/terms/": [],
+    "/offline.html": [],
+    "/not-a-real-page-polish-2": []
+  },
+  "requests": [],
+  "errors": [],
+  "offline": {
+    "url": "https://android-backup-receipt.sociobot.in/?demo=1",
+    "banner": true,
+    "receipt": true,
+    "downloads": 2
+  }
+}

@@ -54,7 +54,7 @@ Audited 29 August 2026 after every round-2 rewrite. Counts use whitespace-delimi
 | A refund revokes the license. | 5 | Pass; tested claim |
 | Compare selected phone and backup folders on this device. | 9 | Pass |
 
-Generated receipt and error sentences are also bounded. The sample warning is: “Do not wipe your phone yet: 1 file is missing and 1 has changed.” (13 words). The offline license status is: “License saved. Connect once to verify it and use receipt history.” (11 words). Browser tests exercise invalid records, empty folders, incomplete pairs, offline state, license rejection, reset, and successful receipts.
+Generated receipt and error sentences are also bounded. The sample warning is: “Do not wipe your phone yet: 1 file is missing and 1 has changed.” (13 words). Offline license states say “Migration Kit active from the last completed check.” (8 words) or “License saved. Connect once to verify it and use receipt history.” (11 words). Browser tests exercise invalid records, empty folders, incomplete pairs, offline state, license rejection, reset, and successful receipts.
 
 ## Headings and controls
 

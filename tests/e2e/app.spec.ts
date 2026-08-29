@@ -632,6 +632,7 @@ test('@claim:offline-reload is installable and reloads the demo after its first 
 });
 
 test('@claim:offline-exports runs the check and downloads both receipt files while offline', async ({ page, context }) => {
+  expect(await readFile('src/main.ts', 'utf8')).not.toMatch(/verification will resume online|License checks resume when connected/);
   await page.goto('/?demo=1');
   await page.evaluate(() => navigator.serviceWorker.ready);
   await page.waitForTimeout(300);
