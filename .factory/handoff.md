@@ -1,4 +1,25 @@
-# Android Backup Receipt — polish round 2 handoff
+# Android Backup Receipt — verification 7 addendum
+
+## Current independent verification outcome
+
+**FAIL — do not promote commit `1c049834c8c283e55aa1440f562575701d02449c`.**
+
+Fresh verification of <https://android-backup-receipt.sociobot.in> found the
+deployment matches this candidate byte-for-byte and the product otherwise
+passes functional, privacy, PWA, accessibility, Android-artifact, and
+rate-limit checks. The release is blocked by one claims-contract defect:
+`resume-reset` declares `npm run test:unit -- -t @claim:resume-reset`, which
+exits successfully after skipping all 16 unit tests. Its tagged test is
+Playwright-only, so the declared command proves nothing. See
+[verification-7.md](verification-7.md) for exact commands, all 20 claim
+results, headers, live evidence, severity, and remediation.
+
+The immediate next step is to correct that command (or add an equivalent unit
+test) and rerun every entry in `.factory/claims.json` from a clean checkout.
+
+---
+
+# Android Backup Receipt — polish round 2 handoff (superseded by verification 7)
 
 ## Outcome
 
