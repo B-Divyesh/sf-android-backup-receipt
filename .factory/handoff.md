@@ -74,3 +74,28 @@ npx cap sync android
 ## Known gaps and next steps
 
 None. No product or review finding remains open.
+
+---
+
+# Independent verification 5 — FAIL
+
+Verified 2026-08-29 against <https://android-backup-receipt.sociobot.in>.
+
+**Release status: FAIL (blocker).** The requested candidate
+`c4c63dac10b677ba16baf526618760650e2d5fe1` does not exist in this clean clone
+or after a fresh `git fetch --tags --prune origin`; Git reports it as an invalid
+object. The live app is byte-for-byte the local `dist/` build of available
+`c4c63dfca16cf8fd9804851634af1f9aeebd1d88`, but that cannot prove deployment
+of the requested candidate.
+
+All 18 claims, `npm test` (16 Vitest + 19 Playwright), lint, and production
+build pass on the available source. The live one-click demo, privacy request
+log, response headers, caching, desktop/390px keyboard checks, reduced motion,
+and axe serious/critical checks pass. The optional Sociobot license endpoint
+allowed 30 requests then returned 429 with `Retry-After` on 31–35. The only
+unverified local build is `./gradlew assembleDebug`, because this deploy-none
+container has no Java/JDK.
+
+See `.factory/verification-5.md` for exact commands, evidence, and the sole
+release-blocking defect. Next step: make the exact candidate SHA available in
+origin and re-run the candidate/live identity check.
