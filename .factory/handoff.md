@@ -72,6 +72,15 @@ Deploy the generated `dist/` directory as the existing static artifact. The
 checked `staticwebapp.config.json` supplies the security headers, caching, demo
 rewrite, and 404 override.
 
+## Deployment
+
+Deployed `dist/` to the production Static Web App
+`sf-android-backup-receipt` on 2026-08-29. Live checks at
+`https://android-backup-receipt.sociobot.in` confirmed `/demo` returns the
+visible sample receipt at 50% coverage with no console errors, while an unknown
+route returns HTTP 404 and the designed page. The live response includes the
+configured CSP, Permissions-Policy, and `X-Frame-Options: DENY`.
+
 ## Known limitation
 
 No JDK is installed in this container (`java` is unavailable), so native
