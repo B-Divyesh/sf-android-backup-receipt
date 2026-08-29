@@ -36,4 +36,14 @@ describe('static deployment response policy', () => {
     expect(config.mimeTypes['.webmanifest']).toBe('application/manifest+json');
     expect(config.routes.find((route) => route.route === '/assets/*')?.headers?.['Cache-Control']).toContain('immutable');
   });
+
+  it('keeps /demo as the only app rewrite and serves a designed 404 for unknown routes', async () => {
+    const [config, notFound] = await Promise.all([
+      readFile(configPath, 'utf8').then((value) => JSON.parse(value) as { responseOverrides: Record<string, { rewrite: string }>; routes: Array<{ route: string; rewrite?: string }> }),
+      readFile(new URL('../public/404.html', import.meta.url), 'utf8')
+    ]);
+    expect(config.responseOverrides['404']).toEqual({ rewrite: '/404.html' });
+    expect(config.routes.find((route) => route.route === '/demo')).toMatchObject({ rewrite: '/index.html' });
+    expect(notFound).toContain('<h1>That page is not here.</h1>');
+  });
 });

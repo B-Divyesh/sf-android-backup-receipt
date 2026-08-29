@@ -1,8 +1,8 @@
 # Android Backup Receipt
 
-Android Backup Receipt is a local-first PWA for Android owners who want evidence
-that selected photos, documents, downloads, and app-export folders made it to a
-backup destination before they erase or replace a phone.
+Check an Android backup before you wipe. Android Backup Receipt is for Android
+owners moving phones who need evidence that selected photos, documents,
+downloads, and app-export folders reached a backup destination.
 
 It inventories two user-selected folder trees, computes SHA-256 evidence in the
 browser, compares relative paths and content, and exports a dated JSON receipt
@@ -11,6 +11,12 @@ backup engine, and it cannot access protected Android app data.
 
 Production URL: <https://android-backup-receipt.sociobot.in>
 
+Try the one-click isolated sample at
+<https://android-backup-receipt.sociobot.in/demo>. It opens a four-file backup
+check with two accounted files, one missing file, and one changed file. Demo
+state uses `demo:android-backup-receipt` IndexedDB and never reads or writes
+your real check.
+
 ## What works
 
 - Android Storage Access Framework folder selection in the APK (with persistent selected-tree access when the provider supports it), plus browser folder selection in the PWA
@@ -18,7 +24,7 @@ Production URL: <https://android-backup-receipt.sociobot.in>
 - Missing, changed, accounted-for, extra, and category totals
 - Portable source/destination manifests for mounted or synced WebDAV/S3 data
 - JSON receipt, CSV discrepancy export, and print view
-- Offline app shell and installable PWA
+- Offline checks and exports after the first visit, plus an installable PWA
 - Optional $7 one-time Migration Kit license for a 20-receipt local archive
 - Responsive 390 px layout and full keyboard operation
 
@@ -38,6 +44,12 @@ Run all unit, mobile flow, accessibility, and offline tests:
 
 ```sh
 npm test
+```
+
+Run the public reliance-claim checks only:
+
+```sh
+npm run test:claims
 ```
 
 Create the exact static deployment output:

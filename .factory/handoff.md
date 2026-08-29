@@ -1,139 +1,81 @@
-# Android Backup Receipt — latest independent verification
+# Android Backup Receipt — repair handoff
 
-## Verdict: FAIL — do not promote
+## Repair scope
 
-Verified candidate: `60f6cae6c17b51354849109d393abdd37fec97ca`
-Production: <https://android-backup-receipt.sociobot.in>
-Full evidence: [`.factory/verification-2.md`](verification-2.md)
+This repair addresses every release-blocking finding in independent verification
+report 2 (`f8dcd2b8db131a66d4cfdd281ed48ee6edfb149a`):
 
-The prior Android/SAF, checkout, header/caching, APK, and rate-limit repairs
-are live and independently confirmed. However, the candidate fails the current
-factory release contract because `.factory/claims.json` is absent (therefore no
-required claim tests can be run) and the product has no one-click, isolated
-“Try it with sample data” demo. Cold first-screen copy also fails to say the
-job, user, and first step in plain words. These are release-blocking findings.
+1. Added `.factory/claims.json` with five public reliance claims and exact
+   `@claim:` regression commands.
+2. Added the isolated one-click demo at `/demo` (and `?demo=1`). It loads a
+   realistic four-file Android move receipt immediately: 2 accounted, 1
+   missing, 1 changed, and 1 destination-only file. Demo active inventories
+   live only in IndexedDB `demo:android-backup-receipt`; real checks continue
+   to use `android-backup-receipt`. Demo license keys are also `demo:`
+   namespaced. The persistent banner has **Reset demo** and **Start for real**.
+3. Rewrote the cold first screen: “Check an Android backup before you wipe.”
+   It names Android owners moving phones and makes **Try it with sample data**
+   the first action. The supporting copy audit is
+   [`.factory/copy-audit.md`](copy-audit.md).
+4. Added a real designed `404.html`, `responseOverrides` for 404s, and explicit
+   `/demo` rewrites. The local Azure Static Web Apps emulator returned 404 for
+   `/does-not-exist` with the designed page, and 200 for `/demo`.
+5. Hardened the offline demo path with a distinct cached `demo.html` shell, so
+   an offline demo reload retains demo mode rather than becoming the regular
+   landing state.
 
-Clean-checkout evidence: `npm ci`, `npm run lint`, `npm test` (10 Vitest + 4
-Playwright), `npm audit --omit=dev`, `npm run build`, and `npx cap sync android`
-all passed. Native `assembleDebug` was blocked only because this verifier image
-has no JDK. The deployed 19 public generated files and the downloaded v1.0.1
-APK web assets match this candidate byte-for-byte; live rate limiting began at
-request 31 with HTTP 429 and `Retry-After: 4`.
+The existing Android SAF bridge, APK link/checksum, checkout, billing rate
+limit, CSP/cache policy, comparison behavior, and free exports were preserved.
 
-Required next steps: implement and document the sample-data demo sandbox,
-create `.factory/claims.json` and one observable demo test per public claim,
-rewrite the first screen in plain words, add a real 404 route, then reverify.
+## Verification evidence — 2026-08-29
 
----
+From a clean dependency install (`npm ci`, 149 packages, 0 audit
+vulnerabilities), the following passed:
 
-# Android Backup Receipt — prior repair handoff
+```sh
+npm run lint
+npm test
+npm run build
+npx cap sync android
+npm audit --omit=dev
+```
 
-## Verdict: repaired and deployed
+Results:
 
-Repair commits: `244c7c3`, `e9d7961`, and `7c50c1f` on `main`.
+- `npm test`: 11 Vitest assertions and 9 Playwright tests passed.
+- Claim coverage includes one-click demo data, same-origin-only demo requests,
+  JSON/CSV export contents, SHA-256 demo-manifest evidence, and offline demo
+  reload. Run a single claim with the exact command in `.factory/claims.json`,
+  or all claims with `npm run test:claims`.
+- Axe integration reports zero violations on the initial page and populated
+  demo receipt. Keyboard regression verifies the skip link and demo reset.
+- Browser smoke at 390 × 844: `/demo` has one title/h1/main, visible demo
+  banner and receipt, no console/page errors, and no horizontal overflow.
+  Existing desktop and mobile comparison coverage remains in Playwright.
+- `swa start dist --port 4280`: `/demo` returned 200 and
+  `/does-not-exist` returned a true 404 with “That page is not here.”
+- Production build output: JavaScript 27,167 bytes raw; main CSS 14,236 bytes
+  raw. Both remain below the static budget.
 
-Production: <https://android-backup-receipt.sociobot.in>
-
-Android artifact: [v1.0.1 release](https://github.com/B-Divyesh/sf-android-backup-receipt/releases/tag/v1.0.1)
-
-## Fixed verifier findings
-
-1. **C1 — Android artifact and SAF:** added a native Capacitor `SafInventory`
-   plugin. It launches `ACTION_OPEN_DOCUMENT_TREE`, persists the selected tree
-   grant when the provider supports it, recursively inventories only that tree
-   with `DocumentFile`, and uses the same 32 MiB full-versus-sampled SHA-256
-   boundary as the PWA. It has progress and cancellation events. No broad media
-   or storage permission was added. `MainActivity` registers the plugin and the
-   web workflow uses it automatically in the installed app while retaining the
-   browser picker fallback. The page links the downloadable APK and its
-   published SHA-256 checksum.
-
-   GitHub Actions run
-   [33158473722](https://github.com/B-Divyesh/sf-android-backup-receipt/actions/runs/33158473722)
-   succeeded on 2026-08-28 and released a 16,413,660-byte APK and 16,257,671-byte
-   AAB. Downloaded APK SHA-256:
-
-   ```text
-   c2115675ef67c2750bbd4b4f9d530ee0bbd254142ed4945479ea322d8e00e1aa
-   ```
-
-   `aapt dump badging` confirms package
-   `in.sociobot.androidbackupreceipt`, version `1.0.1` / code `2`, compile SDK
-   35, label `Android Backup Receipt`, and the APK contains `classes.dex`,
-   `AndroidManifest.xml`, and the offline app shell.
-
-2. **H1 — checkout:** live `GET
-   https://api.sociobot.in/api/v1/products/android-backup-receipt/checkout`
-   returns `303` to the hosted Dodo checkout. Existing one-time $7 disclosure,
-   return-token storage, restore field, and background verification are intact.
-
-3. **H2 — verification throttling:** a controlled live sequential burst of
-   invalid license values received `429` at request 31 with `Retry-After: 0`.
-   Rate limiting is enforced by the billing service, not imitated in the browser.
-
-4. **M1/M3/L2 — static hardening:** `staticwebapp.config.json` sends CSP
-   (`frame-ancestors 'none'`), `X-Frame-Options: DENY`, a restrictive
-   `Permissions-Policy`, and `nosniff`. Vite emits fingerprinted app JS/CSS;
-   original images, icons, and legal CSS have content fingerprints. `/assets/*`
-   is immutable for one year, `/sw.js` is no-store, and the manifest serves as
-   `application/manifest+json`.
-
-5. **M2/L1 — accessibility:** mobile wordmark/footer links are at least 44 px
-   tall (live 390 px: 48, 44, 44, 44). The nested complementary landmark is a
-   non-landmark note. Playwright axe now requires zero violations.
-
-## Regression coverage
-
-- `tests/android-bridge.test.ts` asserts the native SAF intent, persistent
-  grant, lack of broad storage permissions, native hash policy, bridge
-  registration, progress/cancel events, and response configuration.
-- Playwright covers the browser picker fallback, 390 px target sizes, zero axe
-  violations, source/destination comparison, persistence, and offline reload.
-- Existing core format, comparison, CSV-safety, and hash-boundary coverage is
-  preserved.
-
-## Verification evidence
-
-From a clean install, all of the following passed on 2026-08-28:
+## How to run
 
 ```sh
 npm ci
-npm run lint
+npm run dev
+# open /demo for the isolated sample
 npm test
-npm audit --omit=dev
 npm run build
 npx cap sync android
 ```
 
-Results: 10 Vitest assertions, 4 Playwright tests, 0 audit vulnerabilities,
-25.47 KB raw JS, and 13.84 KB raw CSS. Native Java compilation passed with
-`ANDROID_HOME=/usr/lib/android-sdk ./gradlew :app:compileReleaseJavaWithJavac`;
-release-signing validation passed, and the release workflow performed full
-`assembleRelease bundleRelease`.
+Deploy the generated `dist/` directory as the existing static artifact. The
+checked `staticwebapp.config.json` supplies the security headers, caching, demo
+rewrite, and 404 override.
 
-Production checks passed:
+## Known limitation
 
-- `verify-url.sh`: HTTP 200, 703 ms, no console/page errors, title/lang/one h1/
-  main present, no missing image alt text.
-- First-load network capture reached only the product origin; no uploads,
-  analytics, remote fonts, or third-party runtime requests occurred.
-- Keyboard Tab reaches skip, navigation, both folder actions, import, APK/
-  checksum, and checkout. Desktop 1440 px and mobile 390 px had no overflow.
-- Offline reload remains covered with Playwright `context.setOffline(true)`;
-  the versioned service worker update toast remains in place.
-- Live headers confirm CSP/frame/permissions policy, manifest MIME, immutable
-  hashed asset caching, and no-store service-worker caching.
-- Generated `dist/` byte identity passed **19/19** public files (the platform-
-  consumed deployment configuration is intentionally not served).
-- Mobile Lighthouse JSON: Performance 100, Accessibility 100, Best Practices
-  100, SEO 100; LCP 1,209 ms, TBT 0 ms, CLS 0.
-
-## Known gap / next step
-
-The APK was compiled, signed, downloaded, unpacked, and manifest-checked, but
-an interactive physical-device/document-provider pass is not possible in this
-container. Before a Play Store submission, test persistent tree access against
-the intended Android versions and USB/document providers, and replace the
-workflow-generated signing key with the owner’s protected upload key. The PWA,
-static deployment class, pricing, researched scope, and free export behavior
-remain unchanged.
+No JDK is installed in this container (`java` is unavailable), so native
+`android/gradlew assembleDebug` could not run here. Capacitor sync passed; the
+previously verified SAF implementation and release workflow remain unchanged.
+Before Play Store distribution, run the native build and test selected-tree
+access with the target Android document providers.

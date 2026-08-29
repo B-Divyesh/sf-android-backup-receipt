@@ -5,6 +5,7 @@ import {
   comparisonCsv,
   folderLabel,
   formatBytes,
+  MANIFEST_SCHEMA,
   parseManifest,
   type Comparison,
   type Inventory
@@ -13,9 +14,43 @@ import { cancelSafScan, chooseSafTree, listenForSafProgress, usesNativeSaf } fro
 
 const PRODUCT_SLUG = 'android-backup-receipt';
 const BILLING_BASE = 'https://api.sociobot.in/api/v1';
-const LICENSE_KEY = `sb_license:${PRODUCT_SLUG}`;
-const VERDICT_KEY = `sb_license_verdict:${PRODUCT_SLUG}`;
+const navigationUrl = performance.getEntriesByType('navigation')[0]?.name || location.href;
+const navigationPath = new URL(navigationUrl, location.origin).pathname;
+// A service worker may return the cached app shell for /demo while preserving
+// the browser's navigation entry. Keep demo identity from that entry offline.
+const demoMode = location.pathname === '/demo' || location.pathname === '/demo/' || location.pathname === '/demo.html' || navigationPath === '/demo' || navigationPath === '/demo/' || navigationPath === '/demo.html' || new URLSearchParams(location.search).get('demo') === '1';
+const storagePrefix = demoMode ? 'demo:' : '';
+const LICENSE_KEY = `${storagePrefix}sb_license:${PRODUCT_SLUG}`;
+const VERDICT_KEY = `${storagePrefix}sb_license_verdict:${PRODUCT_SLUG}`;
+const DATABASE_NAME = `${storagePrefix}${PRODUCT_SLUG}`;
 const DAY = 86_400_000;
+
+document.documentElement.dataset.demo = String(demoMode);
+if (demoMode) document.title = 'Demo — Android Backup Receipt';
+
+const demoSource: Inventory = {
+  schema: MANIFEST_SCHEMA,
+  label: 'Pixel 7 / DCIM + exports',
+  createdAt: '2026-08-29T09:00:00.000Z',
+  files: [
+    { path: 'Camera/IMG_20260817_0912.jpg', size: 2_481_640, modified: 1, hash: 'd91a', hashMethod: 'sha256' },
+    { path: 'Camera/IMG_20260817_1003.jpg', size: 2_178_532, modified: 2, hash: 'a42f', hashMethod: 'sha256' },
+    { path: 'Documents/phone-transfer-notes.pdf', size: 184_320, modified: 3, hash: 'b113', hashMethod: 'sha256' },
+    { path: 'Exports/Signal-2026-08-17.backup', size: 8_765_441, modified: 4, hash: 'e720', hashMethod: 'sha256' }
+  ]
+};
+
+const demoDestination: Inventory = {
+  schema: MANIFEST_SCHEMA,
+  label: 'USB-C backup drive',
+  createdAt: '2026-08-29T09:01:00.000Z',
+  files: [
+    { ...demoSource.files[0] },
+    { ...demoSource.files[1], hash: 'changed-copy' },
+    { ...demoSource.files[3] },
+    { path: 'Download/read-me-first.txt', size: 912, modified: 5, hash: 'extra', hashMethod: 'sha256' }
+  ]
+};
 
 function element<T extends HTMLElement>(id: string): T {
   const found = document.getElementById(id);
@@ -103,6 +138,15 @@ function acceptInventory(kind: 'source' | 'destination', inventory: Inventory): 
   card.classList.add('is-ready');
   scanPanel.hidden = true;
   updateReadiness();
+}
+
+function loadDemoData(): void {
+  sourceInventory = structuredClone(demoSource);
+  destinationInventory = structuredClone(demoDestination);
+  acceptInventory('source', sourceInventory);
+  acceptInventory('destination', destinationInventory);
+  comparison = compareInventories(sourceInventory, destinationInventory, new Date('2026-08-29T09:02:00.000Z'));
+  renderReceipt(comparison, false);
 }
 
 async function scanFiles(kind: 'source' | 'destination', files: FileList): Promise<void> {
@@ -195,7 +239,7 @@ element<HTMLButtonElement>('cancel-scan').addEventListener('click', () => {
 exportSourceButton.addEventListener('click', () => { if (sourceInventory) exportManifest(sourceInventory); });
 exportDestinationButton.addEventListener('click', () => { if (destinationInventory) exportManifest(destinationInventory); });
 
-function renderReceipt(result: Comparison): void {
+function renderReceipt(result: Comparison, scroll = true): void {
   element<HTMLElement>('receipt-meta').textContent = `${new Date(result.checkedAt).toLocaleString()} / ${result.sourceLabel} → ${result.destinationLabel} / ${result.total.toLocaleString()} source files`;
   element<HTMLElement>('coverage-score').textContent = `${result.coverage}%`;
   element<HTMLElement>('accounted-count').textContent = result.accounted.toLocaleString();
@@ -238,7 +282,7 @@ function renderReceipt(result: Comparison): void {
     ? `All ${result.total.toLocaleString()} selected files are accounted for. Open representative destination files before wiping the source.`
     : `Do not wipe the source yet: ${result.missing.toLocaleString()} missing and ${result.changed.toLocaleString()} changed files need attention.`;
   receiptElement.hidden = false;
-  receiptElement.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  if (scroll) receiptElement.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
 }
 
 compareButton.addEventListener('click', () => {
@@ -328,7 +372,7 @@ licenseForm.addEventListener('submit', (event) => {
 
 function openDatabase(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('android-backup-receipt', 2);
+    const request = indexedDB.open(DATABASE_NAME, 2);
     request.onupgradeneeded = () => {
       if (!request.result.objectStoreNames.contains('history')) request.result.createObjectStore('history', { keyPath: 'checkedAt' });
       if (!request.result.objectStoreNames.contains('active')) request.result.createObjectStore('active', { keyPath: 'kind' });
@@ -342,14 +386,20 @@ async function saveActiveInventory(kind: 'source' | 'destination', inventory: In
   const database = await openDatabase();
   const transaction = database.transaction('active', 'readwrite');
   transaction.objectStore('active').put({ kind, inventory, updatedAt: Date.now() });
-  transaction.oncomplete = () => database.close();
+  await new Promise<void>((resolve, reject) => {
+    transaction.oncomplete = () => { database.close(); resolve(); };
+    transaction.onerror = () => { database.close(); reject(transaction.error); };
+  });
 }
 
 async function clearActiveInventories(): Promise<void> {
   const database = await openDatabase();
   const transaction = database.transaction('active', 'readwrite');
   transaction.objectStore('active').clear();
-  transaction.oncomplete = () => database.close();
+  await new Promise<void>((resolve, reject) => {
+    transaction.oncomplete = () => { database.close(); resolve(); };
+    transaction.onerror = () => { database.close(); reject(transaction.error); };
+  });
 }
 
 async function restoreActiveInventories(): Promise<void> {
@@ -459,8 +509,24 @@ if (storedLicense) {
   void verifyLicense(storedLicense);
 }
 
-void restoreActiveInventories().catch(() => {
-  announce('Saved inventory could not be restored. You can start a new check.');
+if (demoMode) {
+  element<HTMLElement>('demo-banner').hidden = false;
+  element<HTMLButtonElement>('reset-demo').addEventListener('click', async () => {
+    await clearActiveInventories();
+    loadDemoData();
+    announce('Sample receipt reset.');
+  });
+  element<HTMLButtonElement>('start-real').addEventListener('click', async () => {
+    await clearActiveInventories();
+    location.assign('/');
+  });
+}
+
+void restoreActiveInventories().then(() => {
+  if (demoMode) loadDemoData();
+}).catch(() => {
+  if (demoMode) loadDemoData();
+  else announce('Saved inventory could not be restored. You can start a new check.');
 });
 
 void listenForSafProgress((progress) => {

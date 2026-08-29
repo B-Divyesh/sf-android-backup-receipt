@@ -4,6 +4,8 @@ const ASSET_CACHE = `${VERSION}-assets`;
 const SHELL = [
   '/',
   '/index.html',
+  '/demo.html',
+  '/404.html',
   '/offline.html',
   '/privacy/',
   '/terms/',
@@ -53,6 +55,14 @@ self.addEventListener('fetch', (event) => {
 
   if (request.mode === 'navigate') {
     event.respondWith((async () => {
+      const isDemo = url.pathname === '/demo' || url.pathname === '/demo/';
+      if (isDemo) {
+        try {
+          return await fetch(request);
+        } catch {
+          return (await caches.match('/demo.html')) || (await caches.match('/offline.html'));
+        }
+      }
       const cached = await caches.match(request);
       if (cached) return cached;
       try {

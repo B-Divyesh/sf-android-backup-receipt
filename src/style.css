@@ -41,6 +41,9 @@ nav a, .footer-links a { min-height: 44px; display: inline-flex; align-items: ce
 .local-chip { padding: 7px 10px; border: 1.5px solid var(--ink); text-transform: uppercase; font-size: 12px; font-weight: 800; letter-spacing: .08em; background: var(--sheet); }
 
 .offline-banner { padding: 12px clamp(20px,4vw,64px); background: var(--blue); color: white; border-bottom: var(--rule); }
+.demo-banner { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 20px; padding: 12px clamp(20px,4vw,64px); border-bottom: var(--rule); background: var(--acid); color: var(--ink); }
+.demo-banner > div { display: flex; gap: 16px; margin-left: auto; }
+.demo-banner .text-button { min-height: 44px; font-size: 14px; }
 
 main { overflow: clip; }
 .hero { max-width: 1440px; margin: 0 auto; padding: clamp(52px,8vw,112px) clamp(20px,5vw,80px) 72px; display: grid; grid-template-columns: minmax(0,1fr) minmax(380px,.9fr); gap: clamp(36px,6vw,88px); align-items: center; }
@@ -178,6 +181,8 @@ footer p { margin: 4px 0 0; color: #d3d0c6; }
   .wordmark > span:last-child { font-size: 14px; }
   .local-chip { margin-left: auto; font-size: 10px; }
   .hero { padding-top: 52px; }
+  .demo-banner { align-items: flex-start; flex-direction: column; }
+  .demo-banner > div { width: 100%; margin-left: 0; }
   .hero-actions .button, .hero-actions .text-link { width: 100%; }
   .hero-art { transform: none; }
   .hero-art picture { box-shadow: 7px 7px 0 var(--blue); }
@@ -202,7 +207,7 @@ footer p { margin: 4px 0 0; color: #d3d0c6; }
 
 @media print {
   body { background: white; }
-  .site-header,.hero,.section-heading,.steps,.scan-panel,.ready-panel,.empty-guidance,.how,.limits,.apk-install,.unlock,footer,.receipt-actions,.offline-banner,.toast { display: none !important; }
+  .site-header,.hero,.section-heading,.steps,.scan-panel,.ready-panel,.empty-guidance,.how,.limits,.apk-install,.unlock,footer,.receipt-actions,.offline-banner,.demo-banner,.toast { display: none !important; }
   .workspace { padding: 0; border: 0; background: white; }
   .receipt { display: block !important; margin: 0; border: 2px solid; box-shadow: none; }
 }

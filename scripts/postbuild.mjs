@@ -19,3 +19,7 @@ const output = source
 
 if (output.includes('__')) throw new Error('Service-worker build placeholders were not resolved.');
 await writeFile(serviceWorkerPath, output);
+
+// /demo is a server rewrite in production. Keep a distinct cached document so
+// an offline /demo navigation retains its demo identity instead of becoming /.
+await writeFile(join('dist', 'demo.html'), await readFile(join('dist', 'index.html')));

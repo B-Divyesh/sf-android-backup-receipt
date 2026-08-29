@@ -14,7 +14,8 @@
     "preview": "vite preview --host 127.0.0.1",
     "test": "vitest run tests/*.test.ts && playwright test",
     "test:unit": "vitest run tests/*.test.ts",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:claims": "playwright test"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",
