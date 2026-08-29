@@ -1,0 +1,178 @@
+[
+  {
+    "id": "demo-sample-receipt",
+    "command": "npm run test:claims -- --grep @claim:demo-sample-receipt",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 14319,
+    "log": "claim-demo-sample-receipt.log"
+  },
+  {
+    "id": "demo-reset-isolation",
+    "command": "npm run test:claims -- --grep @claim:demo-reset-isolation",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 11643,
+    "log": "claim-demo-reset-isolation.log"
+  },
+  {
+    "id": "resume-reset",
+    "command": "npm run test:claims -- --grep @claim:resume-reset",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 11878,
+    "log": "claim-resume-reset.log"
+  },
+  {
+    "id": "local-only-files",
+    "command": "npm run test:claims -- --grep @claim:local-only-files",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 11405,
+    "log": "claim-local-only-files.log"
+  },
+  {
+    "id": "no-tracking-runtime",
+    "command": "npm run test:claims -- --grep @claim:no-tracking-runtime",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 11827,
+    "log": "claim-no-tracking-runtime.log"
+  },
+  {
+    "id": "receipt-exports",
+    "command": "npm run test:claims -- --grep @claim:receipt-exports",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 11332,
+    "log": "claim-receipt-exports.log"
+  },
+  {
+    "id": "sha256-evidence",
+    "command": "npm run test:claims -- --grep @claim:sha256-evidence",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 11687,
+    "log": "claim-sha256-evidence.log"
+  },
+  {
+    "id": "hash-boundary",
+    "command": "npm run test:unit -- -t @claim:hash-boundary",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 3174,
+    "log": "claim-hash-boundary.log"
+  },
+  {
+    "id": "comparison-manifest",
+    "command": "npm run test:claims -- --grep @claim:comparison-manifest",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 11800,
+    "log": "claim-comparison-manifest.log"
+  },
+  {
+    "id": "multi-folder-receipt",
+    "command": "npm run test:claims -- --grep @claim:multi-folder-receipt",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 12851,
+    "log": "claim-multi-folder-receipt.log"
+  },
+  {
+    "id": "saf-read-only",
+    "command": "npm run test:unit -- -t @claim:saf-read-only",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 3012,
+    "log": "claim-saf-read-only.log"
+  },
+  {
+    "id": "android-private-backup",
+    "command": "npm run test:unit -- -t @claim:android-private-backup",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 3092,
+    "log": "claim-android-private-backup.log"
+  },
+  {
+    "id": "android-updates",
+    "command": "npm run test:unit -- -t @claim:android-updates",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 3198,
+    "log": "claim-android-updates.log"
+  },
+  {
+    "id": "android-release-assets",
+    "command": "npm run test:unit -- -t @claim:android-release-assets",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 3653,
+    "log": "claim-android-release-assets.log"
+  },
+  {
+    "id": "remote-provider-access",
+    "command": "npm run test:unit -- -t @claim:remote-provider-access",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 3088,
+    "log": "claim-remote-provider-access.log"
+  },
+  {
+    "id": "local-metadata-storage",
+    "command": "npm run test:claims -- --grep @claim:local-metadata-storage",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 11504,
+    "log": "claim-local-metadata-storage.log"
+  },
+  {
+    "id": "migration-archive",
+    "command": "npm run test:claims -- --grep @claim:migration-archive",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 30037,
+    "log": "claim-migration-archive.log"
+  },
+  {
+    "id": "license-revocation",
+    "command": "npm run test:claims -- --grep @claim:license-revocation",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 14556,
+    "log": "claim-license-revocation.log"
+  },
+  {
+    "id": "print-view",
+    "command": "npm run test:claims -- --grep @claim:print-view",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 11462,
+    "log": "claim-print-view.log"
+  },
+  {
+    "id": "responsive-keyboard",
+    "command": "npm run test:claims -- --grep @claim:responsive-keyboard",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 11812,
+    "log": "claim-responsive-keyboard.log"
+  },
+  {
+    "id": "offline-reload",
+    "command": "npm run test:claims -- --grep @claim:offline-reload",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 12120,
+    "log": "claim-offline-reload.log"
+  },
+  {
+    "id": "offline-exports",
+    "command": "npm run test:claims -- --grep @claim:offline-exports",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 13041,
+    "log": "claim-offline-exports.log"
+  }
+]

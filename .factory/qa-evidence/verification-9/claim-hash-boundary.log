@@ -1,0 +1,16 @@
+
+> android-backup-receipt@1.0.3 test:unit
+> vitest run tests/*.test.ts -t @claim:hash-boundary
+
+
+ RUN  v3.2.7 /work/repo
+
+ ↓ tests/claims-contract.test.ts (2 tests | 2 skipped)
+ ↓ tests/android-bridge.test.ts (8 tests | 8 skipped)
+ ✓ tests/core.test.ts (10 tests | 9 skipped) 705ms
+   ✓ hash policy > @claim:hash-boundary uses full SHA-256 through 32 MiB and sampled SHA-256 above it  703ms
+
+ Test Files  1 passed | 2 skipped (3)
+      Tests  1 passed | 19 skipped (20)
+   Start at  23:11:35
+   Duration  2.36s (transform 522ms, setup 0ms, collect 713ms, tests 705ms, environment 1ms, prepare 1.21s)

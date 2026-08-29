@@ -1,0 +1,202 @@
+[
+  {
+    "file": "dist/404.html",
+    "url": "https://android-backup-receipt.sociobot.in/404.html",
+    "status": 200,
+    "localHash": "79f9b784aee9ecb7c096d556edc0795d8b7fc2f395c0da9f2a0fa0674c013a49",
+    "remoteHash": "79f9b784aee9ecb7c096d556edc0795d8b7fc2f395c0da9f2a0fa0674c013a49",
+    "match": true
+  },
+  {
+    "file": "dist/assets/app-Bdhd1eRr.js",
+    "url": "https://android-backup-receipt.sociobot.in/assets/app-Bdhd1eRr.js",
+    "status": 200,
+    "localHash": "4330b935a138a505ba88c0162c330b3d58128eda3fef9e25fabec7701aaec61f",
+    "remoteHash": "4330b935a138a505ba88c0162c330b3d58128eda3fef9e25fabec7701aaec61f",
+    "match": true
+  },
+  {
+    "file": "dist/assets/apple-touch-180-e257b61a.png",
+    "url": "https://android-backup-receipt.sociobot.in/assets/apple-touch-180-e257b61a.png",
+    "status": 200,
+    "localHash": "e257b61a30277b1b2f76424756e9c286cbeb7f93fd0808cb8b8645221d9d8431",
+    "remoteHash": "e257b61a30277b1b2f76424756e9c286cbeb7f93fd0808cb8b8645221d9d8431",
+    "match": true
+  },
+  {
+    "file": "dist/assets/icon-192-a89d24be.png",
+    "url": "https://android-backup-receipt.sociobot.in/assets/icon-192-a89d24be.png",
+    "status": 200,
+    "localHash": "a89d24be3236106cf7ea01fbf4646c2b92ec2555c4be95b64d2980f182449624",
+    "remoteHash": "a89d24be3236106cf7ea01fbf4646c2b92ec2555c4be95b64d2980f182449624",
+    "match": true
+  },
+  {
+    "file": "dist/assets/icon-512-22de8196.png",
+    "url": "https://android-backup-receipt.sociobot.in/assets/icon-512-22de8196.png",
+    "status": 200,
+    "localHash": "22de81961a916c0e501b1056614070628c46b53530d35e377cfc16be388b981d",
+    "remoteHash": "22de81961a916c0e501b1056614070628c46b53530d35e377cfc16be388b981d",
+    "match": true
+  },
+  {
+    "file": "dist/assets/icon-maskable-512-0fb5b020.png",
+    "url": "https://android-backup-receipt.sociobot.in/assets/icon-maskable-512-0fb5b020.png",
+    "status": 200,
+    "localHash": "0fb5b020227a38f1a657a15fd9bf0c41d0afff1a55e554e3e849c4b7ebbee2bf",
+    "remoteHash": "0fb5b020227a38f1a657a15fd9bf0c41d0afff1a55e554e3e849c4b7ebbee2bf",
+    "match": true
+  },
+  {
+    "file": "dist/assets/icon-maskable-source.svg",
+    "url": "https://android-backup-receipt.sociobot.in/assets/icon-maskable-source.svg",
+    "status": 200,
+    "localHash": "7da651248fcccb0a2013dc2280bf6ad8c050cb22a6b750c28b988f8bf4d606c9",
+    "remoteHash": "7da651248fcccb0a2013dc2280bf6ad8c050cb22a6b750c28b988f8bf4d606c9",
+    "match": true
+  },
+  {
+    "file": "dist/assets/icon-source.svg",
+    "url": "https://android-backup-receipt.sociobot.in/assets/icon-source.svg",
+    "status": 200,
+    "localHash": "2331a4ba8213e3e12da70c8bf94b58d837a5332747153bdedef37fe5e456948d",
+    "remoteHash": "2331a4ba8213e3e12da70c8bf94b58d837a5332747153bdedef37fe5e456948d",
+    "match": true
+  },
+  {
+    "file": "dist/assets/legal-ff7db1a6.css",
+    "url": "https://android-backup-receipt.sociobot.in/assets/legal-ff7db1a6.css",
+    "status": 200,
+    "localHash": "44ba83cca54764a87a9cdd89a1d45d32e6ffd5acff38ce9aef2fc4f5e3b74940",
+    "remoteHash": "44ba83cca54764a87a9cdd89a1d45d32e6ffd5acff38ce9aef2fc4f5e3b74940",
+    "match": true
+  },
+  {
+    "file": "dist/assets/receipt-inspection-1280-3ed3da66.webp",
+    "url": "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-1280-3ed3da66.webp",
+    "status": 200,
+    "localHash": "3ed3da6601515b4a84a9f42cef0110b7f6eb82d0c4a8c15e1b1487c2dbb4c34a",
+    "remoteHash": "3ed3da6601515b4a84a9f42cef0110b7f6eb82d0c4a8c15e1b1487c2dbb4c34a",
+    "match": true
+  },
+  {
+    "file": "dist/assets/receipt-inspection-768-9fd624e0.webp",
+    "url": "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+    "status": 200,
+    "localHash": "9fd624e041431654bc98b3c90aed13ce9840778706a9ebb577daa2e4ff6b0410",
+    "remoteHash": "9fd624e041431654bc98b3c90aed13ce9840778706a9ebb577daa2e4ff6b0410",
+    "match": true
+  },
+  {
+    "file": "dist/assets/receipt-og-1200x630-84bd4a44.webp",
+    "url": "https://android-backup-receipt.sociobot.in/assets/receipt-og-1200x630-84bd4a44.webp",
+    "status": 200,
+    "localHash": "84bd4a44bc6e29a151f9441d7b9f7f9ad5db2198ad852d69288837fe16d4f79a",
+    "remoteHash": "84bd4a44bc6e29a151f9441d7b9f7f9ad5db2198ad852d69288837fe16d4f79a",
+    "match": true
+  },
+  {
+    "file": "dist/assets/style-BMo3qnhc.css",
+    "url": "https://android-backup-receipt.sociobot.in/assets/style-BMo3qnhc.css",
+    "status": 200,
+    "localHash": "ea03e7243aab9495e1fb6c43b4de1db035afa99e31363f357af6b2e26a289a12",
+    "remoteHash": "ea03e7243aab9495e1fb6c43b4de1db035afa99e31363f357af6b2e26a289a12",
+    "match": true
+  },
+  {
+    "file": "dist/demo.html",
+    "url": "https://android-backup-receipt.sociobot.in/",
+    "status": 200,
+    "localHash": "972108a8485fac06d9e97744f7b1793332ce339cf8c0d52d2af62251813346e3",
+    "remoteHash": "972108a8485fac06d9e97744f7b1793332ce339cf8c0d52d2af62251813346e3",
+    "match": true
+  },
+  {
+    "file": "dist/index.html",
+    "url": "https://android-backup-receipt.sociobot.in/",
+    "status": 200,
+    "localHash": "972108a8485fac06d9e97744f7b1793332ce339cf8c0d52d2af62251813346e3",
+    "remoteHash": "972108a8485fac06d9e97744f7b1793332ce339cf8c0d52d2af62251813346e3",
+    "match": true
+  },
+  {
+    "file": "dist/manifest.webmanifest",
+    "url": "https://android-backup-receipt.sociobot.in/manifest.webmanifest",
+    "status": 200,
+    "localHash": "0d01de479844a88428e0aa5a2f4aa9f6c2d9a41855650a12d0c2cc225bd5f10b",
+    "remoteHash": "0d01de479844a88428e0aa5a2f4aa9f6c2d9a41855650a12d0c2cc225bd5f10b",
+    "match": true
+  },
+  {
+    "file": "dist/offline.html",
+    "url": "https://android-backup-receipt.sociobot.in/offline.html",
+    "status": 200,
+    "localHash": "65c1f03021fb3b6621515256ac4d6ecfa8a4b46667dfb361bbd766c61844ceed",
+    "remoteHash": "65c1f03021fb3b6621515256ac4d6ecfa8a4b46667dfb361bbd766c61844ceed",
+    "match": true
+  },
+  {
+    "file": "dist/online-check.txt",
+    "url": "https://android-backup-receipt.sociobot.in/online-check.txt",
+    "status": 200,
+    "localHash": "3a6c0dc2dcf6af960513e1aef4ea807982580323f478ace69f46597e94624fd7",
+    "remoteHash": "3a6c0dc2dcf6af960513e1aef4ea807982580323f478ace69f46597e94624fd7",
+    "match": true
+  },
+  {
+    "file": "dist/privacy/index.html",
+    "url": "https://android-backup-receipt.sociobot.in/privacy/",
+    "status": 200,
+    "localHash": "e93a0ff7161a16870209303127782b21a2d6ae12c3abb00b6196044d771e0905",
+    "remoteHash": "e93a0ff7161a16870209303127782b21a2d6ae12c3abb00b6196044d771e0905",
+    "match": true
+  },
+  {
+    "file": "dist/robots.txt",
+    "url": "https://android-backup-receipt.sociobot.in/robots.txt",
+    "status": 200,
+    "localHash": "d0d16f1adb4b78c35a2e31cfeffe6efaf760c0a73ab1601cac012521b274a90a",
+    "remoteHash": "d0d16f1adb4b78c35a2e31cfeffe6efaf760c0a73ab1601cac012521b274a90a",
+    "match": true
+  },
+  {
+    "file": "dist/route-focus.js",
+    "url": "https://android-backup-receipt.sociobot.in/route-focus.js",
+    "status": 200,
+    "localHash": "0d5eed7d9977c79e4da47746e7fc8cae0ccdbded5f4ba1935d8cce039bb3e756",
+    "remoteHash": "0d5eed7d9977c79e4da47746e7fc8cae0ccdbded5f4ba1935d8cce039bb3e756",
+    "match": true
+  },
+  {
+    "file": "dist/sitemap.xml",
+    "url": "https://android-backup-receipt.sociobot.in/sitemap.xml",
+    "status": 200,
+    "localHash": "a2b97861aec079b34ae211e424af3b712ac8f77a861a896adf77138100602664",
+    "remoteHash": "a2b97861aec079b34ae211e424af3b712ac8f77a861a896adf77138100602664",
+    "match": true
+  },
+  {
+    "file": "dist/staticwebapp.config.json",
+    "url": "https://android-backup-receipt.sociobot.in/staticwebapp.config.json",
+    "status": 404,
+    "localHash": "330319823cb99d5a601b29553da0c5b020e045339eabc0bed0bf4743de83c734",
+    "remoteHash": "79f9b784aee9ecb7c096d556edc0795d8b7fc2f395c0da9f2a0fa0674c013a49",
+    "match": false
+  },
+  {
+    "file": "dist/sw.js",
+    "url": "https://android-backup-receipt.sociobot.in/sw.js",
+    "status": 200,
+    "localHash": "e86748acf2d6be9989334d261e8c27fec517a3020c8612a97b12a03d1cc8550f",
+    "remoteHash": "e86748acf2d6be9989334d261e8c27fec517a3020c8612a97b12a03d1cc8550f",
+    "match": true
+  },
+  {
+    "file": "dist/terms/index.html",
+    "url": "https://android-backup-receipt.sociobot.in/terms/",
+    "status": 200,
+    "localHash": "8b393eca51c34329c6ae01e42e3d901662efaf9444f8dfe6d9aa45326b113aaf",
+    "remoteHash": "8b393eca51c34329c6ae01e42e3d901662efaf9444f8dfe6d9aa45326b113aaf",
+    "match": true
+  }
+]

@@ -1,4 +1,28 @@
-# Android Backup Receipt — polish round 3 handoff
+# Android Backup Receipt — verification 9 handoff
+
+## Outcome
+
+**PASS — independent QA found no product defects.**
+
+- Candidate: `b6630f60f615a9454cf2c1209794092935d82909`
+- Production: <https://android-backup-receipt.sociobot.in>
+- All 22 exact claim commands, `npm test`, lint, production build, Capacitor
+  sync, live privacy/a11y/PWA/performance checks, and deployment parity passed.
+- Live production matches 24/24 public candidate build files byte-for-byte.
+- Billing verification allowed 30 requests, then enforced HTTP 429 with
+  `Retry-After: 3`.
+
+See [verification 9](verification-9.md) and `qa-evidence/verification-9/` for
+commands, screenshots, logs, headers, hashes, and route evidence.
+
+Known limitation: this container has no JDK, so `./android/gradlew
+assembleDebug` could not start. Capacitor sync, native contract tests, and
+published signed APK/AAB checksum verification passed. Run the native build on
+a JDK-equipped runner before a native-only release change.
+
+---
+
+# Prior polish round 3 handoff
 
 ## Outcome
 

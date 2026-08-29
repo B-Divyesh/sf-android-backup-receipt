@@ -1,0 +1,167 @@
+{
+  "routes": {
+    "/": {
+      "status": 200,
+      "url": "https://android-backup-receipt.sociobot.in/",
+      "title": "Android Backup Receipt — check a phone backup",
+      "lang": "en",
+      "h1": [
+        "Check an Android backup before you wipe."
+      ],
+      "main": 1,
+      "alts": [
+        {
+          "alt": "A blank phone and archive drive with photo and document tiles passing through a bright verification frame",
+          "src": "/assets/receipt-inspection-1280-3ed3da66.webp"
+        }
+      ],
+      "axeSeriousCritical": [],
+      "consoleErrors": [],
+      "pageErrors": [],
+      "externalRequests": []
+    },
+    "/demo": {
+      "status": 200,
+      "url": "https://android-backup-receipt.sociobot.in/demo",
+      "title": "Demo — Android Backup Receipt",
+      "lang": "en",
+      "h1": [
+        "Review a sample backup receipt"
+      ],
+      "main": 1,
+      "alts": [
+        {
+          "alt": "A blank phone and archive drive with photo and document tiles passing through a bright verification frame",
+          "src": "/assets/receipt-inspection-1280-3ed3da66.webp"
+        }
+      ],
+      "axeSeriousCritical": [],
+      "consoleErrors": [],
+      "pageErrors": [],
+      "externalRequests": []
+    },
+    "/privacy/": {
+      "status": 200,
+      "url": "https://android-backup-receipt.sociobot.in/privacy/",
+      "title": "Privacy — Android Backup Receipt",
+      "lang": "en",
+      "h1": [
+        "How Android Backup Receipt handles your files"
+      ],
+      "main": 1,
+      "alts": [],
+      "axeSeriousCritical": [],
+      "consoleErrors": [],
+      "pageErrors": [],
+      "externalRequests": []
+    },
+    "/terms/": {
+      "status": 200,
+      "url": "https://android-backup-receipt.sociobot.in/terms/",
+      "title": "Terms — Android Backup Receipt",
+      "lang": "en",
+      "h1": [
+        "Terms for Android Backup Receipt"
+      ],
+      "main": 1,
+      "alts": [],
+      "axeSeriousCritical": [],
+      "consoleErrors": [],
+      "pageErrors": [],
+      "externalRequests": []
+    },
+    "/offline.html": {
+      "status": 200,
+      "url": "https://android-backup-receipt.sociobot.in/offline.html",
+      "title": "Offline — Android Backup Receipt",
+      "lang": "en",
+      "h1": [
+        "Keep checking files offline."
+      ],
+      "main": 1,
+      "alts": [],
+      "axeSeriousCritical": [],
+      "consoleErrors": [],
+      "pageErrors": [],
+      "externalRequests": []
+    },
+    "/does-not-exist": {
+      "status": 404,
+      "url": "https://android-backup-receipt.sociobot.in/does-not-exist",
+      "title": "Page not found — Android Backup Receipt",
+      "lang": "en",
+      "h1": [
+        "That page is not here."
+      ],
+      "main": 1,
+      "alts": [],
+      "axeSeriousCritical": [],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 404 ()"
+      ],
+      "pageErrors": [],
+      "externalRequests": []
+    }
+  },
+  "desktop": {
+    "demo": {
+      "title": "Demo — Android Backup Receipt",
+      "banner": "Demo — sample data, nothing is saved to your real check.\nFour sample files show two matched, one missing, and one changed.\nReset demo\nStart for real",
+      "counts": {
+        "accounted": "2",
+        "missing": "1",
+        "changed": "1",
+        "coverage": "50%"
+      },
+      "receipt": {
+        "schema": "backup-receipt/result-1",
+        "total": 4,
+        "accounted": 2,
+        "missing": 1,
+        "changed": 1,
+        "extra": 1
+      },
+      "csvLines": 3,
+      "externalRequests": [],
+      "consoleErrors": [],
+      "pageErrors": []
+    }
+  },
+  "mobile": {
+    "overflow": false,
+    "skipFocus": "skip-link",
+    "skipTarget": "main",
+    "focus": {
+      "outline": "rgb(48, 73, 195) solid 3px",
+      "outlineWidth": "3px",
+      "boxShadow": "none"
+    },
+    "reducedMotionTransitionDuration": "1e-05s",
+    "receiptBox": {
+      "x": 8,
+      "y": 52,
+      "width": 374,
+      "height": 521.65625
+    },
+    "actionsBox": {
+      "x": 21,
+      "y": 441.65625,
+      "width": 348,
+      "height": 104
+    }
+  },
+  "endToEnd": {
+    "invalidManifest": "That file is not a valid folder record. Choose one downloaded from this app.",
+    "incompleteFlowGuidance": "\n          \n            Both folder records ready\n            One folder pair ready\n          \n          \n            Add another folder pair\n            Issue combined receipt →\n          \n        "
+  },
+  "offline": {
+    "h1": "Review a sample backup receipt",
+    "receiptVisible": true
+  },
+  "serviceWorker": {
+    "controlled": true,
+    "scope": "https://android-backup-receipt.sociobot.in/",
+    "active": "activated"
+  },
+  "errors": []
+}

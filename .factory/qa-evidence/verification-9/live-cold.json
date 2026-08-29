@@ -1,0 +1,138 @@
+{
+  "url": "https://android-backup-receipt.sociobot.in/",
+  "status": 200,
+  "title": "Android Backup Receipt — check a phone backup",
+  "h1": [
+    "Check an Android backup before you wipe."
+  ],
+  "mainText": "ANDROID BACKUP CHECK\n\nCheck an Android backup\nbefore you wipe.\n\nFor Android owners moving phones: compare selected folders, then get a receipt showing which selected files match.\n\nTry it with sample data\n→\n\nOpens a four-file receipt with two problems.\n\nCheck real folders\n↓\nRead what this does not check\nFiles\nstay on this device\nOffline\nafter the first visit\nChecks are free\nhistory costs $7 once\nFIG. 01\nPHONE FOLDER → BACKUP FOLDER\n\nBACKUP CHECK\n\nBuild a coverage receipt\n\nChoose each phone folder and its backup folder. This device reads file details and creates fingerprints for comparison.\n\n01\n\nPHONE FOLDER\n\nChoose the phone folder\n\nSelect a folder such as DCIM, Download, or an app’s export folder.\n\nChoose phone folder\nNo phone folder selected\n→\n02\n\nBACKUP FOLDER\n\nChoose the matching backup folder\n\nPick the matching folder on local or USB storage. You can also import a saved folder record.\n\nChoose backup folder\nImport backup record\nNo backup folder selected\n□\nYour files do not leave this screen.\n\nStart with a phone folder. Files larger than 32 MiB use a clearly marked sampled SHA-256 fingerprint.\n\nHOW IT WORKS\n\nHow the folder check works\n01\nChoose folder pairs\n\nThe Android app uses Android’s file picker. This website uses your browser’s folder picker. Add every folder pair you want to check.\n\n02\nCreate file fingerprints\n\nFiles through 32 MiB use a complete fingerprint (SHA-256). Larger files use a clearly marked sampled fingerprint.\n\n03\nKeep the receipt\n\nDownload a detailed receipt (JSON) or a spreadsheet-ready issue list (CSV).\n\n↗\nCheck a WebDAV or S3 backup\n\nAndroid: Install a WebDAV or S3 document provider, then select its backup folder. This app reads only that selected folder.\n\nWebsite: Open the mounted remote folder on another computer. Download its backup folder record. Move that JSON file here, then use Import backup record.\n\nLIMITS\n\nThis does not back up your phone.\n\nIt checks selected photos, downloads, documents, and app-export folders. It cannot see protected app data, messages, system settings, or unselected folders.\n\nMatching file names and fingerprints show that copies agree now. They cannot promise that a storage provider will keep them. Keep two copies.\n\nANDROID APP\n\nChoose folders with Android’s file picker.\n\nThe Android app asks you to select each phone or backup folder. It keeps read access only for folders you select.\n\nIt cannot scan your full device or protected app data.\n\nDownload the Android app package (APK). Advanced users can download APK checksums.\nOpen it on Android and allow installation from your browser or file manager if Android asks.\nChoose each phone folder and backup folder in Android’s file picker. Then issue one combined receipt.\nDownload current APK\n\nEach release uses the same protected signing key and a higher Android version code.\n\nOPTIONAL RECEIPT HISTORY\n\nSave receipt history\n\nFolder checks, folder records, and receipt downloads are free. The $7 Migration Kit is a one-time purchase.\n\nIt saves up to 20 receipt summaries on this device for repeat checks.\n\n20 saved receipt summaries\nReceipt history for repeat checks\nNo subscription\nBuy Migration Kit — $7\nHave a license? Paste it here\nVerify license\n\nFree folder checker active.",
+  "buttons": [
+    "Reset demo",
+    "Start for real",
+    "Choose phone folder",
+    "Download phone folder record",
+    "Choose backup folder",
+    "Download backup folder record",
+    "Cancel scan",
+    "Add another folder pair",
+    "Issue combined receipt →",
+    "Download detailed receipt (JSON)",
+    "Download issue list (CSV)",
+    "Print receipt",
+    "Start another check",
+    "Choose remote backup provider",
+    "Verify license",
+    "Clear receipt history",
+    "Reload"
+  ],
+  "links": [
+    {
+      "text": "Skip to verification",
+      "href": "https://android-backup-receipt.sociobot.in/#main"
+    },
+    {
+      "text": "✓\n        Backup / Receipt",
+      "href": "https://android-backup-receipt.sociobot.in/"
+    },
+    {
+      "text": "Demo",
+      "href": "https://android-backup-receipt.sociobot.in/demo"
+    },
+    {
+      "text": "Check folders",
+      "href": "https://android-backup-receipt.sociobot.in/#verify"
+    },
+    {
+      "text": "Privacy",
+      "href": "https://android-backup-receipt.sociobot.in/privacy/"
+    },
+    {
+      "text": "Try it with sample data →",
+      "href": "https://android-backup-receipt.sociobot.in/demo"
+    },
+    {
+      "text": "Check real folders ↓",
+      "href": "https://android-backup-receipt.sociobot.in/#verify"
+    },
+    {
+      "text": "Read what this does not check",
+      "href": "https://android-backup-receipt.sociobot.in/#limits"
+    },
+    {
+      "text": "download APK checksums",
+      "href": "https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/SHA256SUMS"
+    },
+    {
+      "text": "Download current APK",
+      "href": "https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/android-backup-receipt.apk"
+    },
+    {
+      "text": "Buy Migration Kit — $7",
+      "href": "https://api.sociobot.in/api/v1/products/android-backup-receipt/checkout"
+    },
+    {
+      "text": "Privacy",
+      "href": "https://android-backup-receipt.sociobot.in/privacy/"
+    },
+    {
+      "text": "Terms",
+      "href": "https://android-backup-receipt.sociobot.in/terms/"
+    },
+    {
+      "text": "Source",
+      "href": "https://github.com/B-Divyesh/sf-android-backup-receipt"
+    }
+  ],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "requests": [
+    {
+      "url": "https://android-backup-receipt.sociobot.in/",
+      "type": "document",
+      "method": "GET"
+    },
+    {
+      "url": "https://android-backup-receipt.sociobot.in/assets/app-Bdhd1eRr.js",
+      "type": "script",
+      "method": "GET"
+    },
+    {
+      "url": "https://android-backup-receipt.sociobot.in/assets/style-BMo3qnhc.css",
+      "type": "stylesheet",
+      "method": "GET"
+    },
+    {
+      "url": "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+      "type": "image",
+      "method": "GET"
+    }
+  ],
+  "navigationResponses": [
+    {
+      "url": "https://android-backup-receipt.sociobot.in/",
+      "status": 200,
+      "headers": {
+        "cache-control": "public, must-revalidate, max-age=30",
+        "content-encoding": "br",
+        "content-security-policy": "default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self' https://api.sociobot.in; font-src 'self'; frame-ancestors 'none'; form-action 'self' https://api.sociobot.in; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests",
+        "content-type": "text/html",
+        "date": "Sat, 29 Aug 2026 23:14:31 GMT",
+        "etag": "\"32423946\"",
+        "last-modified": "Sat, 29 Aug 2026 22:59:15 GMT",
+        "permissions-policy": "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "strict-transport-security": "max-age=10886400; includeSubDomains; preload",
+        "vary": "Accept-Encoding",
+        "x-content-type-options": "nosniff",
+        "x-dns-prefetch-control": "off",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "1; mode=block"
+      }
+    }
+  ],
+  "html": {
+    "lang": "en",
+    "mainCount": 1,
+    "h1Count": 1
+  }
+}

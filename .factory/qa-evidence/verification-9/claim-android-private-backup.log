@@ -1,0 +1,15 @@
+
+> android-backup-receipt@1.0.3 test:unit
+> vitest run tests/*.test.ts -t @claim:android-private-backup
+
+
+ RUN  v3.2.7 /work/repo
+
+ ↓ tests/claims-contract.test.ts (2 tests | 2 skipped)
+ ✓ tests/android-bridge.test.ts (8 tests | 7 skipped) 5ms
+ ↓ tests/core.test.ts (10 tests | 10 skipped)
+
+ Test Files  1 passed | 2 skipped (3)
+      Tests  1 passed | 19 skipped (20)
+   Start at  23:12:05
+   Duration  1.68s (transform 523ms, setup 0ms, collect 815ms, tests 5ms, environment 1ms, prepare 1.40s)

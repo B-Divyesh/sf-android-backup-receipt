@@ -1,0 +1,16 @@
+
+> android-backup-receipt@1.0.3 test:unit
+> vitest run tests/*.test.ts -t @claim:android-release-assets
+
+
+ RUN  v3.2.7 /work/repo
+
+ ↓ tests/claims-contract.test.ts (2 tests | 2 skipped)
+ ↓ tests/core.test.ts (10 tests | 10 skipped)
+ ✓ tests/android-bridge.test.ts (8 tests | 7 skipped) 1311ms
+   ✓ Android update contract > @claim:android-release-assets publishes verified signed APK and AAB release evidence  1309ms
+
+ Test Files  1 passed | 2 skipped (3)
+      Tests  1 passed | 19 skipped (20)
+   Start at  23:12:12
+   Duration  2.81s (transform 492ms, setup 0ms, collect 807ms, tests 1.31s, environment 1ms, prepare 1.24s)
