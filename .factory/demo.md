@@ -11,8 +11,10 @@ The persistent **Demo — sample data, nothing is saved to your real check**
 banner provides **Reset demo** and **Start for real**. Demo inventories use the
 separate IndexedDB database `demo:android-backup-receipt`; real checks use
 `android-backup-receipt`. Demo licenses also use `demo:`-prefixed localStorage
-keys, so it never reads or writes a real check or license state. Starting for
-real clears the demo active inventory and returns to `/`.
+keys, so it never reads or writes a real check or license state. **Reset demo**
+deletes the complete demo database and all demo-prefixed local keys before it
+reseeds the four-file sample. **Start for real** deletes the same sandbox before
+returning to `/`. Neither action changes real browser data.
 
 The sample data is built into `src/main.ts`, so it is available offline after
 the initial service-worker-controlled visit. Its four source hashes are full

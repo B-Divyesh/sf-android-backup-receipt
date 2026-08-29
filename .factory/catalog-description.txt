@@ -1,1 +1,1 @@
-Compare selected phone and backup folders, then download one receipt showing matched, missing, and changed files.
+Check selected Android folders against backups, then download one receipt for missing or changed files.

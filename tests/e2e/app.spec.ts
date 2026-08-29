@@ -47,7 +47,7 @@ test('@claim:resume-reset restores an interrupted check and clears it on request
   await expect(page.locator('#receipt')).toBeVisible();
   await expect(page.locator('#accounted-count')).toHaveText('1');
   await expect(page.locator('#changed-count')).toHaveText('1');
-  await expect(page.locator('#receipt-conclusion')).toContainText('Do not wipe');
+  await expect(page.locator('#receipt-conclusion')).toHaveText('Do not wipe your phone yet: 1 has changed.');
   await page.reload();
   await expect(page.locator('#ready-panel')).toBeVisible();
   await expect(page.locator('#source-status')).toContainText('restored phone folder');
@@ -153,7 +153,7 @@ test('@claim:demo-sample-receipt loads a useful four-file receipt inside the fir
   await expect(page.locator('#missing-count')).toHaveText('1');
   await expect(page.locator('#changed-count')).toHaveText('1');
   await expect(page.locator('#coverage-score')).toHaveText('50%');
-  await expect(page.locator('#receipt-conclusion')).toContainText('Do not wipe');
+  await expect(page.locator('#receipt-conclusion')).toHaveText('Do not wipe your phone yet: 1 file is missing and 1 has changed.');
   await expect(page.locator('h1')).toBeFocused();
   for (const selector of ['#receipt', '#accounted-count', '#missing-count', '#changed-count', '.issue-list', '#export-receipt', '#export-csv']) {
     const box = await page.locator(selector).boundingBox();
@@ -180,6 +180,92 @@ test('@claim:demo-sample-receipt loads a useful four-file receipt inside the fir
   })).toBe('REAL SENTINEL');
   const accessibility = await new AxeBuilder({ page: page as never }).analyze();
   expect(accessibility.violations).toEqual([]);
+});
+
+test('@claim:demo-reset-isolation resets and exits the complete sandbox without changing real data', async ({ page }) => {
+  await page.goto('/demo');
+  await expect(page.locator('#receipt')).toBeVisible();
+  await page.evaluate(async () => {
+    localStorage.setItem('demo:sb_license:android-backup-receipt', 'demo-license');
+    localStorage.setItem('demo:sb_license_verdict:android-backup-receipt', '{"valid":true}');
+    localStorage.setItem('demo:android-backup-receipt:extra', 'demo-extra');
+    localStorage.setItem('sb_license:android-backup-receipt', 'real-license');
+    const seedHistory = (name: string, checkedAt: string) => new Promise<void>((resolve, reject) => {
+      const request = indexedDB.open(name, 2);
+      request.onupgradeneeded = () => {
+        if (!request.result.objectStoreNames.contains('active')) request.result.createObjectStore('active', { keyPath: 'kind' });
+        if (!request.result.objectStoreNames.contains('history')) request.result.createObjectStore('history', { keyPath: 'checkedAt' });
+      };
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
+        const database = request.result;
+        const transaction = database.transaction('history', 'readwrite');
+        transaction.objectStore('history').put({ checkedAt, sourceLabel: name });
+        transaction.oncomplete = () => { database.close(); resolve(); };
+        transaction.onerror = () => { database.close(); reject(transaction.error); };
+      };
+    });
+    await seedHistory('demo:android-backup-receipt', '2026-08-29T10:00:00.000Z');
+    await seedHistory('android-backup-receipt', '2026-08-29T11:00:00.000Z');
+  });
+
+  await page.locator('#reset-demo').click();
+  await expect(page.locator('#toast-text')).toContainText('Demo history and license data were cleared');
+  await expect(page.locator('#coverage-score')).toHaveText('50%');
+  expect(await page.evaluate(() => Object.keys(localStorage).filter((key) => key.startsWith('demo:')))).toEqual([]);
+  expect(await page.evaluate(async () => {
+    const request = indexedDB.open('demo:android-backup-receipt', 2);
+    const database = await new Promise<IDBDatabase>((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    const count = (store: 'active' | 'history') => new Promise<number>((resolve, reject) => {
+      const result = database.transaction(store, 'readonly').objectStore(store).count();
+      result.onsuccess = () => resolve(result.result);
+      result.onerror = () => reject(result.error);
+    });
+    const value = { active: await count('active'), history: await count('history') };
+    database.close();
+    return value;
+  })).toEqual({ active: 2, history: 0 });
+  expect(await page.evaluate(() => localStorage.getItem('sb_license:android-backup-receipt'))).toBe('real-license');
+
+  await page.evaluate(async () => {
+    localStorage.setItem('demo:sb_license:android-backup-receipt', 'demo-license-again');
+    localStorage.setItem('demo:android-backup-receipt:extra', 'demo-extra-again');
+    const database = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open('demo:android-backup-receipt', 2);
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    const transaction = database.transaction('history', 'readwrite');
+    transaction.objectStore('history').put({ checkedAt: '2026-08-29T12:00:00.000Z' });
+    await new Promise<void>((resolve, reject) => {
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(transaction.error);
+    });
+    database.close();
+  });
+  await page.locator('#start-real').click();
+  await expect(page).toHaveURL('/');
+  await expect(page).toHaveTitle('Android Backup Receipt — check a phone backup');
+  expect(await page.evaluate(() => Object.keys(localStorage).filter((key) => key.startsWith('demo:')))).toEqual([]);
+  expect(await page.evaluate(async () => (await indexedDB.databases()).some((database) => database.name === 'demo:android-backup-receipt'))).toBe(false);
+  expect(await page.evaluate(() => localStorage.getItem('sb_license:android-backup-receipt'))).toBe('real-license');
+  expect(await page.evaluate(async () => {
+    const database = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open('android-backup-receipt', 2);
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    const request = database.transaction('history', 'readonly').objectStore('history').count();
+    const count = await new Promise<number>((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    database.close();
+    return count;
+  })).toBe(1);
 });
 
 test('@claim:multi-folder-receipt combines several folder pairs and preserves per-pair results', async ({ page }) => {
@@ -235,6 +321,36 @@ test('@claim:local-only-files keeps the demo check on the product origin', async
   await page.goto('/demo');
   await expect(page.locator('#receipt')).toBeVisible();
   expect(externalRequests).toEqual([]);
+});
+
+test('@claim:no-tracking-runtime loads every public page without analytics, ads, remote fonts, or third-party runtime scripts', async ({ page }) => {
+  const externalRequests: string[] = [];
+  page.on('request', (request) => {
+    if (new URL(request.url()).origin !== 'http://127.0.0.1:4173') externalRequests.push(request.url());
+  });
+  const loadedSource: string[] = [];
+  for (const route of ['/', '/demo', '/privacy/', '/terms/', '/offline.html', '/404.html']) {
+    await page.goto(route);
+    const resources = await page.evaluate(async () => {
+      const urls = [
+        location.href,
+        ...Array.from(document.scripts, (script) => script.src).filter(Boolean),
+        ...Array.from(document.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]'), (link) => link.href)
+      ];
+      const externalRuntime = urls.filter((url) => new URL(url).origin !== location.origin);
+      const source = await Promise.all(urls.map((url) => fetch(url).then((response) => response.text())));
+      const remoteFontRules = Array.from(document.styleSheets).flatMap((sheet) => {
+        try { return Array.from(sheet.cssRules, (rule) => rule.cssText); } catch { return ['unreadable cross-origin stylesheet']; }
+      }).filter((rule) => /@font-face/i.test(rule) && /https?:\/\//i.test(rule));
+      return { externalRuntime, remoteFontRules, source };
+    });
+    expect(resources.externalRuntime).toEqual([]);
+    expect(resources.remoteFontRules).toEqual([]);
+    loadedSource.push(...resources.source);
+  }
+  expect(externalRequests).toEqual([]);
+  const runtime = loadedSource.join('\n');
+  expect(runtime).not.toMatch(/googletagmanager|google-analytics\.com|doubleclick\.net|adsbygoogle|connect\.facebook\.net|static\.hotjar\.com|cdn\.segment\.com|cdn\.mxpnl\.com|posthog\.com|fonts\.googleapis\.com|fonts\.gstatic\.com/i);
 });
 
 test('@claim:receipt-exports creates observable JSON and CSV exports from demo data', async ({ page }) => {
@@ -410,7 +526,7 @@ test('@claim:migration-archive verifies only with Sociobot and caps the $7 one-t
   ]);
 });
 
-test('@claim:license-revocation keeps the free verifier active when Sociobot rejects a saved license', async ({ page }) => {
+test('@claim:license-revocation keeps every named free output active when Sociobot rejects a saved license', async ({ page }) => {
   await page.addInitScript(() => {
     const originalFetch = window.fetch.bind(window);
     window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
@@ -426,7 +542,19 @@ test('@claim:license-revocation keeps the free verifier active when Sociobot rej
   await expect(page.locator('#license-status')).toContainText('License no longer active');
   await expect(page.locator('#history-panel')).toBeHidden();
   await expect(page.locator('#receipt')).toBeVisible();
-  await expect(page.locator('#export-receipt')).toBeEnabled();
+  await expect(page.locator('#compare-button')).toBeEnabled();
+  await page.locator('#compare-button').click();
+  for (const selector of ['#export-source-manifest', '#export-destination-manifest', '#export-receipt', '#export-csv']) {
+    await expect(page.locator(selector)).toBeEnabled();
+    const downloadPromise = page.waitForEvent('download');
+    await page.locator(selector).click();
+    expect(await (await downloadPromise).path()).toBeTruthy();
+  }
+  await page.evaluate(() => {
+    window.print = () => { document.documentElement.dataset.printRequested = 'true'; };
+  });
+  await page.locator('#print-receipt').click();
+  await expect(page.locator('html')).toHaveAttribute('data-print-requested', 'true');
 });
 
 test('malformed manifest errors use plain recovery guidance', async ({ page }) => {
@@ -450,8 +578,14 @@ test('ships route-specific metadata, consistent navigation, focus, and build ide
   await expect(page.locator('h1')).toBeFocused();
   await page.goBack();
   await expect(page).toHaveURL('/');
+  await expect(page).toHaveTitle('Android Backup Receipt — check a phone backup');
+  await expect(page.locator('h1')).toHaveText(/Check an Android backup/);
+  await expect(page.locator('#demo-banner')).toBeHidden();
+  await expect(page.locator('#receipt')).toBeHidden();
+  await expect(page.locator('html')).toHaveAttribute('data-demo', 'false');
+  await expect(page.locator('#route-announcement')).toHaveText('Android Backup Receipt — check a phone backup');
   await expect(page.locator('h1')).toBeFocused();
-  for (const route of ['/privacy/', '/terms/', '/404.html']) {
+  for (const route of ['/privacy/', '/terms/', '/offline.html', '/404.html']) {
     await page.goto(route);
     await expect(page.locator('link[rel="canonical"]')).toHaveCount(1);
     await expect(page.locator('meta[property="og:title"]')).toHaveCount(1);

@@ -1,0 +1,52 @@
+{
+  "demo": {
+    "url": "/demo",
+    "title": "Demo — Android Backup Receipt",
+    "h1": "Review a sample backup receipt",
+    "focused": true,
+    "receipt": {
+      "x": 8,
+      "y": 178,
+      "width": 374,
+      "height": 521.65625,
+      "top": 178,
+      "right": 382,
+      "bottom": 699.65625,
+      "left": 8
+    },
+    "actions": [
+      {
+        "x": 21,
+        "y": 582.65625,
+        "width": 170,
+        "height": 52,
+        "top": 582.65625,
+        "right": 191,
+        "bottom": 634.65625,
+        "left": 21
+      },
+      {
+        "x": 199,
+        "y": 582.65625,
+        "width": 170,
+        "height": 52,
+        "top": 582.65625,
+        "right": 369,
+        "bottom": 634.65625,
+        "left": 199
+      }
+    ],
+    "overflow": 0
+  },
+  "back": {
+    "url": "/",
+    "title": "Android Backup Receipt — check a phone backup",
+    "h1": "Check an Android backup before you wipe.",
+    "focused": true,
+    "demo": "false",
+    "bannerHidden": true,
+    "receiptHidden": true,
+    "announcement": "Android Backup Receipt — check a phone backup"
+  },
+  "errors": []
+}

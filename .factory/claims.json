@@ -7,6 +7,13 @@
     "sandbox": "Fresh browser context at /demo; assert the isolated receipt has 2 accounted, 1 missing, 1 changed, and 50% coverage."
   },
   {
+    "id": "demo-reset-isolation",
+    "claim": "Resetting or leaving the demo discards all demo data without changing real data.",
+    "where": "Demo banner, demo documentation",
+    "test": "npm run test:claims -- --grep @claim:demo-reset-isolation",
+    "sandbox": "Seed demo active state, history, license, verdict, and an extra demo key beside real sentinels; assert Reset deletes and reseeds only the sample, then assert Start for real removes the whole demo namespace and preserves every real sentinel."
+  },
+  {
     "id": "resume-reset",
     "claim": "An interrupted check resumes from local inventory state, and Start another check clears it.",
     "where": "Workspace behavior, privacy policy, README",
@@ -19,6 +26,13 @@
     "where": "Landing facts, workspace, privacy policy, README",
     "test": "npm run test:claims -- --grep @claim:local-only-files",
     "sandbox": "Fresh browser context at /demo; record every request and assert all are same-origin."
+  },
+  {
+    "id": "no-tracking-runtime",
+    "claim": "Public pages use no analytics, ads, remote fonts, or third-party runtime scripts.",
+    "where": "Privacy policy, README",
+    "test": "npm run test:claims -- --grep @claim:no-tracking-runtime",
+    "sandbox": "Visit every public HTML route in a fresh browser context; assert all loaded scripts, styles, and fonts are same-origin, then inspect each loaded HTML, JavaScript, and CSS resource for tracking, ad, and remote-font integrations."
   },
   {
     "id": "receipt-exports",
@@ -92,10 +106,10 @@
   },
   {
     "id": "license-revocation",
-    "claim": "A rejected or revoked license locks receipt history without blocking the free verifier or exports.",
+    "claim": "A rejected or revoked license locks receipt history while folder checks, folder records, receipt downloads, and printing remain free.",
     "where": "Migration Kit status, terms",
     "test": "npm run test:claims -- --grep @claim:license-revocation",
-    "sandbox": "Fresh /demo with a recorded revoked response; assert the token leaves the URL, history stays locked, and the receipt/export remain available."
+    "sandbox": "Fresh /demo with a recorded revoked response; assert the token leaves the URL and history stays locked, then run the folder check and download both folder records, both receipt files, and invoke printing."
   },
   {
     "id": "print-view",

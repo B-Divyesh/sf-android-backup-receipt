@@ -114,13 +114,6 @@ function focusRouteHeading(): void {
   element<HTMLElement>('route-announcement').textContent = document.title;
 }
 
-document.querySelector<HTMLAnchorElement>('.hero-actions a[href="/demo"]')?.addEventListener('click', (event) => {
-  if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-  event.preventDefault();
-  history.pushState({ route: 'demo' }, '', '/demo');
-  location.reload();
-});
-
 window.addEventListener('pageshow', (event) => {
   if (event.persisted) window.setTimeout(focusRouteHeading, 0);
 });
@@ -177,25 +170,28 @@ function updateReadiness(): void {
   else if (folderPairs.length > 0) readySummary.textContent = `${folderPairs.length} folder ${folderPairs.length === 1 ? 'pair' : 'pairs'} ready. Choose another pair or issue the receipt.`;
 }
 
-function acceptInventory(kind: 'source' | 'destination', inventory: Inventory): void {
+function acceptInventory(kind: 'source' | 'destination', inventory: Inventory): Promise<void> {
   const bytes = inventory.files.reduce((sum, file) => sum + file.size, 0);
   const status = kind === 'source' ? sourceStatus : destinationStatus;
   const card = kind === 'source' ? sourceCard : destinationCard;
   if (kind === 'source') sourceInventory = inventory;
   else destinationInventory = inventory;
-  void saveActiveInventory(kind, inventory);
+  const saved = saveActiveInventory(kind, inventory);
   status.textContent = `${inventory.label} / ${inventory.files.length.toLocaleString()} files / ${formatBytes(bytes)}`;
   card.classList.add('is-ready');
   scanPanel.hidden = true;
   updateReadiness();
+  return saved;
 }
 
-function loadDemoData(): void {
+async function loadDemoData(): Promise<void> {
   folderPairs = [];
   sourceInventory = structuredClone(demoSource);
   destinationInventory = structuredClone(demoDestination);
-  acceptInventory('source', sourceInventory);
-  acceptInventory('destination', destinationInventory);
+  await Promise.all([
+    acceptInventory('source', sourceInventory),
+    acceptInventory('destination', destinationInventory)
+  ]);
   comparison = compareFolderPairs([{ source: sourceInventory, destination: destinationInventory }], new Date('2026-08-29T09:02:00.000Z'));
   renderReceipt(comparison, false);
 }
@@ -224,7 +220,7 @@ async function scanFiles(kind: 'source' | 'destination', files: FileList): Promi
       progressTrack.setAttribute('aria-valuenow', String(percent));
     }, controller.signal);
     if (controller !== scanController) return;
-    acceptInventory(kind, inventory);
+    await acceptInventory(kind, inventory);
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') {
       status.textContent = 'Scan cancelled. Choose the folder again when ready.';
@@ -245,7 +241,7 @@ async function scanSafTree(kind: 'source' | 'destination'): Promise<void> {
   status.textContent = 'Android will only read the folder you select.';
   try {
     const inventory = await chooseSafTree(kind);
-    acceptInventory(kind, inventory);
+    await acceptInventory(kind, inventory);
   } catch (error) {
     status.textContent = error instanceof Error ? error.message : 'Could not read this folder. Choose another folder.';
     scanPanel.hidden = true;
@@ -396,9 +392,14 @@ function renderReceipt(result: Comparison, scroll = true): void {
   }
 
   const conclusion = element<HTMLElement>('receipt-conclusion');
-  conclusion.textContent = result.missing + result.changed === 0
-    ? `All ${result.total.toLocaleString()} selected files match. Open important backup files before wiping your phone.`
-    : `Do not wipe your phone yet: ${result.missing.toLocaleString()} missing and ${result.changed.toLocaleString()} changed files need attention.`;
+  if (result.missing + result.changed === 0) {
+    conclusion.textContent = `All ${result.total.toLocaleString()} selected files match. Open important backup files before wiping your phone.`;
+  } else {
+    const issues: string[] = [];
+    if (result.missing > 0) issues.push(result.missing === 1 ? '1 file is missing' : `${result.missing.toLocaleString()} files are missing`);
+    if (result.changed > 0) issues.push(result.changed === 1 ? '1 has changed' : `${result.changed.toLocaleString()} have changed`);
+    conclusion.textContent = `Do not wipe your phone yet: ${issues.join(' and ')}.`;
+  }
   receiptElement.hidden = false;
   if (scroll) receiptElement.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
 }
@@ -448,7 +449,7 @@ async function verifyLicense(token: string): Promise<void> {
     return;
   }
   if (!navigator.onLine) {
-    status.textContent = cached?.valid ? 'Migration Kit active from the last check; verification will resume online.' : 'Saved license. Connect once to verify and unlock the archive.';
+    status.textContent = cached?.valid ? 'Migration Kit active from the last check; verification will resume online.' : 'License saved. Connect once to verify it and use receipt history.';
     return;
   }
   status.textContent = 'Checking license…';
@@ -536,6 +537,23 @@ async function clearActiveInventories(): Promise<void> {
     transaction.oncomplete = () => { database.close(); resolve(); };
     transaction.onerror = () => { database.close(); reject(transaction.error); };
   });
+}
+
+async function deleteDemoSandbox(): Promise<void> {
+  if (!demoMode) return;
+  await new Promise<void>((resolve, reject) => {
+    const request = indexedDB.deleteDatabase(DATABASE_NAME);
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+    request.onblocked = () => reject(new Error('Close other demo tabs, then reset the sample again.'));
+  });
+  for (const key of Object.keys(localStorage)) {
+    if (key.startsWith('demo:')) localStorage.removeItem(key);
+  }
+  isPremium = false;
+  element<HTMLElement>('history-panel').hidden = true;
+  element<HTMLInputElement>('license-input').value = '';
+  element<HTMLElement>('license-status').textContent = 'Free folder checker active.';
 }
 
 async function restoreActiveInventories(): Promise<void> {
@@ -653,28 +671,34 @@ if (storedLicense) {
 if (demoMode) {
   element<HTMLElement>('demo-banner').hidden = false;
   element<HTMLButtonElement>('reset-demo').addEventListener('click', async () => {
-    await clearActiveInventories();
-    loadDemoData();
-    announce('Sample receipt reset.');
+    try {
+      await deleteDemoSandbox();
+      await loadDemoData();
+      announce('Sample receipt reset. Demo history and license data were cleared.');
+    } catch (error) {
+      announce(error instanceof Error ? error.message : 'The sample could not be reset. Close other demo tabs and try again.');
+    }
   });
   element<HTMLButtonElement>('start-real').addEventListener('click', async () => {
-    await clearActiveInventories();
-    location.assign('/');
+    try {
+      await deleteDemoSandbox();
+      location.assign('/');
+    } catch (error) {
+      announce(error instanceof Error ? error.message : 'Demo data could not be cleared. Close other demo tabs and try again.');
+    }
   });
 }
 
 void restoreActiveInventories().then(() => {
   if (demoMode) {
-    loadDemoData();
-    window.setTimeout(focusRouteHeading, 0);
+    void loadDemoData().then(() => window.setTimeout(focusRouteHeading, 0));
   } else if (performance.getEntriesByType('navigation')[0] instanceof PerformanceNavigationTiming
     && (performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming).type === 'back_forward') {
     window.setTimeout(focusRouteHeading, 0);
   }
 }).catch(() => {
   if (demoMode) {
-    loadDemoData();
-    window.setTimeout(focusRouteHeading, 0);
+    void loadDemoData().then(() => window.setTimeout(focusRouteHeading, 0));
   }
   else announce('Saved folder records could not be restored. Start a new check.');
 });

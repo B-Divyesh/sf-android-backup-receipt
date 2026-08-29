@@ -23,7 +23,6 @@ The sample opens a four-file receipt. It shows two matched files, one missing fi
 - Resume an interrupted check from local browser storage. “Start another check” clears it.
 - Use the installed web app offline after its first visit. Folder checks and both downloads work offline.
 - Buy the optional $7 Migration Kit once. It stores up to 20 receipt summaries on this device.
-- Use the layout at 390 px and operate every control with a keyboard.
 
 Mount, sync, or download a remote backup folder before checking it.
 
@@ -49,6 +48,8 @@ Run unit, browser, mobile, accessibility, privacy, and offline checks:
 ```sh
 npm test
 ```
+
+The browser suite checks the 390 px layout and keyboard controls.
 
 Run only the public claim tests:
 
