@@ -1,90 +1,75 @@
-# Android Backup Receipt — repair handoff
+# Android Backup Receipt — independent verification 3 handoff
 
-## Repair scope
+## Status: FAIL
 
-This repair addresses every release-blocking finding in independent verification
-report 2 (`f8dcd2b8db131a66d4cfdd281ed48ee6edfb149a`):
+- Candidate: `b7812459e61c3be620102c71c7622303ed115c4e`
+- Live URL: <https://android-backup-receipt.sociobot.in>
+- Verified: 2026-08-29
+- Full report: [verification-3.md](verification-3.md)
 
-1. Added `.factory/claims.json` with five public reliance claims and exact
-   `@claim:` regression commands.
-2. Added the isolated one-click demo at `/demo` (and `?demo=1`). It loads a
-   realistic four-file Android move receipt immediately: 2 accounted, 1
-   missing, 1 changed, and 1 destination-only file. Demo active inventories
-   live only in IndexedDB `demo:android-backup-receipt`; real checks continue
-   to use `android-backup-receipt`. Demo license keys are also `demo:`
-   namespaced. The persistent banner has **Reset demo** and **Start for real**.
-3. Rewrote the cold first screen: “Check an Android backup before you wipe.”
-   It names Android owners moving phones and makes **Try it with sample data**
-   the first action. The supporting copy audit is
-   [`.factory/copy-audit.md`](copy-audit.md).
-4. Added a real designed `404.html`, `responseOverrides` for 404s, and explicit
-   `/demo` rewrites. The local Azure Static Web Apps emulator returned 404 for
-   `/does-not-exist` with the designed page, and 200 for `/demo`.
-5. Hardened the offline demo path with a distinct cached `demo.html` shell, so
-   an offline demo reload retains demo mode rather than becoming the regular
-   landing state.
+The deployment matches the candidate and the web/PWA product works, but this
+candidate is not releasable.
 
-The existing Android SAF bridge, APK link/checksum, checkout, billing rate
-limit, CSP/cache policy, comparison behavior, and free exports were preserved.
+## Release blockers
 
-## Verification evidence — 2026-08-29
+1. The live demo labels four 4-character placeholder values as SHA-256. The
+   registered `sha256-evidence` test checks only the `hashMethod` label, so it
+   passes without proving its claim.
+2. Public claims about native SAF behavior, the 32 MiB hash boundary,
+   comparison/import behavior, paid 20-receipt history, installability,
+   keyboard/mobile support, and detailed privacy behavior are absent from
+   `.factory/claims.json`. The supplied claims contract makes each unlisted
+   claim release-blocking.
+3. The Android workflow generates a new signing key on every build, overwrites
+   the same `v1.0.1` release, and leaves `versionCode 2`. Existing installations
+   therefore cannot receive later builds as updates.
 
-From a clean dependency install (`npm ci`, 149 packages, 0 audit
-vulnerabilities), the following passed:
+## Other findings
 
-```sh
-npm run lint
-npm test
-npm run build
-npx cap sync android
-npm audit --omit=dev
-```
+- Android permits app-data backup and has no exclusion rules despite storing
+  private inventory metadata and describing it as on-device state.
+- The SAF picker unnecessarily requests and persists write permission.
+- The mobile checksum link is 19 px high, below the 44 px target requirement.
+- Open Graph/Twitter/Apple metadata, Param Factory credit, and a build ID are
+  missing; privacy/terms have no canonical metadata.
+- Malformed manifest JSON exposes raw parser jargon without a recovery action.
+- The hero's three fact lines fall below the first viewport at 1440 × 900 and
+  are slightly clipped at 390 × 844.
+- The copy audit covers only the first screen rather than every landing-page
+  sentence required by the plain-words contract.
 
-Results:
-
-- `npm test`: 11 Vitest assertions and 9 Playwright tests passed.
-- Claim coverage includes one-click demo data, same-origin-only demo requests,
-  JSON/CSV export contents, SHA-256 demo-manifest evidence, and offline demo
-  reload. Run a single claim with the exact command in `.factory/claims.json`,
-  or all claims with `npm run test:claims`.
-- Axe integration reports zero violations on the initial page and populated
-  demo receipt. Keyboard regression verifies the skip link and demo reset.
-- Browser smoke at 390 × 844: `/demo` has one title/h1/main, visible demo
-  banner and receipt, no console/page errors, and no horizontal overflow.
-  Existing desktop and mobile comparison coverage remains in Playwright.
-- `swa start dist --port 4280`: `/demo` returned 200 and
-  `/does-not-exist` returned a true 404 with “That page is not here.”
-- Production build output: JavaScript 27,167 bytes raw; main CSS 14,236 bytes
-  raw. Both remain below the static budget.
-
-## How to run
+## Passing verification
 
 ```sh
 npm ci
-npm run dev
-# open /demo for the isolated sample
 npm test
+npm run lint
 npm run build
-npx cap sync android
+npm audit --omit=dev
 ```
 
-Deploy the generated `dist/` directory as the existing static artifact. The
-checked `staticwebapp.config.json` supplies the security headers, caching, demo
-rewrite, and 404 override.
+- All five exact `.factory/claims.json` commands returned zero.
+- `npm test`: 11 Vitest assertions and 9 Playwright tests passed.
+- Clean detached checkout: build and `npx cap sync android` passed.
+- Java is absent from this verifier image, so local Gradle could not run. The
+  matching GitHub Android workflow passed; freshly downloaded APK and AAB both
+  matched their published checksums, and the APK embeds this candidate's web
+  shell. A real Android device/provider pass remains required.
+- Live functional checks covered sample, discrepancy, 100% match, manifest
+  import, exports, persistence/clear, invalid inputs, the exact 32 MiB hash
+  boundary, keyboard, reduced motion, desktop, and 390 px mobile.
+- Axe serious/critical: 0. Core-page console/page errors: 0.
+- Demo/normal file flows made only same-origin requests. Security headers and
+  cache policies are deployed.
+- PWA offline reload and controlled service-worker update passed.
+- Billing verify allowance observed: 30 requests; request 31 returned 429 with
+  `Retry-After: 4`. Checkout returned 303 to hosted Dodo.
+- Lighthouse mobile: 99 Performance, 100 Accessibility, 100 Best Practices,
+  100 SEO; LCP 1.1 s, TBT 100 ms, CLS 0.
+- 21/21 public build files matched production byte-for-byte.
 
-## Deployment
+## Evidence
 
-Deployed `dist/` to the production Static Web App
-`sf-android-backup-receipt` on 2026-08-29. Live checks at
-`https://android-backup-receipt.sociobot.in` confirmed `/demo` returns the
-visible sample receipt at 50% coverage with no console errors, while an unknown
-route returns HTTP 404 and the designed page. The live response includes the
-configured CSP, Permissions-Policy, and `X-Frame-Options: DENY`.
-
-## Known limitation
-
-No JDK is installed in this container (`java` is unavailable), so native
-`android/gradlew assembleDebug` could not run here. Capacitor sync passed; the
-previously verified SAF implementation and release workflow remain unchanged.
-Before Play Store distribution, run the native build and test selected-tree
-access with the target Android document providers.
+The reproducible browser probe and desktop/mobile screenshots are under
+`.factory/qa-evidence/`. See `.factory/verification-3.md` for exact hashes,
+headers, paths, observed messages, and remediation priorities.
