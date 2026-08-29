@@ -70,7 +70,7 @@ trees and does not request write or broad storage access. Download the
 [current APK](https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/android-backup-receipt.apk)
 and [SHA-256 checksum](https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/SHA256SUMS).
 Android may ask you to allow installation from the browser or file manager that
-opened the APK. It is not on Google Play yet.
+opened the APK.
 
 The release workflow builds both APK and AAB with JDK 21. It restores the
 factory-managed signing key from protected repository secrets, assigns a higher
@@ -86,6 +86,10 @@ npx cap sync android
 For a local Android release build, provide `android/app/release.keystore` and
 the `RELEASE_STORE_*` environment variables used by the workflow. Then run
 `./gradlew assembleRelease` from `android/`.
+
+The rejected `v1.0.1` test APK used a discarded workflow key and cannot update
+in place. Remove that test build once before installing the current APK.
+Current and future releases share the protected signer and update normally.
 
 ## Privacy and billing
 

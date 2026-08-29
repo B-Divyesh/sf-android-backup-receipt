@@ -79,7 +79,6 @@ line contains a banned marketing word.
 | Method | Larger files use clearly marked, low-memory sampled SHA-256. | 8 | Pass |
 | Method | You keep the receipt | 4 | Pass |
 | Method | Export JSON for machine-readable evidence or CSV for inspection. | 9 | Pass |
-| Method | No account is required. | 4 | Pass |
 | Remote folders | WebDAV or S3? | 3 | Pass |
 | Remote folders | Sync or download the destination folder, then choose it here. | 10 | Pass |
 | Remote folders | Alternatively, run this app where the destination is mounted and export its manifest. | 13 | Pass |
@@ -99,7 +98,6 @@ line contains a banned marketing word.
 | Android | Open it on Android and allow installation from your browser or file manager if Android asks. | 15 | Pass |
 | Android | Choose the phone folder and its copied destination in the Android file picker, then issue the receipt. | 17 | Pass |
 | Android | Download current APK | 3 | Pass |
-| Android | Not on Google Play yet. | 5 | Pass |
 | Android | Each release uses the same protected signing key and a higher Android version code. | 13 | Pass |
 | Paid | Optional receipt history | 3 | Pass |
 | Paid | Save receipt history | 3 | Pass |

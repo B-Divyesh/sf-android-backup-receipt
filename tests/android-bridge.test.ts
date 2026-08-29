@@ -45,7 +45,7 @@ describe('Android SAF delivery contract', () => {
 });
 
 describe('Android update contract', () => {
-  it('uses protected stable signing secrets, increasing version codes, and immutable releases', async () => {
+  it('@claim:android-updates uses protected stable signing secrets, increasing version codes, and immutable releases', async () => {
     const [workflow, gradle] = await Promise.all([readFile(workflowPath, 'utf8'), readFile(gradlePath, 'utf8')]);
     expect(workflow).toContain('secrets.ANDROID_RELEASE_KEYSTORE_BASE64');
     expect(workflow).toContain('secrets.ANDROID_RELEASE_STORE_PASSWORD');

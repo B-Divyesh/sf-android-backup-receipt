@@ -7,6 +7,13 @@
     "sandbox": "Fresh browser context at /demo; assert the isolated receipt has 2 accounted, 1 missing, 1 changed, and 50% coverage."
   },
   {
+    "id": "resume-reset",
+    "claim": "An interrupted check resumes from local inventory state, and Start another check clears it.",
+    "where": "Workspace behavior, privacy policy, README",
+    "test": "npm run test:claims -- --grep @claim:resume-reset",
+    "sandbox": "Fresh 390px browser context; inventory two folders, reload, assert restored state, clear it, and assert both the UI and IndexedDB are empty."
+  },
+  {
     "id": "local-only-files",
     "claim": "Selected files stay on the device and the core check loads no third-party scripts or services.",
     "where": "Landing facts, workspace, privacy policy, README",
@@ -56,6 +63,13 @@
     "sandbox": "Inspect the Android manifest and both backup-rule formats for disabled backup and complete database/shared-preference exclusions."
   },
   {
+    "id": "android-updates",
+    "claim": "New Android releases use one protected signing identity, higher version codes, and immutable release tags.",
+    "where": "Android install section, README",
+    "test": "npm run test:unit -- -t @claim:android-updates",
+    "sandbox": "Inspect the release workflow and Gradle configuration for encrypted signing secrets, run-number version codes, and unique release tags; reject key generation or asset overwrites."
+  },
+  {
     "id": "local-metadata-storage",
     "claim": "Local inventories store paths, sizes, dates, and fingerprints, not file contents or EXIF fields.",
     "where": "Privacy policy, README",
@@ -64,10 +78,17 @@
   },
   {
     "id": "migration-archive",
-    "claim": "The optional $7 one-time Migration Kit keeps at most 20 receipt summaries locally and has no subscription.",
+    "claim": "The optional $7 one-time Migration Kit keeps at most 20 receipt summaries locally, stores its daily verdict locally, and has no subscription.",
     "where": "Migration Kit section, terms, README",
     "test": "npm run test:claims -- --grep @claim:migration-archive",
     "sandbox": "Fresh /demo with a recorded valid Sociobot response; create 21 receipts, assert 20 local records, price/copy, and only the documented verification request."
+  },
+  {
+    "id": "license-revocation",
+    "claim": "A rejected or revoked license locks receipt history without blocking the free verifier or exports.",
+    "where": "Migration Kit status, terms",
+    "test": "npm run test:claims -- --grep @claim:license-revocation",
+    "sandbox": "Fresh /demo with a recorded revoked response; assert the token leaves the URL, history stays locked, and the receipt/export remain available."
   },
   {
     "id": "print-view",
