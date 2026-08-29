@@ -82,7 +82,7 @@ test('@claim:responsive-keyboard keeps the first-screen facts and controls usabl
   await page.keyboard.press('Enter');
   await chooser;
 
-  for (const selector of ['.wordmark', 'footer a', '.checksum-link']) {
+  for (const selector of ['.wordmark', 'footer a', '.checksum-link', '#manifest-input', '.license-box label']) {
     const targets = await page.locator(selector).all();
     for (const target of targets) {
       const box = await target.boundingBox();

@@ -8,8 +8,10 @@ const style = assets.find((file) => /^style-[a-zA-Z0-9_-]+\.css$/.test(file));
 
 if (!app || !style) throw new Error('Expected hashed app JavaScript and stylesheet in dist/assets.');
 
-const buildId = app.match(/^app-([a-zA-Z0-9_-]+)\.js$/)?.[1];
-if (!buildId) throw new Error('Could not read the app build fingerprint.');
+const appId = app.match(/^app-([a-zA-Z0-9_-]+)\.js$/)?.[1];
+const styleId = style.match(/^style-([a-zA-Z0-9_-]+)\.css$/)?.[1];
+if (!appId || !styleId) throw new Error('Could not read the app build fingerprint.');
+const buildId = `${appId}-${styleId}`;
 const serviceWorkerPath = join('dist', 'sw.js');
 const source = await readFile(serviceWorkerPath, 'utf8');
 const output = source
