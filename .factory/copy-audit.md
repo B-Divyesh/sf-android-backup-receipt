@@ -1,6 +1,6 @@
-# Copy audit — polish round 2
+# Copy audit — polish round 3
 
-Audited 29 August 2026 after every round-2 rewrite. Counts use whitespace-delimited words after removing markup. The longest landing sentence has 17 words. The longest README sentence has 15 words. No sentence exceeds 22 words. No customer-facing sentence uses a banned marketing word.
+Audited 29 August 2026 after the round-3 rewrite. Counts use whitespace-delimited words after removing markup. The longest landing sentence has 17 words. The longest README sentence has 15 words. No sentence exceeds 22 words. No customer-facing sentence uses a banned marketing word.
 
 ## Landing and demo sentences and fact lines
 
@@ -11,9 +11,10 @@ Audited 29 August 2026 after every round-2 rewrite. Counts use whitespace-delimi
 | Four sample files show two matched, one missing, and one changed. | 11 | Pass |
 | Check an Android backup before you wipe. | 7 | Pass |
 | For Android owners moving phones: compare selected folders, then get a receipt showing which selected files match. | 17 | Pass |
-| Local files stay on your device. | 6 | Pass |
-| 4 files in the sample check | 6 | Pass |
-| 2 downloads receipt and issue list | 6 | Pass |
+| Opens a four-file receipt with two problems. | 7 | Pass; names the sample result beside its action |
+| Files stay on this device. | 5 | Pass; privacy fact |
+| Offline after the first visit. | 4 | Pass; offline fact |
+| Checks free; history costs $7 once. | 6 | Pass; price fact |
 | Choose each phone folder and its backup folder. | 8 | Pass |
 | This device reads file details and creates fingerprints for comparison. | 10 | Pass |
 | Select a folder such as DCIM, Download, or an app’s export folder. | 12 | Pass |
@@ -30,8 +31,11 @@ Audited 29 August 2026 after every round-2 rewrite. Counts use whitespace-delimi
 | Files through 32 MiB use a complete fingerprint (SHA-256). | 10 | Pass; plain description precedes format |
 | Larger files use a clearly marked sampled fingerprint. | 8 | Pass |
 | Download a detailed receipt (JSON) or a spreadsheet-ready issue list (CSV). | 12 | Pass; outcomes precede formats |
-| Mount, sync, or download the remote backup folder before checking it here. | 12 | Pass |
-| You can also import its saved folder record. | 8 | Pass |
+| Android: Install a WebDAV or S3 document provider, then select its backup folder. | 13 | Pass; native provider path |
+| This app reads only that selected folder. | 7 | Pass; `remote-provider-access` |
+| Website: Open the mounted remote folder on another computer. | 9 | Pass; web handoff |
+| Download its backup folder record. | 5 | Pass |
+| Move that JSON file here, then use Import backup record. | 10 | Pass |
 | This does not back up your phone. | 7 | Pass |
 | It checks selected photos, downloads, documents, and app-export folders. | 9 | Pass |
 | It cannot see protected app data, messages, system settings, or unselected folders. | 12 | Pass |
@@ -42,7 +46,7 @@ Audited 29 August 2026 after every round-2 rewrite. Counts use whitespace-delimi
 | It keeps read access only for folders you select. | 9 | Pass |
 | It cannot scan your full device or protected app data. | 10 | Pass |
 | Download the Android app package (APK). | 6 | Pass; plain description precedes acronym |
-| Advanced users can confirm its published fingerprint. | 7 | Pass |
+| Advanced users can download APK checksums. | 6 | Pass; `android-release-assets` |
 | Open it on Android and allow installation from your browser or file manager if Android asks. | 15 | Pass |
 | Choose each phone folder and backup folder in Android’s file picker. | 11 | Pass |
 | Then issue one combined receipt. | 5 | Pass |
@@ -50,8 +54,9 @@ Audited 29 August 2026 after every round-2 rewrite. Counts use whitespace-delimi
 | Folder checks, folder records, and receipt downloads are free. | 9 | Pass; each named output is tested |
 | The $7 Migration Kit is a one-time purchase. | 8 | Pass; tested claim |
 | It saves up to 20 receipt summaries on this device for repeat checks. | 13 | Pass; tested claim |
-| Sociobot/Dodo is the merchant of record and handles refunds. | 9 | Pass; tested claim |
-| A refund revokes the license. | 5 | Pass; tested claim |
+| 20 saved receipt summaries | 4 | Pass; list item |
+| Receipt history for repeat checks | 5 | Pass; list item |
+| No subscription | 2 | Pass; list item |
 | Compare selected phone and backup folders on this device. | 9 | Pass |
 
 Generated receipt and error sentences are also bounded. The sample warning is: “Do not wipe your phone yet: 1 file is missing and 1 has changed.” (13 words). Offline license states say “Migration Kit active from the last completed check.” (8 words) or “License saved. Connect once to verify it and use receipt history.” (11 words). Browser tests exercise invalid records, empty folders, incomplete pairs, offline state, license rejection, reset, and successful receipts.
@@ -65,7 +70,7 @@ All headings and controls use sentence case and name their content or result.
 - Matched files by category; Missing or changed files
 - Download detailed receipt (JSON); Download issue list (CSV)
 - How Android Backup Receipt handles your files; Terms for Android Backup Receipt
-- Read what this does not check
+- Read what this does not check; Choose remote backup provider; Saved receipt history; Clear receipt history
 
 ## README sentences and fact lines
 
@@ -99,37 +104,41 @@ Code blocks and section titles are excluded. Command introductions are included.
 | 24 | Folder checks and both downloads work offline. | 7 | Pass |
 | 25 | Buy the optional $7 Migration Kit once. | 7 | Pass |
 | 26 | It stores up to 20 receipt summaries on this device. | 10 | Pass |
-| 27 | Mount, sync, or download a remote backup folder before checking it. | 11 | Pass |
-| 28 | Before wiping your phone, open important files in every backup folder. | 11 | Pass |
-| 29 | Keep two copies of files you cannot replace. | 8 | Pass |
-| 30 | Download the current Android app package (APK). | 7 | Pass |
-| 31 | Advanced users can also download its published fingerprint. | 8 | Pass |
-| 32 | Android may ask you to allow installation from your browser or file manager. | 13 | Pass |
-| 33 | The app requests read access only for folders you select. | 10 | Pass |
-| 34 | Use Node.js 20 or newer. | 5 | Pass |
-| 35 | Run unit, browser, mobile, accessibility, privacy, and offline checks: | 9 | Pass |
-| 36 | The browser suite checks the 390 px layout and keyboard controls. | 11 | Pass |
-| 37 | Run only the public claim tests: | 6 | Pass |
-| 38 | Build the static site into dist/: | 6 | Pass |
-| 39 | Preview it with npm run preview. | 6 | Pass |
-| 40 | The Android release workflow is configured for JDK 21. | 9 | Pass |
-| 41 | It builds an app package and an Android App Bundle (AAB). | 11 | Pass |
-| 42 | The workflow restores the protected signing key. | 7 | Pass |
-| 43 | It uses the run number for a higher version code. | 10 | Pass |
-| 44 | Each release includes checksums and the signing fingerprint. | 8 | Pass |
-| 45 | Refresh the Capacitor Android project after a web build: | 9 | Pass |
-| 46 | For a local release, provide android/app/release.keystore and the RELEASE_STORE_* values used by the workflow. | 14 | Pass |
-| 47 | Run ./gradlew assembleRelease from android/. | 5 | Pass |
-| 48 | The app has no analytics, ads, remote fonts, or third-party runtime scripts. | 12 | Pass; `no-tracking-runtime` |
-| 49 | Core folder checks make no cross-origin request. | 7 | Pass; `local-only-files` |
-| 50 | The browser stores active folder records in its local database so a check can resume. | 15 | Pass |
-| 51 | It stores paid receipt summaries there too. | 7 | Pass |
-| 52 | The browser stores the license and daily verdict separately. | 9 | Pass |
-| 53 | License checks contact only the Sociobot billing API. | 8 | Pass |
-| 54 | The Android app excludes private app state from cloud backup and device transfer. | 13 | Pass |
-| 55 | See Privacy and Terms. | 4 | Pass |
-| 56 | MIT. | 1 | Pass |
-| 57 | See LICENSE. | 2 | Pass |
+| 27 | On Android, install a WebDAV or S3 document provider. | 10 | Pass; native provider path |
+| 28 | Choose its backup folder with the app’s remote provider button. | 10 | Pass |
+| 29 | On the web, open the remote backup where it is mounted. | 11 | Pass; web handoff |
+| 30 | Download its backup folder record. | 5 | Pass |
+| 31 | Move that JSON file to this device, then import it. | 11 | Pass |
+| 32 | Before wiping your phone, open important files in every backup folder. | 11 | Pass |
+| 33 | Keep two copies of files you cannot replace. | 8 | Pass |
+| 34 | Download the current Android app package (APK). | 7 | Pass |
+| 35 | Advanced users can also download APK checksums. | 7 | Pass; `android-release-assets` |
+| 36 | Android may ask you to allow installation from your browser or file manager. | 13 | Pass |
+| 37 | The app requests read access only for folders you select. | 10 | Pass |
+| 38 | Use Node.js 20 or newer. | 5 | Pass |
+| 39 | Run unit, browser, mobile, accessibility, privacy, and offline checks: | 9 | Pass |
+| 40 | The browser suite checks the 390 px layout and keyboard controls. | 11 | Pass |
+| 41 | Run only the public claim tests: | 6 | Pass |
+| 42 | Build the static site into dist/: | 6 | Pass |
+| 43 | Preview it with npm run preview. | 6 | Pass |
+| 44 | The Android release workflow uses JDK 21. | 8 | Pass; `android-release-assets` |
+| 45 | It builds a signed app package and an Android App Bundle (AAB). | 12 | Pass; `android-release-assets` |
+| 46 | The workflow restores the protected signing key. | 7 | Pass |
+| 47 | It uses the run number for a higher version code. | 10 | Pass |
+| 48 | Each release publishes checksums and the signing-certificate fingerprint. | 8 | Pass; `android-release-assets` |
+| 49 | Refresh the Capacitor Android project after a web build: | 9 | Pass |
+| 50 | For a local release, provide android/app/release.keystore and the RELEASE_STORE_* values used by the workflow. | 14 | Pass |
+| 51 | Run ./gradlew assembleRelease from android/. | 5 | Pass |
+| 52 | The app has no analytics, ads, remote fonts, or third-party runtime scripts. | 12 | Pass; `no-tracking-runtime` |
+| 53 | Core folder checks make no cross-origin request. | 7 | Pass; `local-only-files` |
+| 54 | The browser stores active folder records in its local database so a check can resume. | 15 | Pass |
+| 55 | It stores paid receipt summaries there too. | 7 | Pass |
+| 56 | The browser stores the license and daily verdict separately. | 9 | Pass |
+| 57 | License checks contact only the Sociobot billing API. | 8 | Pass |
+| 58 | The Android app excludes private app state from cloud backup and device transfer. | 13 | Pass |
+| 59 | See Privacy and Terms. | 4 | Pass |
+| 60 | MIT. | 1 | Pass |
+| 61 | See LICENSE. | 2 | Pass |
 
 ## Terminology
 
@@ -138,7 +147,7 @@ Code blocks and section titles are excluded. Command introductions are included.
 | Folder on the old phone | phone folder |
 | Corresponding copied folder | backup folder |
 | Successful comparison | matched |
-| Saved portable inventory | saved folder record; “manifest” appears once only as the file-format name |
+| Saved portable folder record | saved folder record; “manifest” appears once only as the file-format name |
 | Whole result document | receipt |
 | Optional local history purchase | Migration Kit |
 
