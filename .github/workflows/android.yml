@@ -10,6 +10,8 @@ on:
       - 'public/**'
       - 'index.html'
       - 'capacitor.config.ts'
+      - 'scripts/**'
+      - 'vite.config.ts'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/android.yml'

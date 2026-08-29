@@ -1,4 +1,5 @@
 import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { join } from 'node:path';
 
 const assetDirectory = join('dist', 'assets');
@@ -11,7 +12,13 @@ if (!app || !style) throw new Error('Expected hashed app JavaScript and styleshe
 const appId = app.match(/^app-([a-zA-Z0-9_-]+)\.js$/)?.[1];
 const styleId = style.match(/^style-([a-zA-Z0-9_-]+)\.css$/)?.[1];
 if (!appId || !styleId) throw new Error('Could not read the app build fingerprint.');
-const buildId = `${appId}-${styleId}`;
+const indexTemplate = await readFile(join('dist', 'index.html'));
+const buildId = createHash('sha256')
+  .update(app)
+  .update(style)
+  .update(indexTemplate)
+  .digest('hex')
+  .slice(0, 12);
 const serviceWorkerPath = join('dist', 'sw.js');
 const source = await readFile(serviceWorkerPath, 'utf8');
 const output = source
