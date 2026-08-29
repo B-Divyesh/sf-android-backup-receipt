@@ -25,7 +25,7 @@ export function usesNativeSaf(): boolean {
 export async function chooseSafTree(kind: InventoryKind): Promise<Inventory> {
   const inventory = await SafInventory.chooseTree({ kind });
   if (inventory.schema !== MANIFEST_SCHEMA || !Array.isArray(inventory.files)) {
-    throw new Error('Android returned an unsupported folder inventory. Choose the folder again.');
+    throw new Error('Android returned an unsupported folder record. Choose the folder again.');
   }
   return inventory;
 }

@@ -82,6 +82,7 @@ const destinationInput = element<HTMLInputElement>('destination-input');
 const manifestInput = element<HTMLInputElement>('manifest-input');
 const sourcePicker = element<HTMLButtonElement>('source-picker');
 const destinationPicker = element<HTMLButtonElement>('destination-picker');
+const remoteProviderPicker = element<HTMLButtonElement>('remote-provider-picker');
 const sourceStatus = element<HTMLDivElement>('source-status');
 const destinationStatus = element<HTMLDivElement>('destination-status');
 const sourceCard = element<HTMLElement>('source-card');
@@ -215,7 +216,7 @@ async function scanFiles(kind: 'source' | 'destination', files: FileList): Promi
     const inventory = await buildInventory(Array.from(files), label, ({ current, total, path }) => {
       const percent = total === 0 ? 0 : Math.round((current / total) * 100);
       scanCount.textContent = `${current.toLocaleString()} / ${total.toLocaleString()}`;
-      scanFile.textContent = path || 'Preparing inventory';
+      scanFile.textContent = path || 'Preparing folder record';
       progressBar.style.width = `${percent}%`;
       progressTrack.setAttribute('aria-valuenow', String(percent));
     }, controller.signal);
@@ -231,14 +232,18 @@ async function scanFiles(kind: 'source' | 'destination', files: FileList): Promi
   }
 }
 
-async function scanSafTree(kind: 'source' | 'destination'): Promise<void> {
+async function scanSafTree(kind: 'source' | 'destination', remoteProvider = false): Promise<void> {
   const status = kind === 'source' ? sourceStatus : destinationStatus;
   scanPanel.hidden = false;
-  scanLabel.textContent = kind === 'source' ? 'Waiting for phone-folder permission…' : 'Waiting for backup-folder permission…';
+  scanLabel.textContent = remoteProvider
+    ? 'Waiting for remote backup-folder permission…'
+    : kind === 'source' ? 'Waiting for phone-folder permission…' : 'Waiting for backup-folder permission…';
   scanCount.textContent = '0 / 0';
-  scanFile.textContent = 'Choose a folder in Android’s file picker';
+  scanFile.textContent = remoteProvider ? 'Choose the installed provider’s backup folder' : 'Choose a folder in Android’s file picker';
   progressBar.style.width = '0%';
-  status.textContent = 'Android will only read the folder you select.';
+  status.textContent = remoteProvider
+    ? 'Android will only read the remote backup folder you select.'
+    : 'Android will only read the folder you select.';
   try {
     const inventory = await chooseSafTree(kind);
     await acceptInventory(kind, inventory);
@@ -261,6 +266,10 @@ sourcePicker.addEventListener('click', () => {
 destinationPicker.addEventListener('click', () => {
   if (usesNativeSaf()) void scanSafTree('destination');
   else destinationInput.click();
+});
+if (usesNativeSaf()) remoteProviderPicker.hidden = false;
+remoteProviderPicker.addEventListener('click', () => {
+  if (usesNativeSaf()) void scanSafTree('destination', true);
 });
 manifestInput.addEventListener('change', async () => {
   const file = manifestInput.files?.[0];
@@ -633,7 +642,7 @@ element<HTMLButtonElement>('clear-history').addEventListener('click', async () =
   const database = await openDatabase();
   const transaction = database.transaction('history', 'readwrite');
   transaction.objectStore('history').clear();
-  transaction.oncomplete = () => { database.close(); void renderHistory(); announce('Receipt archive cleared.'); };
+  transaction.oncomplete = () => { database.close(); void renderHistory(); announce('Receipt history cleared.'); };
 });
 
 async function updateNetworkState(): Promise<void> {
@@ -706,7 +715,7 @@ void restoreActiveInventories().then(() => {
 void listenForSafProgress((progress) => {
   scanLabel.textContent = progress.kind === 'source' ? 'Reading phone folder…' : 'Reading backup folder…';
   scanCount.textContent = `${progress.current.toLocaleString()} / ${progress.total.toLocaleString()}`;
-  scanFile.textContent = progress.path || 'Preparing inventory';
+  scanFile.textContent = progress.path || 'Preparing folder record';
   const percent = progress.total === 0 ? 0 : Math.round((progress.current / progress.total) * 100);
   progressBar.style.width = `${percent}%`;
   progressTrack.setAttribute('aria-valuenow', String(percent));

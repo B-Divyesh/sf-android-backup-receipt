@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { describe, expect, it } from 'vitest';
 
@@ -6,6 +7,7 @@ const activityPath = new URL('../android/app/src/main/java/in/sociobot/androidba
 const configPath = new URL('../public/staticwebapp.config.json', import.meta.url);
 const gradlePath = new URL('../android/app/build.gradle', import.meta.url);
 const workflowPath = new URL('../.github/workflows/android.yml', import.meta.url);
+const indexPath = new URL('../index.html', import.meta.url);
 
 describe('Android SAF delivery contract', () => {
   it('@claim:saf-read-only uses persistent selected-tree read access without broad or write permissions', async () => {
@@ -55,6 +57,75 @@ describe('Android update contract', () => {
     expect(workflow).not.toContain('gh release upload');
     expect(gradle).toContain('System.getenv("ANDROID_VERSION_CODE")');
     expect(gradle).toContain('"4"');
+  });
+
+  it('@claim:android-release-assets publishes verified signed APK and AAB release evidence', async () => {
+    const workflow = await readFile(workflowPath, 'utf8');
+    expect(workflow).toContain("java-version: '21'");
+    expect(workflow).toContain('./gradlew assembleRelease bundleRelease');
+    expect(workflow).toContain('cp app/build/outputs/apk/release/app-release.apk ../release/android-backup-receipt.apk');
+    expect(workflow).toContain('cp app/build/outputs/bundle/release/app-release.aab ../release/android-backup-receipt.aab');
+    expect(workflow).toContain('> ../release/SIGNING_CERT_SHA256.txt');
+    expect(workflow).toContain('sha256sum android-backup-receipt.apk android-backup-receipt.aab > SHA256SUMS');
+    expect(workflow).toContain('gh release create "$RELEASE_TAG" --latest');
+    expect(workflow).toContain('android-v1.0.3-build-${GITHUB_RUN_NUMBER}');
+
+    const repository = 'B-Divyesh/sf-android-backup-receipt';
+    const releaseResponse = await fetch(`https://api.github.com/repos/${repository}/releases/latest`);
+    expect(releaseResponse.ok).toBe(true);
+    const release = await releaseResponse.json() as {
+      tag_name: string;
+      assets: Array<{ name: string; browser_download_url: string }>;
+    };
+    expect(release.tag_name).toMatch(/^android-v1\.0\.3-build-\d+$/);
+    const assets = new Map(release.assets.map((asset) => [asset.name, asset.browser_download_url]));
+    expect([...assets.keys()].sort()).toEqual([
+      'SHA256SUMS',
+      'SIGNING_CERT_SHA256.txt',
+      'android-backup-receipt.aab',
+      'android-backup-receipt.apk'
+    ]);
+
+    const publicChecksums = await fetch(`https://github.com/${repository}/releases/latest/download/SHA256SUMS`);
+    expect(publicChecksums.ok).toBe(true);
+    const checksums = new Map(
+      (await publicChecksums.text()).trim().split('\n').map((line) => {
+        const match = line.match(/^([a-f0-9]{64})\s+\*?(.+)$/i);
+        expect(match).not.toBeNull();
+        return [match![2], match![1].toLowerCase()] as const;
+      })
+    );
+    for (const name of ['android-backup-receipt.apk', 'android-backup-receipt.aab']) {
+      const response = await fetch(assets.get(name)!);
+      expect(response.ok, `${name} must download from the immutable release tag`).toBe(true);
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      expect(bytes.subarray(0, 2)).toEqual(new Uint8Array([0x50, 0x4b]));
+      expect(createHash('sha256').update(bytes).digest('hex')).toBe(checksums.get(name));
+    }
+    const certificate = await fetch(assets.get('SIGNING_CERT_SHA256.txt')!);
+    expect(certificate.ok).toBe(true);
+    expect((await certificate.text()).trim()).toMatch(/^SHA-256:\s*(?:[A-F0-9]{2}:){31}[A-F0-9]{2}$/i);
+  }, 60_000);
+
+  it('@claim:remote-provider-access opens an installed document provider as the read-only backup-folder path', async () => {
+    const [page, webBridge, plugin, readme] = await Promise.all([
+      readFile(indexPath, 'utf8'),
+      readFile(new URL('../src/main.ts', import.meta.url), 'utf8'),
+      readFile(pluginPath, 'utf8'),
+      readFile(new URL('../README.md', import.meta.url), 'utf8')
+    ]);
+    expect(page).toContain('id="remote-provider-picker"');
+    expect(page).toContain('Choose remote backup provider');
+    expect(page).toContain('Install a WebDAV or S3 document provider');
+    expect(page).toContain('Import backup record');
+    expect(webBridge).toContain("scanSafTree('destination', true)");
+    expect(webBridge).toContain("chooseSafTree(kind)");
+    expect(plugin).toContain('Intent.ACTION_OPEN_DOCUMENT_TREE');
+    expect(plugin).toContain('Intent.FLAG_GRANT_READ_URI_PERMISSION');
+    expect(plugin).not.toContain('FLAG_GRANT_WRITE_URI_PERMISSION');
+    expect(plugin).toContain('DocumentFile.fromTreeUri');
+    expect(readme).toContain('Download its backup folder record');
+    expect(readme).toContain('then import it');
   });
 });
 

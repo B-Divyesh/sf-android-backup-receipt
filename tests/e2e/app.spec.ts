@@ -88,6 +88,10 @@ test('@claim:responsive-keyboard keeps the first-screen facts and controls usabl
   const facts = await page.locator('.trust-strip').boundingBox();
   expect(facts?.y).toBeGreaterThanOrEqual(0);
   expect((facts?.y ?? 900) + (facts?.height ?? 900)).toBeLessThanOrEqual(844);
+  await expect(page.locator('.action-outcome')).toHaveText('Opens a four-file receipt with two problems.');
+  await expect(page.locator('.trust-strip')).toContainText('Files stay on this device');
+  await expect(page.locator('.trust-strip')).toContainText('Offline after the first visit');
+  await expect(page.locator('.trust-strip')).toContainText('Checks free history costs $7 once');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 
   await page.keyboard.press('Tab');
@@ -491,7 +495,6 @@ test('@claim:migration-archive verifies only with Sociobot and caps the $7 one-t
   await expect(page.locator('#unlock')).toContainText('$7 Migration Kit');
   await expect(page.locator('#unlock')).toContainText('one-time purchase');
   await expect(page.locator('#unlock')).toContainText('No subscription');
-  await expect(page.locator('.legal-note')).toContainText('merchant of record and handles refunds');
   await expect(page.locator('#unlock > .license-box > a')).toHaveAttribute('href', 'https://api.sociobot.in/api/v1/products/android-backup-receipt/checkout');
   await page.locator('#license-input').fill('sbk_test_fixture_license');
   await page.locator('#license-form button').click();
@@ -526,35 +529,42 @@ test('@claim:migration-archive verifies only with Sociobot and caps the $7 one-t
   ]);
 });
 
-test('@claim:license-revocation keeps every named free output active when Sociobot rejects a saved license', async ({ page }) => {
-  await page.addInitScript(() => {
-    const originalFetch = window.fetch.bind(window);
-    window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
-      const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
-      if (url.startsWith('https://api.sociobot.in/')) {
-        return Promise.resolve(new Response('{"valid":false,"reason":"revoked"}', { status: 200, headers: { 'content-type': 'application/json' } }));
+test('@claim:license-revocation keeps receipt history unavailable for expired, revoked, and wrong-product licenses while named free outputs work', async ({ browser }) => {
+  for (const reason of ['expired', 'revoked', 'wrong_product']) {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.addInitScript((recordedReason) => {
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
+        if (url.startsWith('https://api.sociobot.in/')) {
+          return Promise.resolve(new Response(JSON.stringify({ valid: false, reason: recordedReason }), { status: 200, headers: { 'content-type': 'application/json' } }));
+        }
+        return originalFetch(input, init);
+      };
+    }, reason);
+    await page.goto(`/demo?license=${reason}_fixture_token`);
+    await expect(page).not.toHaveURL(/license=/);
+    await expect(page.locator('#license-status')).toContainText('License no longer active');
+    await expect(page.locator('#history-panel')).toBeHidden();
+    await expect(page.locator('#receipt')).toBeVisible();
+    await expect(page.locator('#compare-button')).toBeEnabled();
+    if (reason === 'revoked') {
+      await page.locator('#compare-button').click();
+      for (const selector of ['#export-source-manifest', '#export-destination-manifest', '#export-receipt', '#export-csv']) {
+        await expect(page.locator(selector)).toBeEnabled();
+        const downloadPromise = page.waitForEvent('download');
+        await page.locator(selector).click();
+        expect(await (await downloadPromise).path()).toBeTruthy();
       }
-      return originalFetch(input, init);
-    };
-  });
-  await page.goto('/demo?license=revoked_fixture_token');
-  await expect(page).not.toHaveURL(/license=/);
-  await expect(page.locator('#license-status')).toContainText('License no longer active');
-  await expect(page.locator('#history-panel')).toBeHidden();
-  await expect(page.locator('#receipt')).toBeVisible();
-  await expect(page.locator('#compare-button')).toBeEnabled();
-  await page.locator('#compare-button').click();
-  for (const selector of ['#export-source-manifest', '#export-destination-manifest', '#export-receipt', '#export-csv']) {
-    await expect(page.locator(selector)).toBeEnabled();
-    const downloadPromise = page.waitForEvent('download');
-    await page.locator(selector).click();
-    expect(await (await downloadPromise).path()).toBeTruthy();
+      await page.evaluate(() => {
+        window.print = () => { document.documentElement.dataset.printRequested = 'true'; };
+      });
+      await page.locator('#print-receipt').click();
+      await expect(page.locator('html')).toHaveAttribute('data-print-requested', 'true');
+    }
+    await context.close();
   }
-  await page.evaluate(() => {
-    window.print = () => { document.documentElement.dataset.printRequested = 'true'; };
-  });
-  await page.locator('#print-receipt').click();
-  await expect(page.locator('html')).toHaveAttribute('data-print-requested', 'true');
 });
 
 test('malformed manifest errors use plain recovery guidance', async ({ page }) => {

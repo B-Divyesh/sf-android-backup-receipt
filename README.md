@@ -24,13 +24,15 @@ The sample opens a four-file receipt. It shows two matched files, one missing fi
 - Use the installed web app offline after its first visit. Folder checks and both downloads work offline.
 - Buy the optional $7 Migration Kit once. It stores up to 20 receipt summaries on this device.
 
-Mount, sync, or download a remote backup folder before checking it.
+On Android, install a WebDAV or S3 document provider. Choose its backup folder with the app’s remote provider button.
+
+On the web, open the remote backup where it is mounted. Download its backup folder record. Move that JSON file to this device, then import it.
 
 Before wiping your phone, open important files in every backup folder. Keep two copies of files you cannot replace.
 
 ## Install the Android app
 
-Download the [current Android app package (APK)](https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/android-backup-receipt.apk). Advanced users can also download its [published fingerprint](https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/SHA256SUMS).
+Download the [current Android app package (APK)](https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/android-backup-receipt.apk). Advanced users can also [download APK checksums](https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/SHA256SUMS).
 
 Android may ask you to allow installation from your browser or file manager. The app requests read access only for folders you select.
 
@@ -67,9 +69,9 @@ Preview it with `npm run preview`.
 
 ## Maintainer release notes
 
-The Android release workflow is configured for JDK 21. It builds an app package and an Android App Bundle (AAB).
+The Android release workflow uses JDK 21. It builds a signed app package and an Android App Bundle (AAB).
 
-The workflow restores the protected signing key. It uses the run number for a higher version code. Each release includes checksums and the signing fingerprint.
+The workflow restores the protected signing key. It uses the run number for a higher version code. Each release publishes checksums and the signing-certificate fingerprint.
 
 Refresh the Capacitor Android project after a web build:
 

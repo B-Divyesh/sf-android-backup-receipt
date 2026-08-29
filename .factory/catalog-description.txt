@@ -1,1 +1,1 @@
-Check selected Android folders against backups, then download one receipt for missing or changed files.
+Check Android backup folders and download a receipt for missing or changed files.

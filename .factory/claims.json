@@ -91,6 +91,20 @@
     "sandbox": "Inspect the release workflow and Gradle configuration for encrypted signing secrets, run-number version codes, and unique release tags; reject key generation or asset overwrites."
   },
   {
+    "id": "android-release-assets",
+    "claim": "The Android release workflow uses JDK 21 and publishes signed APK and AAB files with checksums and a signing-certificate fingerprint.",
+    "where": "Android install section, maintainer release notes, README",
+    "test": "npm run test:unit -- -t @claim:android-release-assets",
+    "sandbox": "Inspect the workflow for JDK 21, both Gradle release tasks, copied APK/AAB files, SHA256SUMS, signing-certificate output, and immutable tag creation. Fetch the current public release, verify its four assets, checksum both binary files, and verify the signing-certificate file."
+  },
+  {
+    "id": "remote-provider-access",
+    "claim": "On Android, choose an installed WebDAV or S3 document-provider folder as a read-only backup folder; on the web, import its saved folder record.",
+    "where": "Remote backup guide, Android and web folder workflow, README",
+    "test": "npm run test:unit -- -t @claim:remote-provider-access",
+    "sandbox": "Inspect the remote-provider control, its destination SAF path, Android's provider-neutral ACTION_OPEN_DOCUMENT_TREE request, read-only grants, DocumentFile traversal, and the documented browser record handoff."
+  },
+  {
     "id": "local-metadata-storage",
     "claim": "Local inventories store paths, sizes, dates, and fingerprints, not file contents or EXIF fields.",
     "where": "Privacy policy, README",
@@ -106,10 +120,10 @@
   },
   {
     "id": "license-revocation",
-    "claim": "A rejected or revoked license locks receipt history while folder checks, folder records, receipt downloads, and printing remain free.",
+    "claim": "Expired, revoked, or wrong-product license checks keep receipt history unavailable while folder checks, folder records, receipt downloads, and printing remain free.",
     "where": "Migration Kit status, terms",
     "test": "npm run test:claims -- --grep @claim:license-revocation",
-    "sandbox": "Fresh /demo with a recorded revoked response; assert the token leaves the URL and history stays locked, then run the folder check and download both folder records, both receipt files, and invoke printing."
+    "sandbox": "Fresh /demo contexts with recorded expired, revoked, and wrong-product responses; assert each strips the token and keeps history unavailable. For the revoked fixture, run the folder check, download both folder records and both receipt files, and invoke printing."
   },
   {
     "id": "print-view",
