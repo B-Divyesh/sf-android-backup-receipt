@@ -8,6 +8,8 @@ const configPath = new URL('../public/staticwebapp.config.json', import.meta.url
 const gradlePath = new URL('../android/app/build.gradle', import.meta.url);
 const workflowPath = new URL('../.github/workflows/android.yml', import.meta.url);
 const indexPath = new URL('../index.html', import.meta.url);
+const remoteFixturePath = new URL('../android/app/src/androidTest/java/in/sociobot/androidbackupreceipt/RemoteProviderFixtureTest.java', import.meta.url);
+const remoteProviderPath = new URL('../android/app/src/androidTest/java/in/sociobot/androidbackupreceipt/RemoteBackupDocumentsProvider.java', import.meta.url);
 
 describe('Android SAF delivery contract', () => {
   it('@claim:saf-read-only uses persistent selected-tree read access without broad or write permissions', async () => {
@@ -108,11 +110,13 @@ describe('Android update contract', () => {
   }, 60_000);
 
   it('@claim:remote-provider-access opens an installed document provider as the read-only backup-folder path', async () => {
-    const [page, webBridge, plugin, readme] = await Promise.all([
+    const [page, webBridge, plugin, readme, fixture, provider] = await Promise.all([
       readFile(indexPath, 'utf8'),
       readFile(new URL('../src/main.ts', import.meta.url), 'utf8'),
       readFile(pluginPath, 'utf8'),
-      readFile(new URL('../README.md', import.meta.url), 'utf8')
+      readFile(new URL('../README.md', import.meta.url), 'utf8'),
+      readFile(remoteFixturePath, 'utf8'),
+      readFile(remoteProviderPath, 'utf8')
     ]);
     expect(page).toContain('id="remote-provider-picker"');
     expect(page).toContain('Choose remote backup provider');
@@ -126,6 +130,11 @@ describe('Android update contract', () => {
     expect(plugin).toContain('DocumentFile.fromTreeUri');
     expect(readme).toContain('Download its backup folder record');
     expect(readme).toContain('then import it');
+    expect(provider).toContain('extends DocumentsProvider');
+    expect(provider).toContain('WebDAV backup fixture');
+    expect(fixture).toContain('fixtureDocumentsProviderExposesAReadOnlyBackupTree');
+    expect(fixture).toContain('DocumentFile.fromTreeUri');
+    expect(fixture).toContain('assertFalse(root.canWrite())');
   });
 });
 

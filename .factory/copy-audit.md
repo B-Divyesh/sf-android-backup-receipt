@@ -14,7 +14,7 @@ Audited 29 August 2026 after the round-3 rewrite. Counts use whitespace-delimite
 | Opens a four-file receipt with two problems. | 7 | Pass; names the sample result beside its action |
 | Files stay on this device. | 5 | Pass; privacy fact |
 | Offline after the first visit. | 4 | Pass; offline fact |
-| Checks free; history costs $7 once. | 6 | Pass; price fact |
+| Checks are free; history costs $7 once. | 7 | Pass; price fact |
 | Choose each phone folder and its backup folder. | 8 | Pass |
 | This device reads file details and creates fingerprints for comparison. | 10 | Pass |
 | Select a folder such as DCIM, Download, or an app’s export folder. | 12 | Pass |

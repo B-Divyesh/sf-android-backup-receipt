@@ -91,7 +91,7 @@ test('@claim:responsive-keyboard keeps the first-screen facts and controls usabl
   await expect(page.locator('.action-outcome')).toHaveText('Opens a four-file receipt with two problems.');
   await expect(page.locator('.trust-strip')).toContainText('Files stay on this device');
   await expect(page.locator('.trust-strip')).toContainText('Offline after the first visit');
-  await expect(page.locator('.trust-strip')).toContainText('Checks free history costs $7 once');
+  await expect(page.locator('.trust-strip')).toContainText('Checks are free history costs $7 once');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 
   await page.keyboard.press('Tab');

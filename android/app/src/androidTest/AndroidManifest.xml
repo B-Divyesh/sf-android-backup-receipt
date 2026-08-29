@@ -1,0 +1,9 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <application>
+    <provider
+      android:name="in.sociobot.androidbackupreceipt.RemoteBackupDocumentsProvider"
+      android:authorities="in.sociobot.androidbackupreceipt.remote-fixture"
+      android:exported="true"
+      android:grantUriPermissions="true" />
+  </application>
+</manifest>
