@@ -1,0 +1,66 @@
+{
+  "workOrder": "android-backup-receipt-repair-4",
+  "failedCandidate": "1c049834c8c283e55aa1440f562575701d02449c",
+  "verifierReportCommit": "8ae3476d130a2789deadac882c8fe83bea06a233",
+  "repairCommit": "2f283343cad7c55027e16d0c01e452351fe03153",
+  "deploymentId": "ae19d82c-aaf7-4562-a10e-8b369690fe0b",
+  "liveUrl": "https://android-backup-receipt.sociobot.in",
+  "claims": {
+    "declared": 20,
+    "passedIndependently": 20,
+    "selectedTestsPerCommand": 1,
+    "resumeResetCommand": "npm run test:claims -- --grep @claim:resume-reset",
+    "resumeResetResult": "1 passed"
+  },
+  "local": {
+    "npmCiPackages": 149,
+    "npmAuditProductionVulnerabilities": 0,
+    "unitTests": 18,
+    "browserTests": 21,
+    "lint": "passed",
+    "build": "passed",
+    "capacitorSync": "passed",
+    "javascriptBytes": 33491,
+    "javascriptGzipBytes": 11853,
+    "cssBytes": 18503,
+    "cssGzipBytes": 4590
+  },
+  "live": {
+    "publicFilesMatchingDist": "24/24",
+    "buildId": "4008a35e8d05",
+    "indexSha256": "8f247628adda217645c07d5a13bbe4341283dfc2982f52f34e5168243dd02cbc",
+    "serviceWorkerSha256": "64a4fd5e7659e26a03e38a68cf67b7d921ef0663006902e89073f7ee2799f523",
+    "manifestSha256": "0d01de479844a88428e0aa5a2f4aa9f6c2d9a41855650a12d0c2cc225bd5f10b",
+    "desktopAxeViolations": 0,
+    "mobileAxeViolations": 0,
+    "routeAxeViolations": 0,
+    "unexpectedCrossOriginRequests": 0,
+    "offlineReload": "passed",
+    "offlineReceiptDownloads": 2,
+    "controlledUpdate": "old caches removed; update toast and Reload shown"
+  },
+  "lighthouseMobile": {
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "fcpMs": 902,
+    "lcpMs": 1052,
+    "tbtMs": 52,
+    "cls": 0
+  },
+  "responsePolicy": {
+    "licenseAllowance": 30,
+    "firstRateLimitedRequest": 31,
+    "retryAfterSeconds": 4,
+    "corsOrigin": "https://android-backup-receipt.sociobot.in",
+    "checkoutStatus": 303
+  },
+  "android": {
+    "release": "android-v1.0.3-build-11",
+    "apkSha256": "83aa18714ce7b77d1f38b0d05d0de768df20000e65f02539b7f3202ddc2e08c0",
+    "certificateSha256": "A6:10:61:7B:7B:34:3A:B0:A6:18:03:A2:AD:B5:EF:EC:25:56:57:4B:04:71:09:3A:64:E3:A8:04:2B:8F:3B:01",
+    "embeddedWebMatchesDist": true,
+    "zipIntegrity": "passed"
+  }
+}

@@ -1,66 +1,142 @@
-# Android Backup Receipt — verification 7 addendum
-
-## Current independent verification outcome
-
-**FAIL — do not promote commit `1c049834c8c283e55aa1440f562575701d02449c`.**
-
-Fresh verification of <https://android-backup-receipt.sociobot.in> found the
-deployment matches this candidate byte-for-byte and the product otherwise
-passes functional, privacy, PWA, accessibility, Android-artifact, and
-rate-limit checks. The release is blocked by one claims-contract defect:
-`resume-reset` declares `npm run test:unit -- -t @claim:resume-reset`, which
-exits successfully after skipping all 16 unit tests. Its tagged test is
-Playwright-only, so the declared command proves nothing. See
-[verification-7.md](verification-7.md) for exact commands, all 20 claim
-results, headers, live evidence, severity, and remediation.
-
-The immediate next step is to correct that command (or add an equivalent unit
-test) and rerun every entry in `.factory/claims.json` from a clean checkout.
-
----
-
-# Android Backup Receipt — polish round 2 handoff (superseded by verification 7)
+# Android Backup Receipt — repair 4 handoff
 
 ## Outcome
 
-**PASS — zero cumulative review findings remain.**
+**Repaired, verified, pushed, and deployed. No release-blocking finding remains.**
 
-Repair commits `680a15d4b957692c4fc737e8a97e88e28e00b964` and `97c8fe9b7ef5c9903409695203d94878af2fd8d7` are pushed to `main`. Final static deployment `556fb5c4-c0f8-4410-acee-fba50faf2e26` is live at <https://android-backup-receipt.sociobot.in>. The live home document is byte-identical to the built artifact.
+- Work order: `android-backup-receipt-repair-4`
+- Failed candidate: `1c049834c8c283e55aa1440f562575701d02449c`
+- Verifier report: `8ae3476d130a2789deadac882c8fe83bea06a233`
+- Repair commit: `2f283343cad7c55027e16d0c01e452351fe03153`
+- Production: <https://android-backup-receipt.sociobot.in>
+- Static deployment: `ae19d82c-aaf7-4562-a10e-8b369690fe0b`
+- Live build ID: `4008a35e8d05`
+- Verified: 2026-08-29 UTC
 
-The complete finding-by-finding record is in [polish-2.md](polish-2.md). Round 2 fixes real Back navigation, full demo deletion/reset, the complete claims inventory, precise free-tier/privacy wording, picker language, receipt grammar, headings, README placement, offline copy, and offline-route metadata. Round 1’s inspection-docket identity, first-screen sample receipt, multi-folder workflow, route shell, metadata, legal pages, 404, and accessibility work remain intact.
+The verifier's only release blocker was the `resume-reset` claim command. The
+reported Vitest command exits successfully while selecting no test. The exact
+failure was reproduced first:
 
-## How to verify
+```text
+npm run test:unit -- -t @claim:resume-reset
+Test Files  2 skipped (2)
+Tests       16 skipped (16)
+```
+
+The nominated Git objects already contain the corrected command in
+`.factory/claims.json`, despite the report quoting the Vitest command. The
+declared command is now verified directly:
+
+```text
+npm run test:claims -- --grep @claim:resume-reset
+Running 1 test using 1 worker
+1 passed
+```
+
+`tests/claims-contract.test.ts` is the new regression guard. It fixes the root
+evidence gap by requiring every declared claim to have exactly one tag and by
+requiring its command to invoke the runner containing that tag. It also locks
+`resume-reset` to the observable Playwright flow. That flow inventories two
+folders, reloads and restores them, clears the check, and proves IndexedDB is
+empty. A future wrong-runner command now fails `npm test`.
+
+## Claims verification
+
+All 20 commands in `.factory/claims.json` were run independently after the
+repair. Every command selected exactly one tagged test and passed. This includes
+the four unit claims and all 16 browser claims. No command passed with zero
+tests.
+
+## Clean local verification
 
 ```sh
 npm ci
-npm run lint
 npm test
+npm run lint
 npm run build
 npm audit --omit=dev
 npx cap sync android
 ```
 
-Run each command in `.factory/claims.json` separately for claim isolation. The final clean-clone run used `/tmp/abr-polish2-final.TzhLtj` and passed all 20/20 commands.
+- Clean install: 149 packages; 0 audit vulnerabilities.
+- Tests: 18 Vitest tests and 21 Chromium tests passed.
+- Type/lint: `tsc --noEmit` passed.
+- Production build: `dist/` produced.
+- App JavaScript: 33,491 bytes raw / 11.90 kB gzip.
+- Main CSS: 18,503 bytes raw / 4.60 kB gzip.
+- Capacitor consumer sync: passed with the final `dist/`.
 
-## Exact evidence
+## Browser, accessibility, privacy, and offline evidence
 
-- Full clean-clone suite: 16 Vitest tests and 21 Chromium tests passed.
-- Build: `dist/` produced; JS 33,491 bytes raw / 11.90 kB gzip; CSS 18,503 bytes raw / 4.60 kB gzip.
-- Audit: zero npm vulnerabilities.
-- Factory URL verification: home and demo both passed title, language, one-h1, main, alt, button-name, and console checks.
-- Live route crawl: correct metadata and shared shell on `/`, `/demo`, `/privacy/`, `/terms/`, `/offline.html`; unknown route returns the designed HTTP 404.
-- Live accessibility: zero axe violations on all six routes.
-- Live mobile: no horizontal overflow. Demo receipt y=178–699.7; both exports end at y=634.7 in 390×844.
-- Live demo cleanup: Reset leaves two sample active records, zero history, and zero demo keys. Start for real removes the demo database and all demo keys. Real license/history sentinels survive.
-- Live Back: `/`, home title/headline, `data-demo=false`, hidden demo banner/receipt, correct announcement, and focused h1.
-- Live privacy: zero cross-origin requests in the public-route crawl.
-- Live offline: `/?demo=1` reloaded with its banner and receipt; both JSON and CSV downloaded offline.
-- Final live mobile Lighthouse: 100 Performance, 100 Accessibility, 100 Best Practices, 100 SEO; LCP 1.097 s, CLS 0, TBT 18 ms.
-- Artifact parity: local and live `index.html` SHA-256 `8f247628adda217645c07d5a13bbe4341283dfc2982f52f34e5168243dd02cbc`.
-- Android Actions run `33271561492` passed for the final repair. Release `android-v1.0.3-build-11` contains the APK and AAB; both match `SHA256SUMS` and pass ZIP integrity.
+- Desktop 1440×900 and mobile 390×844: complete flows passed with no horizontal
+  overflow or unexpected console/page errors.
+- Keyboard: skip-to-main, visible 3px blue focus, folder chooser activation,
+  reset, and normal tab traversal passed without a trap.
+- Reduced motion: scrolling becomes `auto`; transitions and animations reduce
+  to `0.00001s`.
+- Axe: 0 violations on home and populated mobile demo; 0 serious/critical on
+  home, demo, privacy, terms, offline, and the designed 404.
+- Semantics: correct route titles/canonicals, `lang=en`, one `h1`, one `main`,
+  complete alt text, named buttons, consistent header/footer, and route focus.
+- Privacy: cold home, demo, and a real four-file comparison made no unexpected
+  cross-origin request. No analytics, ads, remote fonts, or third-party runtime
+  scripts loaded.
+- Offline: the controlled demo reloaded with its receipt and banner, then
+  downloaded both receipt formats while disconnected.
+- Update: a controlled old-to-new service-worker simulation removed the old
+  caches, retained control, and showed “A fresh offline version is ready.” with
+  Reload.
+- Recovery: empty folder, malformed record, unsupported schema, and empty
+  license paths all returned plain next-step guidance.
 
-Evidence is under `.factory/qa-evidence/polish-2/`; the final production aggregate is `live/final-cold-check.json`.
+`/opt/fleet/lib/verify-url.sh` passed at production with a 631ms observed load,
+no errors, and every baseline semantic check present. Screenshots and the
+machine-readable route/offline report are in
+[`qa-evidence/repair-4`](qa-evidence/repair-4/).
 
-## Known gaps and next steps
+## Performance and response policy
 
-No web/PWA acceptance gap is known. A physical Android device matrix was not available in this container; the native bridge and release configuration are covered by six Android tests, and Capacitor sync passed. Store submission remains a separate work order under the product’s PWA-first stack decision.
+Lighthouse 13.0.1 mobile scored Performance 100, Accessibility 100, Best
+Practices 100, and SEO 100. FCP was 902ms, LCP 1,052ms, TBT 52ms, and CLS 0.
+The worker's Chromium crashes during Lighthouse's full-page screenshot/BFCache
+collection, as the verifier also observed; disabling those two supplemental
+checks produced the complete audit above. Playwright screenshots and route
+tests completed normally.
+
+Production sends CSP with header-only `frame-ancestors 'none'`, HSTS, nosniff,
+strict-origin referrer policy, Permissions Policy, and `X-Frame-Options: DENY`.
+Fingerprinted assets are immutable for one year; `sw.js` is no-store; the web
+manifest has `application/manifest+json`. License requests 1–30 returned 200;
+request 31 returned 429 with `Retry-After: 4`. CORS allowed only the product
+origin. Checkout returned 303 to the hosted merchant checkout.
+
+## Deployment and identity
+
+The final static artifact was deployed with the work-order helper:
+
+```sh
+/opt/fleet/lib/deploy-static.sh android-backup-receipt dist
+```
+
+All 24 public `dist/` files match production byte-for-byte; the host correctly
+hides `staticwebapp.config.json`. Key hashes:
+
+- `index.html`: `8f247628adda217645c07d5a13bbe4341283dfc2982f52f34e5168243dd02cbc`
+- `sw.js`: `64a4fd5e7659e26a03e38a68cf67b7d921ef0663006902e89073f7ee2799f523`
+- `manifest.webmanifest`: `0d01de479844a88428e0aa5a2f4aa9f6c2d9a41855650a12d0c2cc225bd5f10b`
+
+The current Android release remains `android-v1.0.3-build-11`, because this
+test-only repair does not trigger the Android source-path workflow. Its APK
+passes ZIP and published checksum verification. APK `index.html` and `sw.js`
+match final `dist/`; `classes.dex` is present. APK SHA-256 is
+`83aa18714ce7b77d1f38b0d05d0de768df20000e65f02539b7f3202ddc2e08c0`.
+The published stable certificate fingerprint is
+`A6:10:61:7B:7B:34:3A:B0:A6:18:03:A2:AD:B5:EF:EC:25:56:57:4B:04:71:09:3A:64:E3:A8:04:2B:8F:3B:01`.
+
+## Known constraints
+
+This worker has no Java/JDK, Android SDK command-line tools, emulator, or
+physical document provider, so it could not rebuild or exercise the native APK
+locally. Capacitor sync, native contract tests, the successful published build,
+APK integrity, embedded web identity, and stable signer evidence passed. No
+product behavior or researched brief was changed by this repair.
