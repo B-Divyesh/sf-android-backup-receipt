@@ -5,8 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#F4F0E6" />
     <meta name="description" content="Check whether the photos and files you chose are present in a backup destination. Files stay on your device." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Android Backup Receipt" />
+    <meta property="og:title" content="Check an Android backup before you wipe" />
+    <meta property="og:description" content="Compare selected Android folders and export a restore receipt. Files stay on your device." />
+    <meta property="og:url" content="https://android-backup-receipt.sociobot.in/" />
+    <meta property="og:image" content="https://android-backup-receipt.sociobot.in/assets/receipt-og-1200x630-84bd4a44.webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A phone and archive drive connected by file tiles and a verification frame" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Check an Android backup before you wipe" />
+    <meta name="twitter:description" content="Compare selected Android folders and export a restore receipt." />
+    <meta name="twitter:image" content="https://android-backup-receipt.sociobot.in/assets/receipt-og-1200x630-84bd4a44.webp" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" href="/assets/icon-192-a89d24be.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-180-e257b61a.png" />
     <link rel="canonical" href="https://android-backup-receipt.sociobot.in/" />
     <title>Android Backup Receipt — check a phone backup</title>
   </head>
@@ -63,7 +77,7 @@
 
       <section id="verify" class="workspace" aria-labelledby="verify-title">
         <div class="section-heading">
-          <p class="eyebrow">Inspection desk / 01</p>
+          <p class="eyebrow">Backup check</p>
           <h2 id="verify-title">Build a coverage receipt</h2>
           <p>Choose matching folder roots. We read filenames, sizes, dates, and file content only long enough to hash them in this browser.</p>
         </div>
@@ -161,12 +175,12 @@
 
       <section id="how" class="how" aria-labelledby="how-title">
         <div class="section-heading">
-          <p class="eyebrow">Method / 02</p>
-          <h2 id="how-title">Evidence, not access.</h2>
+          <p class="eyebrow">How it works</p>
+          <h2 id="how-title">How the folder check works</h2>
         </div>
         <ol class="method-list">
           <li><span>01</span><div><h3>You point to folders</h3><p>Android’s file picker controls what this app can read. Protected app data stays protected.</p></div></li>
-          <li><span>02</span><div><h3>Your browser fingerprints files</h3><p>Small and medium files use full SHA-256. Files over 32 MB use clearly marked, low-memory sampled SHA-256.</p></div></li>
+          <li><span>02</span><div><h3>Your browser fingerprints files</h3><p>Files through 32 MiB use full SHA-256. Larger files use clearly marked, low-memory sampled SHA-256.</p></div></li>
           <li><span>03</span><div><h3>You keep the receipt</h3><p>Export JSON for machine-readable evidence or CSV for inspection. No account is required.</p></div></li>
         </ol>
         <div class="remote-note" role="note">
@@ -176,7 +190,7 @@
       </section>
 
       <section id="limits" class="limits" aria-labelledby="limits-title">
-        <p class="eyebrow">Scope / 03</p>
+        <p class="eyebrow">Limits</p>
         <h2 id="limits-title">This does not back up your phone.</h2>
         <div class="limits-grid">
           <p>It verifies user-selected photos, downloads, documents, and app-export folders. It cannot see protected app data, messages inside apps, system settings, or anything you do not select.</p>
@@ -185,23 +199,25 @@
       </section>
 
       <section class="apk-install" aria-labelledby="apk-title">
-        <p class="eyebrow">Android app / SAF</p>
+        <p class="eyebrow">Android app</p>
         <h2 id="apk-title">Inspect folders with Android’s own picker.</h2>
-        <p>The Android app asks you to select each source or destination tree. It keeps only that selected-tree permission, so it cannot scan your full device or protected app data.</p>
+        <p>The Android app asks you to select each source or destination tree. It keeps read access only for that selected tree.</p>
+        <p>It cannot scan your full device or protected app data.</p>
         <ol>
-          <li>Download the APK and confirm the published <a href="https://github.com/B-Divyesh/sf-android-backup-receipt/releases/download/v1.0.1/SHA256SUMS">SHA-256 checksum</a>.</li>
+          <li>Download the APK and confirm the published <a class="checksum-link" href="https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/SHA256SUMS">SHA-256 checksum</a>.</li>
           <li>Open it on Android and allow installation from your browser or file manager if Android asks.</li>
           <li>Choose the phone folder and its copied destination in the Android file picker, then issue the receipt.</li>
         </ol>
-        <a class="button button-primary" href="https://github.com/B-Divyesh/sf-android-backup-receipt/releases/download/v1.0.1/android-backup-receipt-1.0.1.apk">Download APK (v1.0.1)</a>
-        <p class="fine-print">Not on Google Play yet. The APK is signed with the workflow’s generated upload key; a future Play listing will use the owner’s upload key.</p>
+        <a class="button button-primary" href="https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/android-backup-receipt.apk">Download current APK</a>
+        <p class="fine-print">Not on Google Play yet. Each release uses the same protected signing key and a higher Android version code.</p>
       </section>
 
       <section id="unlock" class="unlock" aria-labelledby="unlock-title">
         <div>
-          <p class="eyebrow">Optional / Migration Kit</p>
-          <h2 id="unlock-title">Keep an audit trail.</h2>
-          <p>The complete verifier and every export stay free. A one-time <strong>$7 Migration Kit</strong> unlock saves up to 20 receipt summaries on this device and makes repeat moves easier.</p>
+          <p class="eyebrow">Optional receipt history</p>
+          <h2 id="unlock-title">Save receipt history</h2>
+          <p>The complete verifier and every export stay free. The <strong>$7 Migration Kit</strong> is a one-time purchase.</p>
+          <p>It saves up to 20 receipt summaries on this device for repeat checks.</p>
           <ul>
             <li>20-entry local receipt archive</li>
             <li>Repeat-check history</li>
@@ -228,7 +244,7 @@
     <footer>
       <div><strong>Backup / Receipt</strong><p>Local-first evidence for Android moves.</p></div>
       <div class="footer-links"><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="https://github.com/B-Divyesh/sf-android-backup-receipt">Source</a></div>
-      <p class="provenance">Original generated illustration; no stock imagery. © 2026 Sociobot.</p>
+      <p class="provenance">Original generated illustration; no stock imagery. Built by Param Factory · Version 1.0.2 · Build __BUILD_ID__ · © 2026 Sociobot.</p>
     </footer>
 
     <div id="toast" class="toast" role="status" hidden><span id="toast-text"></span><button id="update-button" type="button" hidden>Reload</button></div>

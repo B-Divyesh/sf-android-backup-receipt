@@ -6,6 +6,9 @@
   <meta name="theme-color" content="#F4F0E6">
   <meta name="description" content="Privacy policy for Android Backup Receipt">
   <title>Privacy — Android Backup Receipt</title>
+  <link rel="canonical" href="https://android-backup-receipt.sociobot.in/privacy/">
+  <link rel="icon" href="/assets/icon-192-a89d24be.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-180-e257b61a.png">
   <link rel="stylesheet" href="/assets/legal-ff7db1a6.css">
 </head>
 <body>
@@ -18,7 +21,7 @@
     <h2>What the app reads</h2>
     <p>Android Backup Receipt reads only folders and manifest files you explicitly select. In the Android app, the system Storage Access Framework grants access to the selected tree only; in the web app, the browser file picker does the same. The app processes relative paths, file sizes, modification dates, and SHA-256 fingerprints on your device. It does not upload file contents or inventory data to Sociobot.</p>
     <h2>What is stored</h2>
-    <p>The latest source and destination inventories are stored in IndexedDB on this device so an interrupted check can resume; “Start another check” clears them. Exported receipts go wherever you choose. If Migration Kit is active, up to 20 receipt summaries are also stored in IndexedDB. License tokens and a daily verification result are stored in localStorage. You can clear the archive in the app and clear all data through browser settings.</p>
+    <p>The latest source and destination inventories are stored in IndexedDB on this device so an interrupted check can resume; “Start another check” clears them. Exported receipts go wherever you choose. If Migration Kit is active, up to 20 receipt summaries are also stored in IndexedDB. License tokens and a daily verification result are stored in localStorage. You can clear the archive in the app and clear all data through browser settings. The Android package excludes this private app state from cloud backup and device transfer.</p>
     <h2>Network access</h2>
     <p>The app contacts the Sociobot billing API only when you buy or verify a license. That request includes the license token and normal connection metadata such as IP address. We do not add analytics, advertising pixels, or third-party scripts.</p>
     <h2>Media metadata</h2>
@@ -26,6 +29,6 @@
     <h2>Contact</h2>
     <p>Questions can be sent to <a href="mailto:privacy@sociobot.in">privacy@sociobot.in</a>.</p>
   </main>
-  <footer><a href="/terms/">Terms</a><span>© 2026 Sociobot</span></footer>
+  <footer><a href="/terms/">Terms</a><span>Built by Param Factory · Version 1.0.2 · Build __BUILD_ID__</span><span>© 2026 Sociobot</span></footer>
 </body>
 </html>

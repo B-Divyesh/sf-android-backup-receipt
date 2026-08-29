@@ -20,6 +20,12 @@ const output = source
 if (output.includes('__')) throw new Error('Service-worker build placeholders were not resolved.');
 await writeFile(serviceWorkerPath, output);
 
+for (const relativePath of ['index.html', 'privacy/index.html', 'terms/index.html', '404.html', 'offline.html']) {
+  const path = join('dist', relativePath);
+  const html = await readFile(path, 'utf8');
+  await writeFile(path, html.replaceAll('__BUILD_ID__', buildId));
+}
+
 // /demo is a server rewrite in production. Keep a distinct cached document so
 // an offline /demo navigation retains its demo identity instead of becoming /.
 await writeFile(join('dist', 'demo.html'), await readFile(join('dist', 'index.html')));

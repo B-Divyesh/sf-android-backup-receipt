@@ -15,4 +15,7 @@ keys, so it never reads or writes a real check or license state. Starting for
 real clears the demo active inventory and returns to `/`.
 
 The sample data is built into `src/main.ts`, so it is available offline after
-the initial service-worker-controlled visit.
+the initial service-worker-controlled visit. Its four source hashes are full
+64-character SHA-256 digests. Each is reproducible from a documented virtual
+fixture stream in the `@claim:sha256-evidence` test; no real personal media is
+bundled.

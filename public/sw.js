@@ -17,7 +17,8 @@ const SHELL = [
   '/manifest.webmanifest',
   '/assets/icon-192-a89d24be.png',
   '/assets/icon-512-22de8196.png',
-  '/assets/icon-maskable-512-0fb5b020.png'
+  '/assets/icon-maskable-512-0fb5b020.png',
+  '/assets/apple-touch-180-e257b61a.png'
 ];
 
 self.addEventListener('install', (event) => {

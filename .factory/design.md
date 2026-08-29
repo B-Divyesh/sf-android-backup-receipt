@@ -103,3 +103,5 @@ on 2026-08-28. The selected output is stored with its prompt sidecar in
 `assets/src/`; optimized WebP derivatives are shipped from `public/assets/`.
 Generated imagery is original to this product and used under the repository's
 MIT license. Icons and the receipt seal are hand-authored SVG/CSS shapes.
+The 1200×630 social preview is a center crop of the selected original hero,
+and the 180px Apple touch icon is derived from the hand-authored app icon.
