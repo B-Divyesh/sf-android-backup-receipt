@@ -1,0 +1,12 @@
+{
+  "url": "https://android-backup-receipt.sociobot.in/demo",
+  "controlled": true,
+  "caches": [
+    "backup-receipt-62ab8aab61ac-shell"
+  ],
+  "offlineBanner": true,
+  "demoBanner": true,
+  "receipt": true,
+  "coverage": "50%",
+  "errors": []
+}

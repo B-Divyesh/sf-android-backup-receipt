@@ -1,0 +1,17 @@
+{
+  "before": {
+    "controlled": true,
+    "caches": [
+      "backup-receipt-62ab8aab61ac-shell"
+    ]
+  },
+  "toast": "A fresh offline version is ready.",
+  "reloadVisible": true,
+  "after": {
+    "controlled": true,
+    "caches": [
+      "backup-receipt-62ab8aab61ac-qa-update-shell"
+    ]
+  },
+  "oldCachesRemoved": true
+}

@@ -1,75 +1,168 @@
-# Android Backup Receipt — independent verification 3 handoff
+# Android Backup Receipt — repair 3 handoff
 
-## Status: FAIL
+## Status: repaired, pushed, packaged, and deployed
 
-- Candidate: `b7812459e61c3be620102c71c7622303ed115c4e`
-- Live URL: <https://android-backup-receipt.sociobot.in>
-- Verified: 2026-08-29
-- Full report: [verification-3.md](verification-3.md)
+- Verifier report: `a632d5ddacd4adf00341f72e564aef8530b77202`
+- Failed candidate: `b7812459e61c3be620102c71c7622303ed115c4e`
+- Repair code deployed from: `e4f081e783daf4d7f991f626208271878117815e`
+- Production: <https://android-backup-receipt.sociobot.in>
+- Live build: `62ab8aab61ac`
+- Android release: `android-v1.0.2-build-8`
+- Work order: `android-backup-receipt-repair-3`
+- Verified: 2026-08-29 UTC
 
-The deployment matches the candidate and the web/PWA product works, but this
-candidate is not releasable.
+## Findings repaired
 
-## Release blockers
+1. **C1 — false SHA-256 demo evidence:** replaced every four-character or
+   non-digest placeholder with a complete 64-character SHA-256 digest. The
+   four source digests are reproducible from deterministic fixture streams of
+   the stated sizes. Manifest import now rejects incomplete digest values.
+   `@claim:sha256-evidence` independently recomputes every digest instead of
+   trusting `hashMethod`.
+2. **C2 — incomplete claims inventory:** expanded `.factory/claims.json` from
+   5 to 16 public reliance claims. Every claim has exactly one tagged command,
+   and all 16 commands pass independently. Coverage now includes SAF scope,
+   the exact 32 MiB boundary, comparison/import classes, the local 20-receipt
+   archive, print, installability/offline, keyboard/390px, stored fields,
+   Android private-data backup exclusions, and update signing/version rules.
+3. **H1 — unsafe Android updates:** removed per-run key generation and release
+   overwrites. The workflow now fails closed without four encrypted Actions
+   secrets, uses one protected signer, assigns `100000 + GITHUB_RUN_NUMBER` as
+   `versionCode`, and creates a unique immutable release tag. Consecutive
+   builds 5 and 6 used the same certificate while increasing version codes
+   from `100005` to `100008` across the observed releases.
+4. **M1 — private state eligible for Android backup:** set
+   `android:allowBackup="false"` and added both legacy and Android 12+
+   exclusions for databases, preferences, files, roots, and device transfer.
+5. **M2 — unnecessary SAF write access:** removed request and persistence of
+   `FLAG_GRANT_WRITE_URI_PERMISSION`. Selected-tree read access remains
+   persistent where the provider supports it.
+6. **M3 — small mobile checksum target:** the checksum link, manifest input,
+   and license label now have at least 44px hit areas. The live mobile probe
+   finds only the intentionally hidden 1px folder inputs; their visible proxy
+   buttons exceed 44px.
+7. **M4 — missing metadata/footer identity:** added Open Graph, Twitter card,
+   a real 1200×630 product image, 180px Apple touch icon, legal-route
+   canonicals, Param Factory credit, version, and a combined JS/CSS build ID.
+8. **M5 — parser jargon:** malformed JSON now says, “That file is not valid
+   JSON. Choose a manifest exported from this app.” The raw parser position is
+   never exposed.
+9. **M6 — first-screen facts below the fold:** fixed the root cause: the hero
+   image's HTML height was overriding its aspect ratio. Explicit auto height
+   and tighter first-screen spacing keep all three facts inside 1440×900 and
+   390×844 viewports. Both sizes are regression-tested.
+10. **L1 — incomplete copy audit:** `.factory/copy-audit.md` now lists every
+    unique landing-page phrase, word count, result, and the terminology table.
+    The longest sentence is 17 words and no banned term remains.
 
-1. The live demo labels four 4-character placeholder values as SHA-256. The
-   registered `sha256-evidence` test checks only the `hashMethod` label, so it
-   passes without proving its claim.
-2. Public claims about native SAF behavior, the 32 MiB hash boundary,
-   comparison/import behavior, paid 20-receipt history, installability,
-   keyboard/mobile support, and detailed privacy behavior are absent from
-   `.factory/claims.json`. The supplied claims contract makes each unlisted
-   claim release-blocking.
-3. The Android workflow generates a new signing key on every build, overwrites
-   the same `v1.0.1` release, and leaves `versionCode 2`. Existing installations
-   therefore cannot receive later builds as updates.
+Passing comparison, export, demo isolation, checkout, billing, 404, CSP,
+offline, visual identity, and privacy behaviors were retained.
 
-## Other findings
+## Clean local verification
 
-- Android permits app-data backup and has no exclusion rules despite storing
-  private inventory metadata and describing it as on-device state.
-- The SAF picker unnecessarily requests and persists write permission.
-- The mobile checksum link is 19 px high, below the 44 px target requirement.
-- Open Graph/Twitter/Apple metadata, Param Factory credit, and a build ID are
-  missing; privacy/terms have no canonical metadata.
-- Malformed manifest JSON exposes raw parser jargon without a recovery action.
-- The hero's three fact lines fall below the first viewport at 1440 × 900 and
-  are slightly clipped at 390 × 844.
-- The copy audit covers only the first screen rather than every landing-page
-  sentence required by the plain-words contract.
-
-## Passing verification
+The final matrix started with `npm ci` (149 packages, 0 vulnerabilities):
 
 ```sh
 npm ci
 npm test
 npm run lint
 npm run build
+npx cap sync android
 npm audit --omit=dev
 ```
 
-- All five exact `.factory/claims.json` commands returned zero.
-- `npm test`: 11 Vitest assertions and 9 Playwright tests passed.
-- Clean detached checkout: build and `npx cap sync android` passed.
-- Java is absent from this verifier image, so local Gradle could not run. The
-  matching GitHub Android workflow passed; freshly downloaded APK and AAB both
-  matched their published checksums, and the APK embeds this candidate's web
-  shell. A real Android device/provider pass remains required.
-- Live functional checks covered sample, discrepancy, 100% match, manifest
-  import, exports, persistence/clear, invalid inputs, the exact 32 MiB hash
-  boundary, keyboard, reduced motion, desktop, and 390 px mobile.
-- Axe serious/critical: 0. Core-page console/page errors: 0.
-- Demo/normal file flows made only same-origin requests. Security headers and
-  cache policies are deployed.
-- PWA offline reload and controlled service-worker update passed.
-- Billing verify allowance observed: 30 requests; request 31 returned 429 with
-  `Retry-After: 4`. Checkout returned 303 to hosted Dodo.
-- Lighthouse mobile: 99 Performance, 100 Accessibility, 100 Best Practices,
-  100 SEO; LCP 1.1 s, TBT 100 ms, CLS 0.
-- 21/21 public build files matched production byte-for-byte.
+- `npm test`: 15 Vitest unit/integration tests and 17 Chromium tests passed.
+- Every one of the 16 commands in `.factory/claims.json` passed independently.
+  Full output: `qa-evidence/repair-3/exact-claims.log`.
+- Type check: passed with `tsc --noEmit`.
+- Build: `dist/` produced; app JS 27,743 bytes raw / 10,372 bytes gzip;
+  CSS 14,698 bytes raw / 4,033 bytes gzip. No runtime font download.
+- Capacitor sync: passed against the final `dist/`.
+- Dependency audit: 0 production vulnerabilities.
+- Android workflow 8: success for exact head `e4f081e`; APK and AAB built with
+  JDK 21 and the protected signer.
 
-## Evidence
+## Browser, accessibility, privacy, and offline evidence
 
-The reproducible browser probe and desktop/mobile screenshots are under
-`.factory/qa-evidence/`. See `.factory/verification-3.md` for exact hashes,
-headers, paths, observed messages, and remediation priorities.
+- Factory `verify-url.sh`: HTTP 200, 832ms observed load, correct title/lang,
+  one `h1`, one `main`, 0 missing alts, 0 unlabeled buttons, 0 console errors.
+- Playwright + axe: 0 violations on desktop home, 390px populated demo,
+  privacy, terms, and 404. Therefore serious/critical violations are 0.
+- Desktop 1440×900 and mobile 390×844: no horizontal overflow; first-screen
+  facts remain inside the viewport; mobile demo remains usable and coherent.
+- Keyboard: skip link focuses `main`; visible blue focus treatment remains;
+  folder controls operate from Enter; no trap. Reduced motion changes scrolling
+  to `auto` and transition/animation duration to `0.01ms`.
+- Privacy: the cold page, demo, and full real comparison made no cross-origin
+  request. The license fixture records only the documented Sociobot verify URL.
+  IndexedDB records contain exactly path, size, modified time, hash, and hash
+  method—no content or EXIF field.
+- Live offline: `/demo` reloaded while disconnected with its worker, banner,
+  receipt, and 50% result intact and no error.
+- Controlled worker update: old cache deleted, new combined-build cache took
+  control, and “A fresh offline version is ready” appeared with Reload.
+- Response policy: live CSP, `frame-ancestors 'none'`, HSTS, nosniff,
+  Permissions-Policy, strict-origin referrer policy, and `X-Frame-Options: DENY`
+  are present. Hashed assets cache immutable; `sw.js` is no-store; manifest MIME
+  is correct; unknown routes return the designed HTTP 404.
+- Live billing verify returned the documented invalid verdict and exact CORS
+  origin. Checkout returned 303 to the hosted Dodo checkout.
+- All fragments resolved. Source returned 200, release assets 302 to build 6,
+  and checkout returned the expected 303.
+- 23/23 public `dist/` files match production byte-for-byte. The host correctly
+  keeps `staticwebapp.config.json` private.
+
+Evidence is under `.factory/qa-evidence/repair-3/`.
+
+## Performance
+
+Lighthouse 13.0.1 mobile against production:
+
+- Performance 100
+- Accessibility 100
+- Best Practices 100
+- SEO 100
+- FCP 1.0s; LCP 1.1s; TBT 30ms; CLS 0
+
+## Android artifact evidence
+
+- Workflow: <https://github.com/B-Divyesh/sf-android-backup-receipt/actions/runs/33261347922>
+- APK SHA-256: `b1fb4844fea3c92c82bced749925f1291b456928857a720147c52a03fc8fa536`
+- AAB SHA-256: `41022092bfc5e85fd2e77fef8c90b97abe90b7b7f38fc94359cf935b75e8e167`
+- APK Signature Scheme v2 verification: passed.
+- Certificate SHA-256: `A6:10:61:7B:7B:34:3A:B0:A6:18:03:A2:AD:B5:EF:EC:25:56:57:4B:04:71:09:3A:64:E3:A8:04:2B:8F:3B:01`; the
+  fingerprint extracted from the APK exactly matches the published file and
+  the preceding build 5 certificate.
+- Parsed manifest: package `in.sociobot.androidbackupreceipt`, version code
+  `100008`, version name `1.0.2.8`, target SDK 35, `allowBackup=false`, and no
+  broad storage permission.
+- APK `index.html`, service worker, JS, and CSS match final local `dist/`
+  byte-for-byte. The APK includes `classes.dex` and the native SAF plugin.
+
+## Deployment
+
+The final `dist/` was deployed with:
+
+```sh
+/opt/fleet/lib/deploy-static.sh android-backup-receipt /work/repo/dist
+```
+
+Azure Static Web Apps deployment `a3e703bf-abe4-4529-be20-6bd8ea57aba5`
+succeeded in the existing Central US app. The custom domain immediately served
+build `62ab8aab61ac` over HTTPS.
+
+## Known constraints and next steps
+
+- The discarded private key from the rejected `v1.0.1` test release cannot be
+  recovered. That test APK must be removed once before installing the current
+  stable-key line; this is disclosed in README. Builds 5 through 8 prove that
+  subsequent in-place upgrades have one signer and increasing version codes.
+- The worker identity lacks permission to create Key Vault secrets. The stable
+  keystore exists only as encrypted GitHub Actions secrets; temporary plaintext
+  material was securely shredded. A vault administrator should escrow the
+  product key and configure Key Vault-backed Actions access without rotating
+  the signer.
+- This static-deploy worker has no Android emulator or physical document
+  provider. Native packaging, signature, manifest, embedded assets, and bridge
+  code were verified; a later device matrix should exercise picker persistence
+  across Google Files, Samsung My Files, USB, and a remote document provider.

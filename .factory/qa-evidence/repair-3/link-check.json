@@ -1,0 +1,270 @@
+[
+  {
+    "path": "/",
+    "status": 200,
+    "fragments": [
+      {
+        "href": "#main",
+        "exists": true
+      },
+      {
+        "href": "#verify",
+        "exists": true
+      },
+      {
+        "href": "#how",
+        "exists": true
+      },
+      {
+        "href": "#unlock",
+        "exists": true
+      },
+      {
+        "href": "#verify",
+        "exists": true
+      },
+      {
+        "href": "#limits",
+        "exists": true
+      }
+    ],
+    "links": [
+      {
+        "href": "#main",
+        "text": "Skip to verification"
+      },
+      {
+        "href": "/",
+        "text": "✓ Backup / Receipt"
+      },
+      {
+        "href": "#verify",
+        "text": "Verify"
+      },
+      {
+        "href": "#how",
+        "text": "How it works"
+      },
+      {
+        "href": "#unlock",
+        "text": "Migration Kit"
+      },
+      {
+        "href": "/demo",
+        "text": "Try it with sample data →"
+      },
+      {
+        "href": "#verify",
+        "text": "Check real folders ↓"
+      },
+      {
+        "href": "#limits",
+        "text": "Read the honest limits"
+      },
+      {
+        "href": "https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/SHA256SUMS",
+        "text": "SHA-256 checksum"
+      },
+      {
+        "href": "https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/android-backup-receipt.apk",
+        "text": "Download current APK"
+      },
+      {
+        "href": "https://api.sociobot.in/api/v1/products/android-backup-receipt/checkout",
+        "text": "Buy Migration Kit — $7"
+      },
+      {
+        "href": "/privacy/",
+        "text": "Privacy"
+      },
+      {
+        "href": "/terms/",
+        "text": "Terms"
+      },
+      {
+        "href": "https://github.com/B-Divyesh/sf-android-backup-receipt",
+        "text": "Source"
+      }
+    ]
+  },
+  {
+    "path": "/demo",
+    "status": 200,
+    "fragments": [
+      {
+        "href": "#main",
+        "exists": true
+      },
+      {
+        "href": "#verify",
+        "exists": true
+      },
+      {
+        "href": "#how",
+        "exists": true
+      },
+      {
+        "href": "#unlock",
+        "exists": true
+      },
+      {
+        "href": "#verify",
+        "exists": true
+      },
+      {
+        "href": "#limits",
+        "exists": true
+      }
+    ],
+    "links": [
+      {
+        "href": "#main",
+        "text": "Skip to verification"
+      },
+      {
+        "href": "/",
+        "text": "✓ Backup / Receipt"
+      },
+      {
+        "href": "#verify",
+        "text": "Verify"
+      },
+      {
+        "href": "#how",
+        "text": "How it works"
+      },
+      {
+        "href": "#unlock",
+        "text": "Migration Kit"
+      },
+      {
+        "href": "/demo",
+        "text": "Try it with sample data →"
+      },
+      {
+        "href": "#verify",
+        "text": "Check real folders ↓"
+      },
+      {
+        "href": "#limits",
+        "text": "Read the honest limits"
+      },
+      {
+        "href": "https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/SHA256SUMS",
+        "text": "SHA-256 checksum"
+      },
+      {
+        "href": "https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/android-backup-receipt.apk",
+        "text": "Download current APK"
+      },
+      {
+        "href": "https://api.sociobot.in/api/v1/products/android-backup-receipt/checkout",
+        "text": "Buy Migration Kit — $7"
+      },
+      {
+        "href": "/privacy/",
+        "text": "Privacy"
+      },
+      {
+        "href": "/terms/",
+        "text": "Terms"
+      },
+      {
+        "href": "https://github.com/B-Divyesh/sf-android-backup-receipt",
+        "text": "Source"
+      }
+    ]
+  },
+  {
+    "path": "/privacy/",
+    "status": 200,
+    "fragments": [
+      {
+        "href": "#main",
+        "exists": true
+      }
+    ],
+    "links": [
+      {
+        "href": "#main",
+        "text": "Skip to content"
+      },
+      {
+        "href": "/",
+        "text": "← Backup / Receipt"
+      },
+      {
+        "href": "mailto:privacy@sociobot.in",
+        "text": "privacy@sociobot.in"
+      },
+      {
+        "href": "/terms/",
+        "text": "Terms"
+      }
+    ]
+  },
+  {
+    "path": "/terms/",
+    "status": 200,
+    "fragments": [
+      {
+        "href": "#main",
+        "exists": true
+      }
+    ],
+    "links": [
+      {
+        "href": "#main",
+        "text": "Skip to content"
+      },
+      {
+        "href": "/",
+        "text": "← Backup / Receipt"
+      },
+      {
+        "href": "mailto:support@sociobot.in",
+        "text": "support@sociobot.in"
+      },
+      {
+        "href": "/privacy/",
+        "text": "Privacy"
+      }
+    ]
+  },
+  {
+    "path": "/does-not-exist",
+    "status": 404,
+    "fragments": [
+      {
+        "href": "#main",
+        "exists": true
+      }
+    ],
+    "links": [
+      {
+        "href": "#main",
+        "text": "Skip to content"
+      },
+      {
+        "href": "/",
+        "text": "← Backup / Receipt"
+      },
+      {
+        "href": "/",
+        "text": "Start a backup check"
+      },
+      {
+        "href": "/demo",
+        "text": "try the sample data"
+      },
+      {
+        "href": "/privacy/",
+        "text": "Privacy"
+      },
+      {
+        "href": "/terms/",
+        "text": "Terms"
+      }
+    ]
+  }
+]

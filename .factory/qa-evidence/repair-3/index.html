@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#F4F0E6" />
+    <meta name="description" content="Check whether the photos and files you chose are present in a backup destination. Files stay on your device." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Android Backup Receipt" />
+    <meta property="og:title" content="Check an Android backup before you wipe" />
+    <meta property="og:description" content="Compare selected Android folders and export a restore receipt. Files stay on your device." />
+    <meta property="og:url" content="https://android-backup-receipt.sociobot.in/" />
+    <meta property="og:image" content="https://android-backup-receipt.sociobot.in/assets/receipt-og-1200x630-84bd4a44.webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A phone and archive drive connected by file tiles and a verification frame" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Check an Android backup before you wipe" />
+    <meta name="twitter:description" content="Compare selected Android folders and export a restore receipt." />
+    <meta name="twitter:image" content="https://android-backup-receipt.sociobot.in/assets/receipt-og-1200x630-84bd4a44.webp" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/assets/icon-192-a89d24be.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-180-e257b61a.png" />
+    <link rel="canonical" href="https://android-backup-receipt.sociobot.in/" />
+    <title>Android Backup Receipt — check a phone backup</title>
+    <script type="module" crossorigin src="/assets/app-Dbrmv9Go.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/style-BvK3JHGa.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to verification</a>
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="Android Backup Receipt home">
+        <span class="wordmark-mark" aria-hidden="true">✓</span>
+        <span>Backup / Receipt</span>
+      </a>
+      <nav aria-label="Primary">
+        <a href="#verify">Verify</a>
+        <a href="#how">How it works</a>
+        <a href="#unlock">Migration Kit</a>
+      </nav>
+      <span class="local-chip">Local only</span>
+    </header>
+
+    <div id="offline-banner" class="offline-banner" role="status" hidden>
+      <strong>Offline mode.</strong> Folder checks and exports still work. License verification will resume when connected.
+    </div>
+
+    <aside id="demo-banner" class="demo-banner" aria-label="Demo controls" hidden>
+      <strong>Demo — sample data, nothing is saved to your real check.</strong>
+      <span>Four sample files show two found, one missing, and one changed.</span>
+      <div><button id="reset-demo" class="text-button" type="button">Reset demo</button><button id="start-real" class="text-button" type="button">Start for real</button></div>
+    </aside>
+
+    <main id="main" tabindex="-1">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Android backup check</p>
+          <h1 id="hero-title">Check an Android backup<br /> <span>before you wipe.</span></h1>
+          <p class="lede">For Android owners moving phones: compare selected folders, then get a receipt showing what can be restored.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="/demo">Try it with sample data <span aria-hidden="true">→</span></a>
+            <a class="button button-plain" href="#verify">Check real folders <span aria-hidden="true">↓</span></a>
+            <a class="text-link" href="#limits">Read the honest limits</a>
+          </div>
+          <ul class="trust-strip" aria-label="Privacy and capability summary">
+            <li><strong>Local</strong> files stay on your device</li>
+            <li><strong>4 files</strong> in the sample check</li>
+            <li><strong>JSON + CSV</strong> receipt exports</li>
+          </ul>
+        </div>
+        <figure class="hero-art">
+          <picture>
+            <source srcset="/assets/receipt-inspection-768-9fd624e0.webp 768w, /assets/receipt-inspection-1280-3ed3da66.webp 1280w" sizes="(max-width: 760px) 100vw, 48vw" type="image/webp" />
+            <img src="/assets/receipt-inspection-1280-3ed3da66.webp" width="1536" height="1024" alt="A blank phone and archive drive with photo and document tiles passing through a bright verification frame" decoding="async" fetchpriority="high" />
+          </picture>
+          <figcaption><span>Fig. 01</span> Device evidence → destination evidence</figcaption>
+        </figure>
+      </section>
+
+      <section id="verify" class="workspace" aria-labelledby="verify-title">
+        <div class="section-heading">
+          <p class="eyebrow">Backup check</p>
+          <h2 id="verify-title">Build a coverage receipt</h2>
+          <p>Choose matching folder roots. We read filenames, sizes, dates, and file content only long enough to hash them in this browser.</p>
+        </div>
+
+        <div class="steps" aria-label="Verification steps">
+          <article class="step-card" id="source-card">
+            <div class="step-number" aria-hidden="true">01</div>
+            <div>
+              <p class="kicker">Original evidence</p>
+              <h3>Choose the phone folder</h3>
+              <p>Select a folder such as <code>DCIM</code>, <code>Download</code>, or an app’s export folder.</p>
+            </div>
+            <button id="source-picker" class="button button-dark" type="button">Choose source folder</button>
+            <input id="source-input" class="picker-input" type="file" webkitdirectory multiple tabindex="-1" aria-hidden="true" />
+            <div id="source-status" class="file-status" aria-live="polite">No source selected</div>
+            <button id="export-source-manifest" class="text-button" type="button" hidden>Export source manifest</button>
+          </article>
+
+          <div class="flow-arrow" aria-hidden="true">→</div>
+
+          <article class="step-card" id="destination-card">
+            <div class="step-number" aria-hidden="true">02</div>
+            <div>
+              <p class="kicker">Backup evidence</p>
+              <h3>Choose the matching destination</h3>
+              <p>Pick the copied folder on USB/local storage, or import a manifest made on the destination.</p>
+            </div>
+            <div class="button-row">
+              <button id="destination-picker" class="button button-dark" type="button">Choose destination</button>
+              <input id="destination-input" class="picker-input" type="file" webkitdirectory multiple tabindex="-1" aria-hidden="true" />
+              <label class="button button-plain file-button">
+                Import manifest
+                <input id="manifest-input" type="file" accept="application/json,.json" />
+              </label>
+            </div>
+            <div id="destination-status" class="file-status" aria-live="polite">No destination selected</div>
+            <button id="export-destination-manifest" class="text-button" type="button" hidden>Export destination manifest</button>
+          </article>
+        </div>
+
+        <div id="scan-panel" class="scan-panel" hidden aria-live="polite">
+          <div class="scan-head"><strong id="scan-label">Reading files…</strong><span id="scan-count">0 / 0</span></div>
+          <div class="progress-track" role="progressbar" aria-label="File scan progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progress-bar"></span></div>
+          <p id="scan-file" class="scan-file">Preparing inventory</p>
+          <button id="cancel-scan" class="text-button" type="button">Cancel scan</button>
+        </div>
+
+        <div id="ready-panel" class="ready-panel" hidden>
+          <div>
+            <p class="kicker">Both inventories ready</p>
+            <strong id="ready-summary">Ready to compare</strong>
+          </div>
+          <button id="compare-button" class="button button-primary" type="button">Compare and issue receipt <span aria-hidden="true">→</span></button>
+        </div>
+
+        <div id="empty-guidance" class="empty-guidance">
+          <span class="empty-mark" aria-hidden="true">□</span>
+          <div><strong>Your files do not leave this screen.</strong><p>Start with the source folder. Large files use a disclosed sampled fingerprint to protect memory and battery.</p></div>
+        </div>
+
+        <section id="receipt" class="receipt" hidden aria-labelledby="receipt-title">
+          <div class="receipt-top">
+            <div>
+              <p class="stamp">Coverage receipt</p>
+              <h2 id="receipt-title">Backup check complete</h2>
+              <p id="receipt-meta" class="receipt-meta"></p>
+            </div>
+            <div id="coverage-score" class="coverage-score" aria-label="Coverage percentage">—</div>
+          </div>
+          <div class="result-grid">
+            <div class="result result-safe"><span>✓</span><strong id="accounted-count">0</strong><small>Accounted for</small></div>
+            <div class="result result-danger"><span>!</span><strong id="missing-count">0</strong><small>Missing</small></div>
+            <div class="result result-warn"><span>≠</span><strong id="changed-count">0</strong><small>Changed</small></div>
+          </div>
+          <div class="receipt-body">
+            <div>
+              <h3>By category</h3>
+              <div id="category-results" class="category-results"></div>
+            </div>
+            <div>
+              <h3>Needs attention</h3>
+              <div id="issue-list" class="issue-list"></div>
+            </div>
+          </div>
+          <p id="receipt-conclusion" class="receipt-conclusion"></p>
+          <div class="receipt-actions">
+            <button id="export-receipt" class="button button-primary" type="button">Export receipt (.json)</button>
+            <button id="export-csv" class="button button-plain" type="button">Export details (.csv)</button>
+            <button id="print-receipt" class="button button-plain" type="button">Print receipt</button>
+            <button id="new-check" class="text-button" type="button">Start another check</button>
+          </div>
+          <p class="fine-print">A receipt proves only the folders selected at this time. Open a few important files on the destination before wiping your phone.</p>
+        </section>
+      </section>
+
+      <section id="how" class="how" aria-labelledby="how-title">
+        <div class="section-heading">
+          <p class="eyebrow">How it works</p>
+          <h2 id="how-title">How the folder check works</h2>
+        </div>
+        <ol class="method-list">
+          <li><span>01</span><div><h3>You point to folders</h3><p>Android’s file picker controls what this app can read. Protected app data stays protected.</p></div></li>
+          <li><span>02</span><div><h3>Your browser fingerprints files</h3><p>Files through 32 MiB use full SHA-256. Larger files use clearly marked, low-memory sampled SHA-256.</p></div></li>
+          <li><span>03</span><div><h3>You keep the receipt</h3><p>Export JSON for machine-readable evidence or CSV for inspection.</p></div></li>
+        </ol>
+        <div class="remote-note" role="note">
+          <span aria-hidden="true">↗</span>
+          <div><strong>WebDAV or S3?</strong><p>Sync or download the destination folder, then choose it here. Alternatively, run this app where the destination is mounted and export its manifest. Direct cloud credentials are intentionally not collected by this static v1.</p></div>
+        </div>
+      </section>
+
+      <section id="limits" class="limits" aria-labelledby="limits-title">
+        <p class="eyebrow">Limits</p>
+        <h2 id="limits-title">This does not back up your phone.</h2>
+        <div class="limits-grid">
+          <p>It verifies user-selected photos, downloads, documents, and app-export folders. It cannot see protected app data, messages inside apps, system settings, or anything you do not select.</p>
+          <p>Matching filenames and bytes are strong evidence, not a guarantee that a remote provider will retain them forever. Keep two copies of irreplaceable files.</p>
+        </div>
+      </section>
+
+      <section class="apk-install" aria-labelledby="apk-title">
+        <p class="eyebrow">Android app</p>
+        <h2 id="apk-title">Inspect folders with Android’s own picker.</h2>
+        <p>The Android app asks you to select each source or destination tree. It keeps read access only for that selected tree.</p>
+        <p>It cannot scan your full device or protected app data.</p>
+        <ol>
+          <li>Download the APK and confirm the published <a class="checksum-link" href="https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/SHA256SUMS">SHA-256 checksum</a>.</li>
+          <li>Open it on Android and allow installation from your browser or file manager if Android asks.</li>
+          <li>Choose the phone folder and its copied destination in the Android file picker, then issue the receipt.</li>
+        </ol>
+        <a class="button button-primary" href="https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/android-backup-receipt.apk">Download current APK</a>
+        <p class="fine-print">Each release uses the same protected signing key and a higher Android version code.</p>
+      </section>
+
+      <section id="unlock" class="unlock" aria-labelledby="unlock-title">
+        <div>
+          <p class="eyebrow">Optional receipt history</p>
+          <h2 id="unlock-title">Save receipt history</h2>
+          <p>The complete verifier and every export stay free. The <strong>$7 Migration Kit</strong> is a one-time purchase.</p>
+          <p>It saves up to 20 receipt summaries on this device for repeat checks.</p>
+          <ul>
+            <li>20-entry local receipt archive</li>
+            <li>Repeat-check history</li>
+            <li>No subscription</li>
+          </ul>
+          <p class="legal-note">One-time purchase. Sociobot/Dodo is the merchant of record and handles refunds. A refund revokes the license.</p>
+        </div>
+        <div class="license-box">
+          <a class="button button-primary" href="https://api.sociobot.in/api/v1/products/android-backup-receipt/checkout">Buy Migration Kit — $7</a>
+          <form id="license-form">
+            <label for="license-input">Have a license? Paste it here</label>
+            <div class="license-row"><input id="license-input" name="license" autocomplete="off" spellcheck="false" /><button class="button button-dark" type="submit">Verify</button></div>
+          </form>
+          <p id="license-status" class="license-status" role="status">Free verifier active.</p>
+          <div id="history-panel" hidden>
+            <h3>Receipt archive</h3>
+            <ol id="history-list" class="history-list"></ol>
+            <button id="clear-history" class="text-button" type="button">Clear archive</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div><strong>Backup / Receipt</strong><p>Local-first evidence for Android moves.</p></div>
+      <div class="footer-links"><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="https://github.com/B-Divyesh/sf-android-backup-receipt">Source</a></div>
+      <p class="provenance">Original generated illustration; no stock imagery. Built by Param Factory · Version 1.0.2 · Build 62ab8aab61ac · © 2026 Sociobot.</p>
+    </footer>
+
+    <div id="toast" class="toast" role="status" hidden><span id="toast-text"></span><button id="update-button" type="button" hidden>Reload</button></div>
+  </body>
+</html>

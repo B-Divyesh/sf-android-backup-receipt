@@ -1,0 +1,4 @@
+200  https://github.com/B-Divyesh/sf-android-backup-receipt
+302 https://github.com/B-Divyesh/sf-android-backup-receipt/releases/download/android-v1.0.2-build-8/android-backup-receipt.apk https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/android-backup-receipt.apk
+302 https://github.com/B-Divyesh/sf-android-backup-receipt/releases/download/android-v1.0.2-build-8/SHA256SUMS https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/SHA256SUMS
+303 https://checkout.dodopayments.com/session/cks_0NmSAoqDvKzvLXhsUy3Yg https://api.sociobot.in/api/v1/products/android-backup-receipt/checkout

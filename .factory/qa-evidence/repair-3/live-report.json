@@ -1,0 +1,325 @@
+{
+  "desktopCold": {
+    "status": 200,
+    "semantics": {
+      "title": "Android Backup Receipt — check a phone backup",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "imagesMissingAlt": 0,
+      "primary": "Try it with sample data →",
+      "headline": "Check an Android backup before you wipe.",
+      "audience": "For Android owners moving phones: compare selected folders, then get a receipt showing what can be restored."
+    },
+    "errors": [],
+    "externalRequests": [],
+    "axe": []
+  },
+  "mobileDemo": {
+    "errors": [],
+    "layout": {
+      "bodyWidth": 390,
+      "viewportWidth": 390,
+      "h1Count": 1,
+      "demoBanner": true,
+      "receiptVisible": true,
+      "touchTargetsBelow44": [
+        {
+          "tag": "INPUT",
+          "text": "",
+          "id": "source-input",
+          "width": 1,
+          "height": 1
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "id": "destination-input",
+          "width": 1,
+          "height": 1
+        }
+      ]
+    },
+    "counts": {
+      "accounted": "2",
+      "missing": "1",
+      "changed": "1",
+      "coverage": "50%"
+    },
+    "axe": []
+  },
+  "normalFlow": {
+    "errors": [],
+    "externalRequests": [],
+    "receipt": {
+      "schema": "backup-receipt/result-1",
+      "accounted": 2,
+      "missing": 1,
+      "changed": 1,
+      "extra": 1,
+      "coverage": 50
+    },
+    "csvLines": [
+      "status,category,path,size_bytes",
+      "\"changed\",\"Photos\",\"DCIM/Camera/changed.jpg\",\"14\"",
+      "\"missing\",\"Documents\",\"Download/missing.pdf\",\"16\""
+    ],
+    "beforeReload": "4 source files vs 4 destination files",
+    "afterReload": "Phone / 4 files / restored local inventory",
+    "afterClear": "No source selected",
+    "focusAfterClear": "source-input"
+  },
+  "hashBoundary": [
+    {
+      "path": "exact.bin",
+      "size": 33554432,
+      "hashMethod": "sha256",
+      "hashLength": 64
+    },
+    {
+      "path": "over.bin",
+      "size": 33554433,
+      "hashMethod": "sampled-sha256",
+      "hashLength": 64
+    }
+  ],
+  "recovery": {
+    "emptyMessage": "That folder contained no readable files. Choose another folder.",
+    "malformedMessage": "That file is not valid JSON. Choose a manifest exported from this app.",
+    "schemaMessage": "Manifest format is not supported. Export a fresh manifest from this app.",
+    "emptyLicense": "Paste the complete license token first."
+  },
+  "keyboardMotion": {
+    "skipFocused": true,
+    "skipFocusStyle": {
+      "outline": "rgb(48, 73, 195) solid 3px",
+      "boxShadow": "none"
+    },
+    "focusAfterSkip": "main",
+    "tabStops": [
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Try it with sample data →"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Check real folders ↓"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Read the honest limits"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "source-picker",
+        "text": "Choose source folder"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "destination-picker",
+        "text": "Choose destination"
+      },
+      {
+        "tag": "INPUT",
+        "id": "manifest-input",
+        "text": ""
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "SHA-256 checksum"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Download current APK"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Buy Migration Kit — $7"
+      },
+      {
+        "tag": "INPUT",
+        "id": "license-input",
+        "text": ""
+      },
+      {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Verify"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Privacy"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Terms"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Source"
+      },
+      {
+        "tag": "BODY",
+        "id": "",
+        "text": "Skip to verification ✓ Backup / Receipt Verify How it works "
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Skip to verification"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "✓ Backup / Receipt"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Try it with sample data →"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Check real folders ↓"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Read the honest limits"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "source-picker",
+        "text": "Choose source folder"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "destination-picker",
+        "text": "Choose destination"
+      },
+      {
+        "tag": "INPUT",
+        "id": "manifest-input",
+        "text": ""
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "SHA-256 checksum"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Download current APK"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Buy Migration Kit — $7"
+      },
+      {
+        "tag": "INPUT",
+        "id": "license-input",
+        "text": ""
+      },
+      {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Verify"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Privacy"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Terms"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Source"
+      },
+      {
+        "tag": "BODY",
+        "id": "",
+        "text": "Skip to verification ✓ Backup / Receipt Verify How it works "
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Skip to verification"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "✓ Backup / Receipt"
+      },
+      {
+        "tag": "A",
+        "id": "",
+        "text": "Try it with sample data →"
+      }
+    ],
+    "motion": {
+      "mediaMatches": true,
+      "htmlScrollBehavior": "auto",
+      "transitions": [
+        "1e-05s"
+      ],
+      "animations": [
+        "1e-05s",
+        "1e-05s",
+        "1e-05s",
+        "1e-05s",
+        "1e-05s",
+        "1e-05s",
+        "1e-05s",
+        "1e-05s",
+        "1e-05s",
+        "1e-05s"
+      ]
+    }
+  },
+  "/privacy/": {
+    "status": 200,
+    "title": "Privacy — Android Backup Receipt",
+    "h1": [
+      "Your files stay yours."
+    ],
+    "errors": [],
+    "axe": []
+  },
+  "/terms/": {
+    "status": 200,
+    "title": "Terms — Android Backup Receipt",
+    "h1": [
+      "Verify, then open the files."
+    ],
+    "errors": [],
+    "axe": []
+  },
+  "/does-not-exist": {
+    "status": 404,
+    "title": "Page not found — Android Backup Receipt",
+    "h1": [
+      "That page is not here."
+    ],
+    "errors": [
+      "console: Failed to load resource: the server responded with a status of 404 ()"
+    ],
+    "axe": []
+  }
+}
