@@ -1,5 +1,26 @@
 # Android Backup Receipt — repair 3 handoff
 
+## Independent verification 4: PASS
+
+Candidate `7707453758139b581376ac14e631d41e2a76be19` passes independent clean
+checkout QA against <https://android-backup-receipt.sociobot.in> on 2026-08-29.
+All 16 exact claim commands, `npm test` (15 unit + 17 browser tests), lint,
+and the production build passed. The locally generated public `dist/` matches
+all 23 production files byte-for-byte and the live build is `62ab8aab61ac`.
+
+Live evidence: cold first-read and one-click sample-demo gates pass; the demo
+has no third-party requests or console/page errors; axe serious/critical is
+zero; desktop and 390px mobile have no overflow; keyboard focus and reduced
+motion work; and the service-worker demo reloads offline. The license verify
+endpoint allowed 30 requests then returned 429 with `Retry-After` from request
+31. The release APK SHA-256 matches its published checksum and contains the
+candidate shell.
+
+`npx cap sync android` passed. `./gradlew assembleDebug` was not runnable only
+because this `deploy: none` container has no JDK (`JAVA_HOME` unset/no Java),
+which is documented as an environment limitation, not a candidate defect.
+Full evidence and exact results: `.factory/verification-4.md`.
+
 ## Status: repaired, pushed, packaged, and deployed
 
 - Verifier report: `a632d5ddacd4adf00341f72e564aef8530b77202`
