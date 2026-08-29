@@ -33,10 +33,12 @@ const demoSource: Inventory = {
   label: 'Pixel 7 / DCIM + exports',
   createdAt: '2026-08-29T09:00:00.000Z',
   files: [
-    { path: 'Camera/IMG_20260817_0912.jpg', size: 2_481_640, modified: 1, hash: 'd91a', hashMethod: 'sha256' },
-    { path: 'Camera/IMG_20260817_1003.jpg', size: 2_178_532, modified: 2, hash: 'a42f', hashMethod: 'sha256' },
-    { path: 'Documents/phone-transfer-notes.pdf', size: 184_320, modified: 3, hash: 'b113', hashMethod: 'sha256' },
-    { path: 'Exports/Signal-2026-08-17.backup', size: 8_765_441, modified: 4, hash: 'e720', hashMethod: 'sha256' }
+    // These are complete SHA-256 digests of deterministic virtual fixture
+    // streams. Each stream repeats its path-specific seed to the stated size.
+    { path: 'Camera/IMG_20260817_0912.jpg', size: 2_481_640, modified: 1, hash: 'cc9b0766eaea3d8899a98f78fc34b4725ad8821754ccb2fff396ab9811c5df06', hashMethod: 'sha256' },
+    { path: 'Camera/IMG_20260817_1003.jpg', size: 2_178_532, modified: 2, hash: '5c649bd0f8fad31c86668d4f3d9eb31a40907130eac9bf06001cacd31447e7f2', hashMethod: 'sha256' },
+    { path: 'Documents/phone-transfer-notes.pdf', size: 184_320, modified: 3, hash: 'b0215f905cfcecd40bbd7639ed11d68298009f67f5887c5e09a5af69017fd148', hashMethod: 'sha256' },
+    { path: 'Exports/Signal-2026-08-17.backup', size: 8_765_441, modified: 4, hash: 'cb08e73f26815ff2290e84a8b6fe6033c881acabac792dd7f3c9ad0cc6b027b6', hashMethod: 'sha256' }
   ]
 };
 
@@ -46,9 +48,9 @@ const demoDestination: Inventory = {
   createdAt: '2026-08-29T09:01:00.000Z',
   files: [
     { ...demoSource.files[0] },
-    { ...demoSource.files[1], hash: 'changed-copy' },
+    { ...demoSource.files[1], hash: 'cdd35de98e33e5c102225f651b4a6df49de5fbf6e72e59f9d9b28140819751ab' },
     { ...demoSource.files[3] },
-    { path: 'Download/read-me-first.txt', size: 912, modified: 5, hash: 'extra', hashMethod: 'sha256' }
+    { path: 'Download/read-me-first.txt', size: 912, modified: 5, hash: '0aa9496a8747cb0d0e069dc5a871e66c9c684e5bff7ecf9fc15f6b83f77d7e02', hashMethod: 'sha256' }
   ]
 };
 
@@ -219,7 +221,13 @@ manifestInput.addEventListener('change', async () => {
   const file = manifestInput.files?.[0];
   if (!file) return;
   try {
-    destinationInventory = parseManifest(JSON.parse(await file.text()));
+    let decoded: unknown;
+    try {
+      decoded = JSON.parse(await file.text());
+    } catch {
+      throw new Error('That file is not valid JSON. Choose a manifest exported from this app.');
+    }
+    destinationInventory = parseManifest(decoded);
     void saveActiveInventory('destination', destinationInventory);
     destinationStatus.textContent = `${destinationInventory.label} manifest / ${destinationInventory.files.length.toLocaleString()} files`;
     destinationCard.classList.add('is-ready');
@@ -428,16 +436,18 @@ async function restoreActiveInventories(): Promise<void> {
 async function saveHistory(result: Comparison): Promise<void> {
   const database = await openDatabase();
   const transaction = database.transaction('history', 'readwrite');
-  transaction.objectStore('history').put(result);
+  const store = transaction.objectStore('history');
+  store.put(result);
+  const allRequest = store.getAll();
+  const all = await new Promise<Comparison[]>((resolve, reject) => {
+    allRequest.onsuccess = () => resolve((allRequest.result as Comparison[]).sort((a, b) => b.checkedAt.localeCompare(a.checkedAt)));
+    allRequest.onerror = () => reject(allRequest.error);
+  });
+  for (const item of all.slice(20)) store.delete(item.checkedAt);
   await new Promise<void>((resolve, reject) => {
     transaction.oncomplete = () => resolve();
     transaction.onerror = () => reject(transaction.error);
   });
-  const all = await getHistory();
-  if (all.length > 20) {
-    const trim = database.transaction('history', 'readwrite');
-    for (const item of all.slice(20)) trim.objectStore('history').delete(item.checkedAt);
-  }
   database.close();
 }
 

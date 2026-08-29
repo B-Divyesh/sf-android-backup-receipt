@@ -4,19 +4,36 @@ import { describe, expect, it } from 'vitest';
 const pluginPath = new URL('../android/app/src/main/java/in/sociobot/androidbackupreceipt/SafInventoryPlugin.java', import.meta.url);
 const activityPath = new URL('../android/app/src/main/java/in/sociobot/androidbackupreceipt/MainActivity.java', import.meta.url);
 const configPath = new URL('../public/staticwebapp.config.json', import.meta.url);
+const gradlePath = new URL('../android/app/build.gradle', import.meta.url);
+const workflowPath = new URL('../.github/workflows/android.yml', import.meta.url);
 
 describe('Android SAF delivery contract', () => {
-  it('uses the persisted selected-tree SAF flow without broad storage permissions', async () => {
+  it('@claim:saf-read-only uses persistent selected-tree read access without broad or write permissions', async () => {
     const [plugin, manifest] = await Promise.all([
       readFile(pluginPath, 'utf8'),
       readFile(new URL('../android/app/src/main/AndroidManifest.xml', import.meta.url), 'utf8')
     ]);
     expect(plugin).toContain('Intent.ACTION_OPEN_DOCUMENT_TREE');
     expect(plugin).toContain('takePersistableUriPermission');
+    expect(plugin).not.toContain('FLAG_GRANT_WRITE_URI_PERMISSION');
     expect(plugin).toContain('DocumentFile.fromTreeUri');
     expect(plugin).toContain('FULL_HASH_LIMIT = 32L * 1024L * 1024L');
     expect(plugin).toContain('"sampled-sha256"');
     expect(manifest).not.toMatch(/READ_MEDIA|READ_EXTERNAL_STORAGE|MANAGE_EXTERNAL_STORAGE/);
+  });
+
+  it('@claim:android-private-backup excludes private inventory state from Android backup and transfer', async () => {
+    const [manifest, legacyRules, extractionRules] = await Promise.all([
+      readFile(new URL('../android/app/src/main/AndroidManifest.xml', import.meta.url), 'utf8'),
+      readFile(new URL('../android/app/src/main/res/xml/backup_rules.xml', import.meta.url), 'utf8'),
+      readFile(new URL('../android/app/src/main/res/xml/data_extraction_rules.xml', import.meta.url), 'utf8')
+    ]);
+    expect(manifest).toContain('android:allowBackup="false"');
+    expect(manifest).toContain('android:fullBackupContent="@xml/backup_rules"');
+    expect(manifest).toContain('android:dataExtractionRules="@xml/data_extraction_rules"');
+    expect(legacyRules).toContain('<exclude domain="database" path="." />');
+    expect(extractionRules).toContain('<device-transfer>');
+    expect(extractionRules).toContain('<exclude domain="sharedpref" path="." />');
   });
 
   it('registers the bridge and returns progress/cancellation to the same web workflow', async () => {
@@ -24,6 +41,20 @@ describe('Android SAF delivery contract', () => {
     expect(activity).toContain('registerPlugin(SafInventoryPlugin.class)');
     expect(plugin).toContain('@PluginMethod\n    public void cancelScan');
     expect(plugin).toContain('notifyListeners("scanProgress", progress)');
+  });
+});
+
+describe('Android update contract', () => {
+  it('uses protected stable signing secrets, increasing version codes, and immutable releases', async () => {
+    const [workflow, gradle] = await Promise.all([readFile(workflowPath, 'utf8'), readFile(gradlePath, 'utf8')]);
+    expect(workflow).toContain('secrets.ANDROID_RELEASE_KEYSTORE_BASE64');
+    expect(workflow).toContain('secrets.ANDROID_RELEASE_STORE_PASSWORD');
+    expect(workflow).not.toContain('keytool -genkeypair');
+    expect(workflow).toContain('100000 + GITHUB_RUN_NUMBER');
+    expect(workflow).toContain('android-v1.0.2-build-${GITHUB_RUN_NUMBER}');
+    expect(workflow).not.toContain('gh release upload');
+    expect(gradle).toContain('System.getenv("ANDROID_VERSION_CODE")');
+    expect(gradle).toContain('"3"');
   });
 });
 

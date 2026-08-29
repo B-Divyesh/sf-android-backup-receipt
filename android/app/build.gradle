@@ -7,8 +7,8 @@ android {
         applicationId "in.sociobot.androidbackupreceipt"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "1.0.1"
+        versionCode Integer.parseInt(System.getenv("ANDROID_VERSION_CODE") ?: "3")
+        versionName System.getenv("ANDROID_VERSION_NAME") ?: "1.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -19,9 +19,9 @@ android {
     signingConfigs {
         release {
             storeFile rootProject.file(System.getenv("RELEASE_STORE_FILE") ?: "app/release.keystore")
-            storePassword System.getenv("RELEASE_STORE_PASSWORD") ?: "android"
-            keyAlias System.getenv("RELEASE_KEY_ALIAS") ?: "upload"
-            keyPassword System.getenv("RELEASE_KEY_PASSWORD") ?: "android"
+            storePassword System.getenv("RELEASE_STORE_PASSWORD")
+            keyAlias System.getenv("RELEASE_KEY_ALIAS")
+            keyPassword System.getenv("RELEASE_KEY_PASSWORD")
         }
     }
     buildTypes {

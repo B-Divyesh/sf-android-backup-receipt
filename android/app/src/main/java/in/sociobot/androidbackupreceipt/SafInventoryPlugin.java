@@ -42,7 +42,6 @@ public class SafInventoryPlugin extends Plugin {
     public void chooseTree(PluginCall call) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         intent.addFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION);
         startActivityForResult(call, intent, "treePicked");
@@ -63,9 +62,9 @@ public class SafInventoryPlugin extends Plugin {
             return;
         }
         Uri treeUri = data.getData();
-        int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        int takeFlags = data.getFlags() & Intent.FLAG_GRANT_READ_URI_PERMISSION;
         try {
-            getContext().getContentResolver().takePersistableUriPermission(treeUri, takeFlags | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            getContext().getContentResolver().takePersistableUriPermission(treeUri, takeFlags);
         } catch (SecurityException ignored) {
             // Some document providers expose a transient read grant only. The scan can still run now.
         }

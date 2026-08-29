@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 
 async function chooseVirtualFolder(page: import('@playwright/test').Page, selector: string, folder: string, files: Array<{ path: string; body: string }>) {
@@ -13,6 +14,17 @@ async function chooseVirtualFolder(page: import('@playwright/test').Page, select
     Object.defineProperty(input, 'files', { configurable: true, value: transfer.files });
     input.dispatchEvent(new Event('change', { bubbles: true }));
   }, { folder, files });
+}
+
+function repeatedFixtureDigest(size: number, seed: string): string {
+  const digest = createHash('sha256');
+  const bytes = Buffer.from(seed);
+  for (let remaining = size; remaining > 0;) {
+    const part = bytes.subarray(0, Math.min(remaining, bytes.length));
+    digest.update(part);
+    remaining -= part.length;
+  }
+  return digest.digest('hex');
 }
 
 test('core receipt flow works at mobile width', async ({ page }) => {
@@ -47,14 +59,30 @@ test('has no serious accessibility violations', async ({ page }) => {
   expect(results.violations).toEqual([]);
 });
 
-test('folder controls retain the browser fallback and mobile targets meet the touch baseline', async ({ page }) => {
+test('@claim:responsive-keyboard keeps the first-screen facts and controls usable at 390 px with a keyboard', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+  const desktopFacts = await page.locator('.trust-strip').boundingBox();
+  expect((desktopFacts?.y ?? 901) + (desktopFacts?.height ?? 901)).toBeLessThanOrEqual(900);
+
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
+  const facts = await page.locator('.trust-strip').boundingBox();
+  expect(facts?.y).toBeGreaterThanOrEqual(0);
+  expect((facts?.y ?? 900) + (facts?.height ?? 900)).toBeLessThanOrEqual(844);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+
+  await page.keyboard.press('Tab');
+  await expect(page.locator('.skip-link')).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#main')).toBeFocused();
+
   const chooser = page.waitForEvent('filechooser');
-  await page.locator('#source-picker').click();
+  await page.locator('#source-picker').focus();
+  await page.keyboard.press('Enter');
   await chooser;
 
-  for (const selector of ['.wordmark', 'footer a']) {
+  for (const selector of ['.wordmark', 'footer a', '.checksum-link']) {
     const targets = await page.locator(selector).all();
     for (const target of targets) {
       const box = await target.boundingBox();
@@ -114,7 +142,7 @@ test('@claim:local-only-files keeps the demo check on the product origin', async
   expect(externalRequests).toEqual([]);
 });
 
-test('@claim:receipt-exports @claim:sha256-evidence creates observable JSON, CSV, and SHA-256 evidence from demo data', async ({ page }) => {
+test('@claim:receipt-exports creates observable JSON and CSV exports from demo data', async ({ page }) => {
   await page.goto('/demo');
   await expect(page.locator('#receipt')).toBeVisible();
   const receiptPromise = page.waitForEvent('download');
@@ -135,16 +163,174 @@ test('@claim:receipt-exports @claim:sha256-evidence creates observable JSON, CSV
   expect(csvText).toContain('changed');
   expect(csvText).toContain('missing');
 
-  const sourceManifestPromise = page.waitForEvent('download');
-  await page.locator('#export-source-manifest').click();
-  const sourceManifest = await sourceManifestPromise;
-  const sourceManifestPath = await sourceManifest.path();
-  const sourceData = JSON.parse(await readFile(sourceManifestPath!, 'utf8')) as { files: Array<{ hashMethod: string }> };
-  expect(sourceData.files).toHaveLength(4);
-  expect(sourceData.files.every((file) => file.hashMethod === 'sha256')).toBe(true);
 });
 
-test('@claim:offline-reload reloads the demo after its first visit while offline', async ({ page, context }) => {
+test('@claim:sha256-evidence exports complete, reproducible SHA-256 evidence for every demo source file', async ({ page }) => {
+  await page.goto('/demo');
+  const downloadPromise = page.waitForEvent('download');
+  await page.locator('#export-source-manifest').click();
+  const download = await downloadPromise;
+  const path = await download.path();
+  const source = JSON.parse(await readFile(path!, 'utf8')) as { files: Array<{ path: string; size: number; hash: string; hashMethod: string }> };
+  const fixtures = new Map([
+    ['Camera/IMG_20260817_0912.jpg', 'sample-photo-0912\n'],
+    ['Camera/IMG_20260817_1003.jpg', 'sample-photo-1003\n'],
+    ['Documents/phone-transfer-notes.pdf', 'sample-transfer-notes\n'],
+    ['Exports/Signal-2026-08-17.backup', 'sample-signal-export\n']
+  ]);
+  expect(source.files).toHaveLength(4);
+  for (const file of source.files) {
+    expect(file.hashMethod).toBe('sha256');
+    expect(file.hash).toMatch(/^[a-f0-9]{64}$/);
+    expect(file.hash).toBe(repeatedFixtureDigest(file.size, fixtures.get(file.path)!));
+  }
+});
+
+test('@claim:comparison-manifest reports every comparison class and accepts an exported manifest', async ({ page }) => {
+  await page.goto('/demo');
+  const receiptPromise = page.waitForEvent('download');
+  await page.locator('#export-receipt').click();
+  const receiptPath = await (await receiptPromise).path();
+  const result = JSON.parse(await readFile(receiptPath!, 'utf8')) as { accounted: number; missing: number; changed: number; extra: number; categories: unknown[] };
+  expect(result).toMatchObject({ accounted: 2, missing: 1, changed: 1, extra: 1 });
+  expect(result.categories.length).toBeGreaterThan(1);
+
+  const manifestPromise = page.waitForEvent('download');
+  await page.locator('#export-source-manifest').click();
+  const manifestPath = await (await manifestPromise).path();
+  await page.locator('#manifest-input').setInputFiles(manifestPath!);
+  await expect(page.locator('#destination-status')).toContainText('manifest / 4 files');
+  await page.locator('#compare-button').click();
+  await expect(page.locator('#coverage-score')).toHaveText('100%');
+  await expect(page.locator('#missing-count')).toHaveText('0');
+  await expect(page.locator('#changed-count')).toHaveText('0');
+});
+
+test('@claim:print-view sends the completed demo receipt to the browser print view', async ({ page }) => {
+  await page.goto('/demo');
+  await page.evaluate(() => {
+    window.print = () => { document.documentElement.dataset.printRequested = 'true'; };
+  });
+  await page.locator('#print-receipt').click();
+  await expect(page.locator('html')).toHaveAttribute('data-print-requested', 'true');
+  await page.emulateMedia({ media: 'print' });
+  expect(await page.locator('#receipt').evaluate((receipt) => getComputedStyle(receipt).display)).not.toBe('none');
+});
+
+test('@claim:local-metadata-storage keeps only inventory evidence in the isolated demo database', async ({ page }) => {
+  await page.goto('/demo');
+  await expect.poll(() => page.evaluate(async () => {
+    const database = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open('demo:android-backup-receipt');
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    const count = database.transaction('active', 'readonly').objectStore('active').count();
+    const value = await new Promise<number>((resolve, reject) => {
+      count.onsuccess = () => resolve(count.result);
+      count.onerror = () => reject(count.error);
+    });
+    database.close();
+    return value;
+  })).toBe(2);
+  const records = await page.evaluate(async () => {
+    const database = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open('demo:android-backup-receipt');
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    const request = database.transaction('active', 'readonly').objectStore('active').getAll();
+    const values = await new Promise<unknown[]>((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    database.close();
+    return values;
+  }) as Array<{ inventory: { files: Array<Record<string, unknown>> } }>;
+  expect(records).toHaveLength(2);
+  for (const record of records) {
+    for (const file of record.inventory.files) {
+      expect(Object.keys(file).sort()).toEqual(['hash', 'hashMethod', 'modified', 'path', 'size']);
+      expect(file).not.toHaveProperty('content');
+      expect(file).not.toHaveProperty('exif');
+    }
+  }
+  expect(await page.evaluate(() => Object.keys(localStorage))).toEqual([]);
+});
+
+test('@claim:migration-archive verifies only with Sociobot and caps the $7 one-time archive at 20 local receipts', async ({ page }) => {
+  const externalRequests: string[] = [];
+  page.on('request', (request) => {
+    if (new URL(request.url()).origin !== 'http://127.0.0.1:4173') externalRequests.push(request.url());
+  });
+  await page.addInitScript(() => {
+    const originalFetch = window.fetch.bind(window);
+    const billingRequests: string[] = [];
+    Object.defineProperty(window, '__billingRequests', { value: billingRequests });
+    window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
+      if (url.startsWith('https://api.sociobot.in/')) {
+        billingRequests.push(url);
+        return Promise.resolve(new Response('{"valid":true,"reason":"ok"}', { status: 200, headers: { 'content-type': 'application/json' } }));
+      }
+      return originalFetch(input, init);
+    };
+  });
+  await page.goto('/demo');
+  await expect(page.locator('#unlock')).toContainText('$7 Migration Kit');
+  await expect(page.locator('#unlock')).toContainText('one-time purchase');
+  await expect(page.locator('#unlock')).toContainText('No subscription');
+  await page.locator('#license-input').fill('sbk_test_fixture_license');
+  await page.locator('#license-form button').click();
+  await expect(page.locator('#license-status')).toContainText('active');
+  for (let index = 1; index <= 21; index += 1) {
+    await page.waitForTimeout(2);
+    await page.locator('#compare-button').click();
+    await expect(page.locator('#history-list li')).toHaveCount(Math.min(index, 20));
+  }
+  await page.waitForTimeout(100);
+  expect(await page.evaluate(async () => {
+    const database = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open('demo:android-backup-receipt');
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    const count = database.transaction('history', 'readonly').objectStore('history').count();
+    const value = await new Promise<number>((resolve, reject) => {
+      count.onsuccess = () => resolve(count.result);
+      count.onerror = () => reject(count.error);
+    });
+    database.close();
+    return value;
+  })).toBe(20);
+  expect(externalRequests).toEqual([]);
+  const billingRequests = await page.evaluate(() => (window as typeof window & { __billingRequests: string[] }).__billingRequests);
+  expect(billingRequests).toHaveLength(1);
+  expect(billingRequests[0]).toMatch(/^https:\/\/api\.sociobot\.in\/api\/v1\/products\/android-backup-receipt\/verify\?license=/);
+});
+
+test('malformed manifest errors use plain recovery guidance', async ({ page }) => {
+  await page.goto('/demo');
+  await page.locator('#manifest-input').setInputFiles({ name: 'broken.json', mimeType: 'application/json', buffer: Buffer.from('{bad') });
+  await expect(page.locator('#destination-status')).toHaveText('That file is not valid JSON. Choose a manifest exported from this app.');
+  await expect(page.locator('#destination-status')).not.toContainText('position');
+});
+
+test('ships complete social, canonical, Apple, footer, and build metadata', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /receipt-og-1200x630/);
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
+  await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute('sizes', '180x180');
+  await expect(page.locator('footer')).toContainText('Built by Param Factory');
+  await expect(page.locator('footer')).not.toContainText('__BUILD_ID__');
+  for (const route of ['/privacy/', '/terms/']) {
+    await page.goto(route);
+    await expect(page.locator('link[rel="canonical"]')).toHaveCount(1);
+    await expect(page.locator('footer')).toContainText('Built by Param Factory');
+  }
+});
+
+test('@claim:offline-reload is installable and reloads the demo after its first visit while offline', async ({ page, context }) => {
   // Clean the shared-origin worker/cache before this fresh-context claim. This
   // mirrors a first visit even when a prior local test run left an old worker.
   await page.goto('/');
@@ -156,6 +342,10 @@ test('@claim:offline-reload reloads the demo after its first visit while offline
   // released before the fresh demo page registers the current worker.
   await page.goto('/online-check.txt');
   await page.goto('/?demo=1');
+  const manifest = await page.evaluate(async () => fetch('/manifest.webmanifest').then((response) => response.json())) as { display: string; icons: Array<{ sizes: string; purpose?: string }> };
+  expect(manifest.display).toBe('standalone');
+  expect(manifest.icons.some((icon) => icon.sizes === '192x192')).toBe(true);
+  expect(manifest.icons.some((icon) => icon.sizes === '512x512' && icon.purpose === 'maskable')).toBe(true);
   await page.evaluate(() => navigator.serviceWorker.ready);
   await page.waitForTimeout(300);
   // Let the now-active worker make one online demo navigation before asking it

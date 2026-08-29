@@ -4,34 +4,90 @@
     "claim": "Try a four-file sample backup check in one click.",
     "where": "Landing primary action, demo banner",
     "test": "npm run test:claims -- --grep @claim:demo-sample-receipt",
-    "sandbox": "Fresh browser context at /demo; assert the isolated demo receipt has 2 accounted, 1 missing, 1 changed, and 50% coverage."
+    "sandbox": "Fresh browser context at /demo; assert the isolated receipt has 2 accounted, 1 missing, 1 changed, and 50% coverage."
   },
   {
     "id": "local-only-files",
-    "claim": "Selected files stay on your device.",
-    "where": "Landing facts, workspace guidance, privacy policy",
+    "claim": "Selected files stay on the device and the core check loads no third-party scripts or services.",
+    "where": "Landing facts, workspace, privacy policy, README",
     "test": "npm run test:claims -- --grep @claim:local-only-files",
-    "sandbox": "Fresh browser context at /demo; record all requests during the sample flow and assert every request is same-origin."
+    "sandbox": "Fresh browser context at /demo; record every request and assert all are same-origin."
   },
   {
     "id": "receipt-exports",
-    "claim": "Export a JSON receipt and CSV details.",
+    "claim": "Export a JSON receipt and CSV discrepancy list.",
     "where": "Landing facts, receipt actions, README",
     "test": "npm run test:claims -- --grep @claim:receipt-exports",
-    "sandbox": "Fresh browser context at /demo; download both exports and assert schema, header, and discrepancy rows."
+    "sandbox": "Fresh /demo; download both exports and assert the receipt schema/counts and CSV discrepancy rows."
   },
   {
     "id": "sha256-evidence",
-    "claim": "The sample receipt includes SHA-256 file evidence.",
-    "where": "How it works, README",
+    "claim": "The four demo source records contain complete SHA-256 evidence.",
+    "where": "How it works, demo documentation, README",
     "test": "npm run test:claims -- --grep @claim:sha256-evidence",
-    "sandbox": "Fresh browser context at /demo; export the sample source manifest and assert four SHA-256 evidence records."
+    "sandbox": "Fresh /demo; export the source manifest and independently reproduce each 64-character digest from its deterministic fixture stream."
+  },
+  {
+    "id": "hash-boundary",
+    "claim": "Files through 32 MiB use full SHA-256; larger files use disclosed sampled SHA-256.",
+    "where": "How it works, workspace guidance, README",
+    "test": "npm run test:unit -- -t @claim:hash-boundary",
+    "sandbox": "Hash an exact 32 MiB File and a 32 MiB + 1 byte File; assert method labels and complete 64-character digests."
+  },
+  {
+    "id": "comparison-manifest",
+    "claim": "The receipt reports accounted, missing, changed, extra, and category results and accepts an exported manifest.",
+    "where": "Receipt, landing method, README",
+    "test": "npm run test:claims -- --grep @claim:comparison-manifest",
+    "sandbox": "Fresh /demo; assert every comparison count/category, import its exported source manifest, and observe 100% coverage."
+  },
+  {
+    "id": "saf-read-only",
+    "claim": "The Android app uses persistent read-only selected-tree SAF access and requests no broad storage permission.",
+    "where": "Android install section, privacy policy, README",
+    "test": "npm run test:unit -- -t @claim:saf-read-only",
+    "sandbox": "Inspect the shipped native bridge and manifest for ACTION_OPEN_DOCUMENT_TREE, persisted read access, DocumentFile, and absence of write or broad storage permission."
+  },
+  {
+    "id": "android-private-backup",
+    "claim": "The Android package excludes private inventory and license state from cloud backup and device transfer.",
+    "where": "Privacy policy, README",
+    "test": "npm run test:unit -- -t @claim:android-private-backup",
+    "sandbox": "Inspect the Android manifest and both backup-rule formats for disabled backup and complete database/shared-preference exclusions."
+  },
+  {
+    "id": "local-metadata-storage",
+    "claim": "Local inventories store paths, sizes, dates, and fingerprints, not file contents or EXIF fields.",
+    "where": "Privacy policy, README",
+    "test": "npm run test:claims -- --grep @claim:local-metadata-storage",
+    "sandbox": "Fresh /demo; inspect isolated IndexedDB records and assert their exact evidence fields and empty localStorage."
+  },
+  {
+    "id": "migration-archive",
+    "claim": "The optional $7 one-time Migration Kit keeps at most 20 receipt summaries locally and has no subscription.",
+    "where": "Migration Kit section, terms, README",
+    "test": "npm run test:claims -- --grep @claim:migration-archive",
+    "sandbox": "Fresh /demo with a recorded valid Sociobot response; create 21 receipts, assert 20 local records, price/copy, and only the documented verification request."
+  },
+  {
+    "id": "print-view",
+    "claim": "Print a completed receipt.",
+    "where": "Receipt actions, README",
+    "test": "npm run test:claims -- --grep @claim:print-view",
+    "sandbox": "Fresh /demo; invoke Print receipt, assert the browser print action, and verify the receipt remains present in print media."
+  },
+  {
+    "id": "responsive-keyboard",
+    "claim": "The product works at 390 px and with keyboard controls.",
+    "where": "README, accessibility contract",
+    "test": "npm run test:claims -- --grep @claim:responsive-keyboard",
+    "sandbox": "Fresh 390x844 page; assert no overflow, facts inside the viewport, 44 px links, skip-link focus, and keyboard activation of the folder control."
   },
   {
     "id": "offline-reload",
-    "claim": "The check works offline after the first visit.",
-    "where": "README",
+    "claim": "The installable check works offline after the first visit.",
+    "where": "README, manifest, offline status",
     "test": "npm run test:claims -- --grep @claim:offline-reload",
-    "sandbox": "Fresh browser context at /?demo=1; wait for the service worker, set offline, reload, and assert the sample receipt remains visible."
+    "sandbox": "Fresh /?demo=1; verify standalone manifest icons, install the worker, go offline, reload, and assert the sample receipt remains visible."
   }
 ]

@@ -62,6 +62,10 @@ function toHex(buffer: ArrayBuffer): string {
   return Array.from(new Uint8Array(buffer), (byte) => byte.toString(16).padStart(2, '0')).join('');
 }
 
+export function isSha256Hex(value: string): boolean {
+  return /^[a-f0-9]{64}$/i.test(value);
+}
+
 async function sha256(bytes: ArrayBuffer): Promise<string> {
   return toHex(await crypto.subtle.digest('SHA-256', bytes));
 }
@@ -191,7 +195,7 @@ export function parseManifest(value: unknown): Inventory {
     throw new Error('Manifest format is not supported. Export a fresh manifest from this app.');
   }
   const files = candidate.files.map((file) => {
-    if (!file || typeof file.path !== 'string' || typeof file.size !== 'number' || typeof file.hash !== 'string' || !['sha256','sampled-sha256'].includes(file.hashMethod)) {
+    if (!file || typeof file.path !== 'string' || typeof file.size !== 'number' || typeof file.hash !== 'string' || !isSha256Hex(file.hash) || !['sha256','sampled-sha256'].includes(file.hashMethod)) {
       throw new Error('Manifest contains an invalid file entry.');
     }
     return { path: file.path, size: file.size, modified: Number(file.modified) || 0, hash: file.hash, hashMethod: file.hashMethod } as FileEvidence;
