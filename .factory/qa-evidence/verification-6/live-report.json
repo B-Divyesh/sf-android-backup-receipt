@@ -1,0 +1,295 @@
+{
+  "checkedAt": "2026-08-29T18:22:37.349Z",
+  "origin": "https://android-backup-receipt.sociobot.in",
+  "checks": {
+    "cold-first-read": {
+      "pass": true,
+      "evidence": {
+        "title": "Android Backup Receipt — check a phone backup",
+        "lang": "en",
+        "h1": [
+          "Check an Android backup before you wipe."
+        ],
+        "lede": "For Android owners moving phones: compare selected folders, then get a receipt showing which selected files match.",
+        "primary": "Try it with sample data →",
+        "facts": [
+          "Local files stay on your device",
+          "4 files in the sample check",
+          "2 downloads receipt and issue list"
+        ],
+        "h1Count": 1,
+        "mainCount": 1
+      }
+    },
+    "axe-home-serious-critical": {
+      "pass": true,
+      "evidence": []
+    },
+    "mobile-first-screen": {
+      "pass": true,
+      "evidence": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "scrollWidth": 390,
+        "facts": {
+          "x": 20,
+          "y": 589.46875,
+          "width": 350,
+          "height": 66.5,
+          "top": 589.46875,
+          "right": 370,
+          "bottom": 655.96875,
+          "left": 20
+        },
+        "primary": {
+          "x": 20,
+          "y": 413.46875,
+          "width": 350,
+          "height": 50,
+          "top": 413.46875,
+          "right": 370,
+          "bottom": 463.46875,
+          "left": 20
+        }
+      }
+    },
+    "keyboard-skip-and-focus": {
+      "pass": true,
+      "evidence": {
+        "skipFocus": true,
+        "mainFocus": true,
+        "focusStyle": {
+          "width": "3px",
+          "style": "solid",
+          "color": "rgb(48, 73, 195)",
+          "offset": "4px"
+        }
+      }
+    },
+    "demo-one-click-value": {
+      "pass": true,
+      "evidence": {
+        "url": "https://android-backup-receipt.sociobot.in/demo",
+        "title": "Demo — Android Backup Receipt",
+        "banner": "Demo — sample data, nothing is saved to your real check. Four sample files show two matched, one missing, and one changed. Reset demoStart for real",
+        "receipt": {
+          "x": 8,
+          "y": 104,
+          "width": 374,
+          "height": 521.65625,
+          "top": 104,
+          "right": 382,
+          "bottom": 625.65625,
+          "left": 8
+        },
+        "counts": {
+          "coverage": "50%",
+          "matched": "2",
+          "missing": "1",
+          "changed": "1"
+        },
+        "downloads": [
+          {
+            "x": 21,
+            "y": 508.65625,
+            "width": 170,
+            "height": 52,
+            "top": 508.65625,
+            "right": 191,
+            "bottom": 560.65625,
+            "left": 21
+          },
+          {
+            "x": 199,
+            "y": 508.65625,
+            "width": 170,
+            "height": 52,
+            "top": 508.65625,
+            "right": 369,
+            "bottom": 560.65625,
+            "left": 199
+          }
+        ]
+      }
+    },
+    "demo-exports": {
+      "pass": true,
+      "evidence": {
+        "json": {
+          "schema": "backup-receipt/result-1",
+          "missing": 1,
+          "changed": 1
+        },
+        "csvLines": 3
+      }
+    },
+    "axe-demo-serious-critical": {
+      "pass": true,
+      "evidence": []
+    },
+    "live-offline-reload": {
+      "pass": true,
+      "evidence": {
+        "banner": true,
+        "receipt": true,
+        "coverage": "50%",
+        "controller": true,
+        "caches": [
+          "backup-receipt-9f78de63fd40-shell"
+        ]
+      }
+    },
+    "live-offline-download:#export-receipt": {
+      "pass": true,
+      "evidence": "backup-receipt-2026-08-29.json"
+    },
+    "live-offline-download:#export-csv": {
+      "pass": true,
+      "evidence": "backup-issues-2026-08-29.csv"
+    },
+    "core-flow-request-privacy": {
+      "pass": true,
+      "evidence": {
+        "uniqueRequests": [
+          "https://android-backup-receipt.sociobot.in/",
+          "https://android-backup-receipt.sociobot.in/assets/app-BCcZc5GW.js",
+          "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+          "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+          "https://android-backup-receipt.sociobot.in/demo",
+          "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788027760672",
+          "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788027760744",
+          "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788027763067",
+          "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788027763369"
+        ],
+        "external": []
+      }
+    },
+    "legal-and-404-routes": {
+      "pass": true,
+      "evidence": [
+        {
+          "route": "/privacy/",
+          "status": 200,
+          "title": "Privacy — Android Backup Receipt",
+          "lang": "en",
+          "h1": 1,
+          "main": 1,
+          "canonical": "https://android-backup-receipt.sociobot.in/privacy/",
+          "focusedHeading": true,
+          "overflow": false,
+          "missingAlt": 0,
+          "seriousCritical": []
+        },
+        {
+          "route": "/terms/",
+          "status": 200,
+          "title": "Terms — Android Backup Receipt",
+          "lang": "en",
+          "h1": 1,
+          "main": 1,
+          "canonical": "https://android-backup-receipt.sociobot.in/terms/",
+          "focusedHeading": true,
+          "overflow": false,
+          "missingAlt": 0,
+          "seriousCritical": []
+        },
+        {
+          "route": "/not-a-real-route-verification-6",
+          "status": 404,
+          "title": "Page not found — Android Backup Receipt",
+          "lang": "en",
+          "h1": 1,
+          "main": 1,
+          "canonical": "https://android-backup-receipt.sociobot.in/404.html",
+          "focusedHeading": true,
+          "overflow": false,
+          "missingAlt": 0,
+          "seriousCritical": []
+        }
+      ]
+    },
+    "normal-real-folder-flow": {
+      "pass": true,
+      "evidence": {
+        "matched": "1",
+        "missing": "1",
+        "changed": "1",
+        "conclusion": "Do not wipe your phone yet: 1 missing and 1 changed files need attention."
+      }
+    },
+    "resume-and-clear": {
+      "pass": true,
+      "evidence": {
+        "resumed": true
+      }
+    },
+    "invalid-manifest-recovery": {
+      "pass": true,
+      "evidence": {
+        "malformedMessage": "That file is not a valid folder record. Choose one downloaded from this app.",
+        "unsupportedMessage": "This folder record version is not supported. Download a new record from this app."
+      }
+    },
+    "reduced-motion": {
+      "pass": true,
+      "evidence": {
+        "matches": true,
+        "transitionDuration": "1e-05s",
+        "animationDuration": "1e-05s",
+        "animationIterationCount": "1"
+      }
+    },
+    "console-and-page-errors": {
+      "pass": true,
+      "evidence": []
+    }
+  },
+  "failures": [],
+  "console": [],
+  "requests": [
+    "https://android-backup-receipt.sociobot.in/",
+    "https://android-backup-receipt.sociobot.in/assets/app-BCcZc5GW.js",
+    "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+    "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+    "https://android-backup-receipt.sociobot.in/",
+    "https://android-backup-receipt.sociobot.in/assets/app-BCcZc5GW.js",
+    "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+    "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+    "https://android-backup-receipt.sociobot.in/demo",
+    "https://android-backup-receipt.sociobot.in/assets/app-BCcZc5GW.js",
+    "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+    "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+    "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788027760672",
+    "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788027760744",
+    "https://android-backup-receipt.sociobot.in/demo",
+    "https://android-backup-receipt.sociobot.in/assets/app-BCcZc5GW.js",
+    "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+    "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+    "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788027763067",
+    "https://android-backup-receipt.sociobot.in/demo",
+    "https://android-backup-receipt.sociobot.in/assets/app-BCcZc5GW.js",
+    "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+    "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+    "https://android-backup-receipt.sociobot.in/online-check.txt?t=1788027763369",
+    "https://android-backup-receipt.sociobot.in/privacy/",
+    "https://android-backup-receipt.sociobot.in/assets/legal-ff7db1a6.css",
+    "https://android-backup-receipt.sociobot.in/route-focus.js",
+    "https://android-backup-receipt.sociobot.in/terms/",
+    "https://android-backup-receipt.sociobot.in/assets/legal-ff7db1a6.css",
+    "https://android-backup-receipt.sociobot.in/route-focus.js",
+    "https://android-backup-receipt.sociobot.in/",
+    "https://android-backup-receipt.sociobot.in/assets/app-BCcZc5GW.js",
+    "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+    "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+    "https://android-backup-receipt.sociobot.in/",
+    "https://android-backup-receipt.sociobot.in/assets/app-BCcZc5GW.js",
+    "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+    "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp",
+    "https://android-backup-receipt.sociobot.in/",
+    "https://android-backup-receipt.sociobot.in/assets/app-BCcZc5GW.js",
+    "https://android-backup-receipt.sociobot.in/assets/style-Ch_lQprv.css",
+    "https://android-backup-receipt.sociobot.in/assets/receipt-inspection-768-9fd624e0.webp"
+  ]
+}

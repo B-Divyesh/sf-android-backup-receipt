@@ -1,0 +1,10 @@
+{
+  "status": 200,
+  "url": "https://android-backup-receipt.sociobot.in/demo",
+  "licenseStatus": "License no longer active. The free folder checker is still available; use the buy link to get a new license.",
+  "receiptVisible": true,
+  "exportEnabled": true,
+  "external": [
+    "https://api.sociobot.in/api/v1/products/android-backup-receipt/verify?license=verification_6_invalid_live"
+  ]
+}

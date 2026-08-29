@@ -1,0 +1,114 @@
+[
+  {
+    "url": "https://android-backup-receipt.sociobot.in/#main",
+    "status": 200,
+    "final": "https://android-backup-receipt.sociobot.in/",
+    "method": "GET"
+  },
+  {
+    "url": "https://android-backup-receipt.sociobot.in/",
+    "status": 200,
+    "final": "https://android-backup-receipt.sociobot.in/",
+    "method": "GET"
+  },
+  {
+    "url": "https://android-backup-receipt.sociobot.in/demo",
+    "status": 200,
+    "final": "https://android-backup-receipt.sociobot.in/demo",
+    "method": "GET"
+  },
+  {
+    "url": "https://android-backup-receipt.sociobot.in/#verify",
+    "status": 200,
+    "final": "https://android-backup-receipt.sociobot.in/",
+    "method": "GET"
+  },
+  {
+    "url": "https://android-backup-receipt.sociobot.in/privacy/",
+    "status": 200,
+    "final": "https://android-backup-receipt.sociobot.in/privacy/",
+    "method": "GET"
+  },
+  {
+    "url": "https://android-backup-receipt.sociobot.in/#limits",
+    "status": 200,
+    "final": "https://android-backup-receipt.sociobot.in/",
+    "method": "GET"
+  },
+  {
+    "url": "https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/SHA256SUMS",
+    "status": 200,
+    "final": "https://release-assets.githubusercontent.com/<signed-public-download>",
+    "method": "GET"
+  },
+  {
+    "url": "https://github.com/B-Divyesh/sf-android-backup-receipt/releases/latest/download/android-backup-receipt.apk",
+    "status": 200,
+    "final": "https://release-assets.githubusercontent.com/<signed-public-download>",
+    "method": "GET"
+  },
+  {
+    "url": "https://api.sociobot.in/api/v1/products/android-backup-receipt/checkout",
+    "status": 303,
+    "location": "https://checkout.dodopayments.com/session/<redacted>",
+    "method": "HEAD"
+  },
+  {
+    "url": "https://android-backup-receipt.sociobot.in/terms/",
+    "status": 200,
+    "final": "https://android-backup-receipt.sociobot.in/terms/",
+    "method": "GET"
+  },
+  {
+    "url": "https://github.com/B-Divyesh/sf-android-backup-receipt",
+    "status": 200,
+    "final": "https://github.com/B-Divyesh/sf-android-backup-receipt",
+    "method": "GET"
+  },
+  {
+    "url": "https://android-backup-receipt.sociobot.in/demo#main",
+    "status": 200,
+    "final": "https://android-backup-receipt.sociobot.in/demo",
+    "method": "GET"
+  },
+  {
+    "url": "https://android-backup-receipt.sociobot.in/demo#verify",
+    "status": 200,
+    "final": "https://android-backup-receipt.sociobot.in/demo",
+    "method": "GET"
+  },
+  {
+    "url": "https://android-backup-receipt.sociobot.in/demo#limits",
+    "status": 200,
+    "final": "https://android-backup-receipt.sociobot.in/demo",
+    "method": "GET"
+  },
+  {
+    "url": "https://android-backup-receipt.sociobot.in/privacy/#main",
+    "status": 200,
+    "final": "https://android-backup-receipt.sociobot.in/privacy/",
+    "method": "GET"
+  },
+  {
+    "url": "mailto:privacy@sociobot.in",
+    "status": "explicit-mailto",
+    "method": "none"
+  },
+  {
+    "url": "https://android-backup-receipt.sociobot.in/terms/#main",
+    "status": 200,
+    "final": "https://android-backup-receipt.sociobot.in/terms/",
+    "method": "GET"
+  },
+  {
+    "url": "mailto:support@sociobot.in",
+    "status": "explicit-mailto",
+    "method": "none"
+  },
+  {
+    "url": "https://android-backup-receipt.sociobot.in/404.html#main",
+    "status": 200,
+    "final": "https://android-backup-receipt.sociobot.in/404.html",
+    "method": "GET"
+  }
+]

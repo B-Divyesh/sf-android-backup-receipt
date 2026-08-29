@@ -1,0 +1,18 @@
+{
+  "before": {
+    "active": "activated",
+    "script": "https://android-backup-receipt.sociobot.in/sw.js",
+    "controller": "https://android-backup-receipt.sociobot.in/sw.js"
+  },
+  "update": {
+    "active": "activated",
+    "script": "https://android-backup-receipt.sociobot.in/sw.js",
+    "installing": null,
+    "waiting": null,
+    "controller": "https://android-backup-receipt.sociobot.in/sw.js",
+    "caches": [
+      "backup-receipt-9f78de63fd40-shell"
+    ]
+  },
+  "version": "backup-receipt-9f78de63fd40"
+}

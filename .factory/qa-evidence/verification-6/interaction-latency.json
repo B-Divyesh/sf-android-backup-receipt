@@ -1,0 +1,17 @@
+{
+  "method": "trusted click handler start to next animation frame; responsiveness proxy, not field INP",
+  "samplesMs": [
+    9.5,
+    9.3,
+    6.3,
+    11.5,
+    10.3,
+    11.4,
+    4.6,
+    3.9,
+    4.1,
+    9.8
+  ],
+  "medianMs": 9.5,
+  "maxMs": 11.5
+}

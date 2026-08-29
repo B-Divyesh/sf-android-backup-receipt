@@ -1,0 +1,44 @@
+{
+  "action": {
+    "id": 33264739610,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "head_sha": "bec5c98a47ea2dd4c772649175eb543636cfe57a",
+    "created_at": "2026-08-29T17:06:09Z",
+    "updated_at": "2026-08-29T17:08:34Z"
+  },
+  "release": {
+    "tag": "android-v1.0.3-build-9",
+    "target": "main",
+    "draft": false,
+    "prerelease": false,
+    "published_at": "2026-08-29T17:08:30Z",
+    "assets": [
+      {
+        "name": "android-backup-receipt.aab",
+        "size": 16327519,
+        "digest": "sha256:85bbf9ea2849c3b396f374df2f47300d3fe9e6b7c0922ff528981b7cf0a30033",
+        "download_count": 1
+      },
+      {
+        "name": "android-backup-receipt.apk",
+        "size": 16483683,
+        "digest": "sha256:706c53db9f1469382e2f94c5dd80711dba820096f5a6981556c4fc3ac9970308",
+        "download_count": 1
+      },
+      {
+        "name": "SHA256SUMS",
+        "size": 186,
+        "digest": "sha256:ef5f765a2f2b5b1b80d6e743d6084ed95fa3a0010f61ed6c34d69e83c3a8980e",
+        "download_count": 1
+      },
+      {
+        "name": "SIGNING_CERT_SHA256.txt",
+        "size": 105,
+        "digest": "sha256:4b22e81002aaa4709f95116e9c861bfa061762d5d0d15ccd51f1ec618b26c202",
+        "download_count": 1
+      }
+    ]
+  }
+}

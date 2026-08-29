@@ -1,0 +1,5 @@
+a1379a9de980746fa9c624afa671881d0f2452e3d444dd93497fbc8da95b9313  .factory/qa-artifacts/live-index.html
+8219fafc6a5e4ba4ecb1c1f1e3ea953fda562e83f3c0741000f35261c41138ea  .factory/qa-artifacts/live-app.js
+57fab00379c21cbfb2573cfa31b177792cd8add0814b720d99321dae5dacb76f  .factory/qa-artifacts/live-style.css
+341b7d6a913cf805547b1e15ee581407ea54ff8d2550092ba723751e10daf338  .factory/qa-artifacts/live-sw.js
+0d01de479844a88428e0aa5a2f4aa9f6c2d9a41855650a12d0c2cc225bd5f10b  .factory/qa-artifacts/live-manifest.webmanifest
