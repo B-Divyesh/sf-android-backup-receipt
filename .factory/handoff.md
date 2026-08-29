@@ -1,52 +1,76 @@
-# Android Backup Receipt — review 1 handoff
+# Android Backup Receipt — polish round 1 handoff
 
 ## Outcome
 
-Adversarial first-read review 1 is complete. Verdict: **FAIL** with 23
-findings: 1 blocking, 7 major, and 15 minor. The complete report is
-`.factory/review-1.md`.
+All 23 findings in `.factory/review-1.md` are fixed. No earlier review or polish report existed in the base commit. The static PWA remains wrapped by the existing Capacitor Android project and is live at <https://android-backup-receipt.sociobot.in>.
 
-No product code or production configuration was changed.
+Implementation commit: `bec5c98a47ea2dd4c772649175eb543636cfe57a`
 
-## Blocking result
+Deployed build ID: `9f78de63fd40`
 
-The landing page is clear before scrolling, and the isolated sample works.
-However, after **Try it with sample data**, `/demo` repeats the landing hero.
-The populated receipt begins at y=2,776 px on 390×844 and y=1,899 px on
-1440×900. The first demo screen therefore does not show the product in use.
-This is a half-fix of verification-2 C2 and is recorded as F-1-1.
+Azure Static Web Apps deployment ID: `f96d3271-b4a9-402e-9108-e0c2eaf80845`
 
-## Verification performed
+## What changed
 
-- Fresh Chromium contexts at 390×844 and 1440×900 against production.
-- One-click demo, banner, Reset, Start for real, storage isolation, request
-  logging, and live offline reload.
-- Every exact command in `.factory/claims.json` from a fresh temporary clone;
-  all 16 passed.
-- `npm test`: 15 unit/integration and 17 Playwright tests passed.
-- `npm run build`: passed and produced `dist/`.
-- `npm run lint`: passed.
-- Factory `verify-url.sh`: passed.
-- Live axe checks on home, demo, privacy, terms, and 404: zero violations.
-- Full live link/fragment crawl, route metadata inspection, Back/focus probe,
-  390 px touch-target probe, and response-header inspection.
-- Billing verification rate limit: requests 1–30 returned 200; 31–35 returned
-  429. Checkout returned 303 to the hosted checkout.
-- Current APK and checksum downloaded; SHA-256 matched and ZIP integrity passed.
-- Every earlier verification finding and the previous handoff were rechecked.
+- `/demo` and `?demo=1` now open on the populated receipt, not the landing hero. At 390×844, all key counts, issue rows, and both downloads are visible without scrolling.
+- Demo data remains isolated in `demo:android-backup-receipt`, with Reset demo and Start for real controls.
+- Real checks accept several phone-folder/backup-folder pairs. One receipt contains per-pair results and combined counts, issues, categories, JSON, and CSV.
+- Landing, README, guidance, receipt, privacy, and terms copy now use consistent plain terms. Untested restore, memory, battery, credential, signed-ID, and historical APK claims were removed or narrowed.
+- Demo, privacy, terms, offline, and 404 have route-specific titles/metadata, consistent navigation/footer, h1 focus, polite announcements, legal links, and designed 404 handling.
+- `.factory/claims.json` now has 18 unique claims and 18 unique test commands. New tests cover demo first-viewport placement, multiple folder pairs, and offline downloads.
+- Version 1.0.3 updates the web app, manifest, Android configuration, and immutable Android release workflow.
+- The field-inspection-docket identity, palette, typography, hard shadows, and reduced-motion policy remain intact. `.factory/design.md` records the demo-first extension.
 
-## Remaining work
+The finding-by-finding mapping is in `.factory/polish-1.md`. The full sentence audit and terminology table are in `.factory/copy-audit.md`.
 
-Repair all F-1 findings before requesting another review. Highest priority:
+## Verification
 
-1. Make `/demo` receipt-first and add a viewport assertion after clicking the
-   landing CTA.
-2. Remove or test the uncovered restore, offline-export, memory/battery,
-   cloud-credential, and Android release claims.
-3. Complete route-specific canonical/OG metadata, shared header/footer, and
-   focus announcements.
-4. Clear the copy audit findings and support multiple folder pairs in one
-   receipt.
+From the working checkout:
 
-Re-run the entire adversarial checklist from a clean clone. A passing result
-requires zero findings.
+- `npm ci` — passed; 149 packages, zero vulnerabilities.
+- `npm test` — passed; 16 Vitest tests and 19 Chromium tests.
+- Route-specific axe addition — passed on privacy, terms, and 404; live demo and all three routes have zero serious/critical findings.
+- `npm run lint` — passed.
+- `npm run build` — passed; `dist/` produced.
+- `npm audit --omit=dev` — passed; zero vulnerabilities.
+- `npx cap sync android` — passed.
+- Local `./gradlew assembleDebug` — unavailable because this worker has no Java executable or `JAVA_HOME`.
+
+The Android-capable GitHub runner completed the equivalent release path successfully:
+
+- Actions run: <https://github.com/B-Divyesh/sf-android-backup-receipt/actions/runs/33264739610>
+- Release: <https://github.com/B-Divyesh/sf-android-backup-receipt/releases/tag/android-v1.0.3-build-9>
+- APK SHA-256: `706c53db9f1469382e2f94c5dd80711dba820096f5a6981556c4fc3ac9970308`
+- AAB SHA-256: `85bbf9ea2849c3b396f374df2f47300d3fe9e6b7c0922ff528981b7cf0a30033`
+- Both files matched `SHA256SUMS` and passed ZIP integrity.
+
+Every claim command was also run separately after `git clone --local /work/repo` and `npm ci` in `/tmp/abr-claims-8cae3C`. All 18 passed with exactly one selected tagged test each.
+
+## Browser, accessibility, privacy, offline, and performance evidence
+
+- `/opt/fleet/lib/verify-url.sh` passed live: HTTPS 200, title, `lang=en`, one h1, main landmark, alt text, and zero console errors.
+- Cold live mobile demo: receipt y=178–699.7 px; JSON and CSV actions end at y=634.7 px in a 390×844 viewport.
+- Cold live home/demo used only product-origin requests. License verification remains the only disclosed optional cross-origin runtime request.
+- Live service-worker-controlled demo reloaded offline and downloaded both receipt files while offline.
+- Live privacy and terms returned 200. An unknown URL returned the designed page with HTTP 404. Each route passed metadata, focus, shell, axe, and overflow checks.
+- CSP includes response-header `frame-ancestors 'none'`; HSTS, Permissions-Policy, nosniff, and DENY framing are present. Hashed assets cache immutable for one year; `sw.js` is no-store.
+- JavaScript: 32,802 B raw / 11.76 kB gzip. CSS: 18,503 B raw / 4.60 kB gzip. Mobile hero: 28,160 B.
+- Local Lighthouse: 100 Performance, 100 Accessibility, 100 Best Practices, 100 SEO; LCP 1.2 s, TBT 0 ms, CLS 0.
+- Live Lighthouse: 100/100/100/100; FCP 0.9 s, LCP 1.1 s, TBT 0 ms, CLS 0.
+- Local and live `index.html` SHA-256 matched: `a1379a9de980746fa9c624afa671881d0f2452e3d444dd93497fbc8da95b9313`.
+
+Evidence is under `.factory/qa-evidence/polish-1/`, including the reproducible live probe and screenshots.
+
+## Run and deploy
+
+```sh
+npm ci
+npm test
+npm run build
+npx cap sync android
+/opt/fleet/lib/deploy-static.sh android-backup-receipt dist
+```
+
+## Known gaps and next steps
+
+None. No product or review finding remains open.

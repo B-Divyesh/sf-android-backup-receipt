@@ -1,0 +1,84 @@
+{
+  "checkedAt": "2026-08-29T17:08:15.733Z",
+  "origin": "https://android-backup-receipt.sociobot.in",
+  "checks": {
+    "home-title": "Android Backup Receipt — check a phone backup",
+    "first-screen-copy": true,
+    "mobile-home-no-overflow": true,
+    "demo-url": "https://android-backup-receipt.sociobot.in/demo",
+    "demo-title": "Demo — Android Backup Receipt",
+    "demo-canonical": true,
+    "demo-focused-heading": true,
+    "demo-first-screen:#receipt": {
+      "x": 8,
+      "y": 178,
+      "width": 374,
+      "height": 521.65625
+    },
+    "demo-first-screen:#accounted-count": {
+      "x": 58,
+      "y": 287.53125,
+      "width": 72,
+      "height": 21
+    },
+    "demo-first-screen:#missing-count": {
+      "x": 174,
+      "y": 287.53125,
+      "width": 72,
+      "height": 21
+    },
+    "demo-first-screen:#changed-count": {
+      "x": 290,
+      "y": 287.53125,
+      "width": 74,
+      "height": 21
+    },
+    "demo-first-screen:.issue-list": {
+      "x": 21,
+      "y": 427.65625,
+      "width": 348,
+      "height": 84
+    },
+    "demo-first-screen:#export-receipt": {
+      "x": 21,
+      "y": 582.65625,
+      "width": 170,
+      "height": 52
+    },
+    "demo-first-screen:#export-csv": {
+      "x": 199,
+      "y": 582.65625,
+      "width": 170,
+      "height": 52
+    },
+    "demo-counts": true,
+    "demo-reset": true,
+    "same-origin-demo": [],
+    "axe-demo-serious-critical": [],
+    "offline-download:#export-receipt": true,
+    "offline-download:#export-csv": true,
+    "offline-demo-reload": true,
+    "status:/privacy/": 200,
+    "metadata:/privacy/": true,
+    "shell:/privacy/": true,
+    "focus:/privacy/": true,
+    "overflow:/privacy/": true,
+    "axe:/privacy/": [],
+    "status:/terms/": 200,
+    "metadata:/terms/": true,
+    "shell:/terms/": true,
+    "focus:/terms/": true,
+    "overflow:/terms/": true,
+    "axe:/terms/": [],
+    "status:/404-does-not-exist": 404,
+    "metadata:/404-does-not-exist": true,
+    "shell:/404-does-not-exist": true,
+    "focus:/404-does-not-exist": true,
+    "overflow:/404-does-not-exist": true,
+    "axe:/404-does-not-exist": [],
+    "multi-folder-pair-rows": true,
+    "multi-folder-combined-counts": true,
+    "console-errors": []
+  },
+  "errors": []
+}

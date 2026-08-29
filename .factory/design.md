@@ -74,6 +74,14 @@ by 8px over 180ms, buttons depress over 100ms, and the progress bar changes over
 160ms. Nothing loops. Under `prefers-reduced-motion: reduce`, transforms and
 transitions are removed; status changes are immediate and remain fully legible.
 
+## Polish round 1 application
+
+The demo route now opens on the inspection docket itself. At 390×844, the
+sample stamp, discrepancy rows, and download punches fit in the first screen.
+The full folder-pair rail follows below. Multi-folder checks use repeated
+phone-folder → backup-folder docket rows and one combined receipt, extending
+the existing inspection grammar without adding a generic dashboard layer.
+
 ## Original asset plan and provenance
 
 The hero illustration is an original generated editorial still life: an Android
